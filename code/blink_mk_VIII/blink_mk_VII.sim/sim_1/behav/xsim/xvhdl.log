@@ -1,0 +1,28 @@
+INFO: [VRFC 10-163] Analyzing VHDL file "/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.srcs/sources_1/new/demux.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'demux'
+INFO: [VRFC 10-163] Analyzing VHDL file "/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.srcs/sources_1/new/rampgen.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'rampgen'
+INFO: [VRFC 10-163] Analyzing VHDL file "/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.ip_user_files/bd/design_1/ip/design_1_proc_sys_reset_0_0/sim/design_1_proc_sys_reset_0_0.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'design_1_proc_sys_reset_0_0'
+INFO: [VRFC 10-163] Analyzing VHDL file "/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.ip_user_files/bd/design_1/ip/design_1_axi_cfg_register_0_0/sim/design_1_axi_cfg_register_0_0.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'design_1_axi_cfg_register_0_0'
+INFO: [VRFC 10-163] Analyzing VHDL file "/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.ip_user_files/bd/design_1/ip/design_1_ila_0_0/sim/design_1_ila_0_0.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'design_1_ila_0_0'
+INFO: [VRFC 10-163] Analyzing VHDL file "/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.ip_user_files/bd/design_1/ip/design_1_demux_0_0/sim/design_1_demux_0_0.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'design_1_demux_0_0'
+INFO: [VRFC 10-163] Analyzing VHDL file "/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.ip_user_files/bd/design_1/ip/design_1_rampgen_0_0/sim/design_1_rampgen_0_0.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'design_1_rampgen_0_0'
+INFO: [VRFC 10-163] Analyzing VHDL file "/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.ip_user_files/bd/design_1/ip/design_1_axi_fifo_mm_s_0_0/sim/design_1_axi_fifo_mm_s_0_0.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'design_1_axi_fifo_mm_s_0_0'
+INFO: [VRFC 10-163] Analyzing VHDL file "/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.ip_user_files/bd/design_1/ip/design_1_axi_fifo_mm_s_0_1/sim/design_1_axi_fifo_mm_s_0_1.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'design_1_axi_fifo_mm_s_0_1'
+INFO: [VRFC 10-163] Analyzing VHDL file "/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.ip_user_files/bd/design_1/sim/design_1.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'm00_couplers_imp_QJIMLI'
+INFO: [VRFC 10-3107] analyzing entity 'm01_couplers_imp_1D3SAH3'
+INFO: [VRFC 10-3107] analyzing entity 'm02_couplers_imp_P3UMW5'
+INFO: [VRFC 10-3107] analyzing entity 's00_couplers_imp_1A7ZMW4'
+INFO: [VRFC 10-3107] analyzing entity 's01_couplers_imp_KGUFR9'
+INFO: [VRFC 10-3107] analyzing entity 'design_1_ps8_0_axi_periph_0'
+INFO: [VRFC 10-3107] analyzing entity 'design_1'
+INFO: [VRFC 10-163] Analyzing VHDL file "/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/hdl/design_1_wrapper.vhd" into library xil_defaultlib
+INFO: [VRFC 10-3107] analyzing entity 'design_1_wrapper'

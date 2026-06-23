@@ -1,0 +1,46 @@
+{
+  "schema": "xilinx.com:schema:json_instance:1.0",
+  "ip_inst": {
+    "xci_name": "kria_starter_kit_nand_gate_0_0",
+    "cell_name": "nand_gate_0",
+    "component_reference": "xilinx.com:module_ref:nand_gate:1.0",
+    "ip_revision": "1",
+    "gen_directory": "../../../../../../nand_ps_mk_III.gen/sources_1/bd/kria_starter_kit/ip/kria_starter_kit_nand_gate_0_0",
+    "parameters": {
+      "component_parameters": {
+        "Component_Name": [ { "value": "kria_starter_kit_nand_gate_0_0", "resolve_type": "user", "usage": "all" } ]
+      },
+      "project_parameters": {
+        "ARCHITECTURE": [ { "value": "zynquplus" } ],
+        "BASE_BOARD_PART": [ { "value": "xilinx.com:kr260_som:part0:1.1" } ],
+        "BOARD_CONNECTIONS": [ { "value": "som240_1_connector xilinx.com:kr260_carrier:som240_1_connector:1.1 som240_2_connector xilinx.com:kr260_carrier:som240_2_connector:1.1" } ],
+        "DEVICE": [ { "value": "xck26" } ],
+        "NEXTGEN_VERSAL": [ { "value": "0" } ],
+        "PACKAGE": [ { "value": "sfvc784" } ],
+        "PREFHDL": [ { "value": "VHDL" } ],
+        "SILICON_REVISION": [ { "value": "" } ],
+        "SIMULATOR_LANGUAGE": [ { "value": "MIXED" } ],
+        "SPEEDGRADE": [ { "value": "-2LV" } ],
+        "STATIC_POWER": [ { "value": "" } ],
+        "TEMPERATURE_GRADE": [ { "value": "C" } ]
+      },
+      "runtime_parameters": {
+        "IPCONTEXT": [ { "value": "IP_Integrator" } ],
+        "IPREVISION": [ { "value": "1" } ],
+        "MANAGED": [ { "value": "TRUE" } ],
+        "OUTPUTDIR": [ { "value": "../../../../../../nand_ps_mk_III.gen/sources_1/bd/kria_starter_kit/ip/kria_starter_kit_nand_gate_0_0" } ],
+        "SELECTEDSIMMODEL": [ { "value": "" } ],
+        "SHAREDDIR": [ { "value": "../../ipshared" } ],
+        "SWVERSION": [ { "value": "2024.1" } ],
+        "SYNTHESISFLOW": [ { "value": "OOC_HIERARCHICAL" } ]
+      }
+    },
+    "boundary": {
+      "ports": {
+        "a": [ { "direction": "in" } ],
+        "b": [ { "direction": "in" } ],
+        "y": [ { "direction": "out" } ]
+      }
+    }
+  }
+}

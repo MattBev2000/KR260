@@ -1,0 +1,18 @@
+{
+   "ActiveEmotionalView":"Default View",
+   "Default View_ScaleFactor":"1.06181",
+   "Default View_TopLeft":"30,-154",
+   "ExpandedHierarchyInLayout":"",
+   "guistr":"# # String gsaved with Nlview 7.7.1 2023-07-26 3bc4126617 VDI=43 GEI=38 GUI=JA:21.0
+#  -string -flagsOSRD
+preplace portBus fan_en_b -pg 1 -lvl 3 -x 900 -y 70 -defaultsOSRD
+preplace inst xlslice_0 -pg 1 -lvl 2 -x 780 -y 70 -defaultsOSRD
+preplace inst zynq_ultra_ps_e_0 -pg 1 -lvl 1 -x 340 -y 90 -defaultsOSRD
+preplace inst clk_wiz_0 -pg 1 -lvl 1 -x 340 -y -100 -defaultsOSRD
+preplace netloc xlslice_0_Dout 1 2 1 NJ 70
+preplace netloc zynq_ultra_ps_e_0_emio_ttc0_wave_o 1 1 1 NJ 70
+levelinfo -pg 1 0 340 780 900
+pagesize -pg 1 -db -bbox -sgen 0 -170 1050 250
+"
+}
+0

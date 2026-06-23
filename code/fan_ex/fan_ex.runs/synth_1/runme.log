@@ -1,0 +1,328 @@
+
+*** Running vivado
+    with args -log kria_starter_kit_wrapper.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source kria_starter_kit_wrapper.tcl
+
+
+
+****** Vivado v2024.1 (64-bit)
+  **** SW Build 5076996 on Wed May 22 18:37:14 MDT 2024
+  **** IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
+  **** SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
+  **** Start of session at: Wed Feb 19 09:11:21 2025
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source kria_starter_kit_wrapper.tcl -notrace
+create_project: Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 515.117 ; gain = 201.410
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'C:/Xilinx/Vivado/2024.1/data/ip'.
+Command: read_checkpoint -auto_incremental -incremental C:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.srcs/utils_1/imports/synth_1/kria_starter_kit_wrapper.dcp
+INFO: [Vivado 12-5825] Read reference checkpoint from C:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.srcs/utils_1/imports/synth_1/kria_starter_kit_wrapper.dcp for incremental synthesis
+INFO: [Vivado 12-7989] Please ensure there are no constraint changes
+Command: synth_design -top kria_starter_kit_wrapper -part xck26-sfvc784-2LV-c
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xck26'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xck26'
+INFO: [Device 21-403] Loading part xck26-sfvc784-2LV-c
+INFO: [Designutils 20-5440] No compile time benefit to using incremental synthesis; A full resynthesis will be run
+INFO: [Designutils 20-4379] Flow is switching to default flow due to incremental criteria not met. If you would like to alter this behaviour and have the flow terminate instead, please set the following parameter config_implementation {autoIncr.Synth.RejectBehavior Terminate}
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 17828
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:05 ; elapsed = 00:00:06 . Memory (MB): peak = 1967.922 ; gain = 398.125
+---------------------------------------------------------------------------------
+INFO: [Synth 8-638] synthesizing module 'kria_starter_kit_wrapper' [C:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/hdl/kria_starter_kit_wrapper.vhd:21]
+INFO: [Synth 8-3491] module 'kria_starter_kit' declared at 'c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/synth/kria_starter_kit.vhd:1488' bound to instance 'kria_starter_kit_i' of component 'kria_starter_kit' [C:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/hdl/kria_starter_kit_wrapper.vhd:28]
+INFO: [Synth 8-638] synthesizing module 'kria_starter_kit' [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/synth/kria_starter_kit.vhd:1498]
+INFO: [Synth 8-3491] module 'kria_starter_kit_axi_cfg_register_0_0' declared at 'C:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.runs/synth_1/.Xil/Vivado-3496-Goose/realtime/kria_starter_kit_axi_cfg_register_0_0_stub.vhdl:6' bound to instance 'axi_cfg_register_0' of component 'kria_starter_kit_axi_cfg_register_0_0' [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/synth/kria_starter_kit.vhd:1747]
+INFO: [Synth 8-638] synthesizing module 'kria_starter_kit_axi_cfg_register_0_0' [C:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.runs/synth_1/.Xil/Vivado-3496-Goose/realtime/kria_starter_kit_axi_cfg_register_0_0_stub.vhdl:32]
+INFO: [Synth 8-3491] module 'kria_starter_kit_axi_cfg_register_0_1' declared at 'C:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.runs/synth_1/.Xil/Vivado-3496-Goose/realtime/kria_starter_kit_axi_cfg_register_0_1_stub.vhdl:6' bound to instance 'axi_cfg_register_1' of component 'kria_starter_kit_axi_cfg_register_0_1' [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/synth/kria_starter_kit.vhd:1770]
+INFO: [Synth 8-638] synthesizing module 'kria_starter_kit_axi_cfg_register_0_1' [C:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.runs/synth_1/.Xil/Vivado-3496-Goose/realtime/kria_starter_kit_axi_cfg_register_0_1_stub.vhdl:32]
+INFO: [Synth 8-3491] module 'kria_starter_kit_axi_cfg_register_1_0' declared at 'C:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.runs/synth_1/.Xil/Vivado-3496-Goose/realtime/kria_starter_kit_axi_cfg_register_1_0_stub.vhdl:6' bound to instance 'axi_cfg_register_2' of component 'kria_starter_kit_axi_cfg_register_1_0' [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/synth/kria_starter_kit.vhd:1793]
+INFO: [Synth 8-638] synthesizing module 'kria_starter_kit_axi_cfg_register_1_0' [C:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.runs/synth_1/.Xil/Vivado-3496-Goose/realtime/kria_starter_kit_axi_cfg_register_1_0_stub.vhdl:32]
+INFO: [Synth 8-638] synthesizing module 'kria_starter_kit_ps8_0_axi_periph_0' [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/synth/kria_starter_kit.vhd:922]
+INFO: [Synth 8-638] synthesizing module 'm00_couplers_imp_1DCS57W' [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/synth/kria_starter_kit.vhd:58]
+INFO: [Synth 8-256] done synthesizing module 'm00_couplers_imp_1DCS57W' (0#1) [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/synth/kria_starter_kit.vhd:58]
+INFO: [Synth 8-638] synthesizing module 'm01_couplers_imp_O4WZJV' [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/synth/kria_starter_kit.vhd:159]
+INFO: [Synth 8-256] done synthesizing module 'm01_couplers_imp_O4WZJV' (0#1) [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/synth/kria_starter_kit.vhd:159]
+INFO: [Synth 8-638] synthesizing module 'm02_couplers_imp_19OT6GZ' [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/synth/kria_starter_kit.vhd:260]
+INFO: [Synth 8-256] done synthesizing module 'm02_couplers_imp_19OT6GZ' (0#1) [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/synth/kria_starter_kit.vhd:260]
+INFO: [Synth 8-638] synthesizing module 's00_couplers_imp_194WYE2' [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/synth/kria_starter_kit.vhd:383]
+INFO: [Synth 8-3491] module 'kria_starter_kit_auto_ds_0' declared at 'C:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.runs/synth_1/.Xil/Vivado-3496-Goose/realtime/kria_starter_kit_auto_ds_0_stub.vhdl:6' bound to instance 'auto_ds' of component 'kria_starter_kit_auto_ds_0' [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/synth/kria_starter_kit.vhd:676]
+INFO: [Synth 8-638] synthesizing module 'kria_starter_kit_auto_ds_0' [C:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.runs/synth_1/.Xil/Vivado-3496-Goose/realtime/kria_starter_kit_auto_ds_0_stub.vhdl:88]
+INFO: [Synth 8-3491] module 'kria_starter_kit_auto_pc_0' declared at 'C:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.runs/synth_1/.Xil/Vivado-3496-Goose/realtime/kria_starter_kit_auto_pc_0_stub.vhdl:6' bound to instance 'auto_pc' of component 'kria_starter_kit_auto_pc_0' [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/synth/kria_starter_kit.vhd:755]
+INFO: [Synth 8-638] synthesizing module 'kria_starter_kit_auto_pc_0' [C:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.runs/synth_1/.Xil/Vivado-3496-Goose/realtime/kria_starter_kit_auto_pc_0_stub.vhdl:68]
+INFO: [Synth 8-256] done synthesizing module 's00_couplers_imp_194WYE2' (0#1) [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/synth/kria_starter_kit.vhd:383]
+INFO: [Synth 8-3491] module 'kria_starter_kit_xbar_0' declared at 'C:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.runs/synth_1/.Xil/Vivado-3496-Goose/realtime/kria_starter_kit_xbar_0_stub.vhdl:6' bound to instance 'xbar' of component 'kria_starter_kit_xbar_0' [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/synth/kria_starter_kit.vhd:1406]
+INFO: [Synth 8-638] synthesizing module 'kria_starter_kit_xbar_0' [C:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.runs/synth_1/.Xil/Vivado-3496-Goose/realtime/kria_starter_kit_xbar_0_stub.vhdl:52]
+INFO: [Synth 8-256] done synthesizing module 'kria_starter_kit_ps8_0_axi_periph_0' (0#1) [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/synth/kria_starter_kit.vhd:922]
+INFO: [Synth 8-3491] module 'kria_starter_kit_rst_ps8_0_99M_0' declared at 'C:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.runs/synth_1/.Xil/Vivado-3496-Goose/realtime/kria_starter_kit_rst_ps8_0_99M_0_stub.vhdl:6' bound to instance 'rst_ps8_0_99M' of component 'kria_starter_kit_rst_ps8_0_99M_0' [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/synth/kria_starter_kit.vhd:1917]
+INFO: [Synth 8-638] synthesizing module 'kria_starter_kit_rst_ps8_0_99M_0' [C:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.runs/synth_1/.Xil/Vivado-3496-Goose/realtime/kria_starter_kit_rst_ps8_0_99M_0_stub.vhdl:22]
+INFO: [Synth 8-3491] module 'kria_starter_kit_xlslice_0_0' declared at 'c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/ip/kria_starter_kit_xlslice_0_0/synth/kria_starter_kit_xlslice_0_0.v:53' bound to instance 'xlslice_0' of component 'kria_starter_kit_xlslice_0_0' [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/synth/kria_starter_kit.vhd:1930]
+INFO: [Synth 8-6157] synthesizing module 'kria_starter_kit_xlslice_0_0' [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/ip/kria_starter_kit_xlslice_0_0/synth/kria_starter_kit_xlslice_0_0.v:53]
+INFO: [Synth 8-6157] synthesizing module 'xlslice_v1_0_4_xlslice' [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/ipshared/a97c/hdl/xlslice_v1_0_vl_rfs.v:58]
+INFO: [Synth 8-6155] done synthesizing module 'xlslice_v1_0_4_xlslice' (0#1) [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/ipshared/a97c/hdl/xlslice_v1_0_vl_rfs.v:58]
+INFO: [Synth 8-6155] done synthesizing module 'kria_starter_kit_xlslice_0_0' (0#1) [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/ip/kria_starter_kit_xlslice_0_0/synth/kria_starter_kit_xlslice_0_0.v:53]
+INFO: [Synth 8-3491] module 'kria_starter_kit_zynq_ultra_ps_e_0_0' declared at 'C:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.runs/synth_1/.Xil/Vivado-3496-Goose/realtime/kria_starter_kit_zynq_ultra_ps_e_0_0_stub.vhdl:6' bound to instance 'zynq_ultra_ps_e_0' of component 'kria_starter_kit_zynq_ultra_ps_e_0_0' [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/synth/kria_starter_kit.vhd:1935]
+INFO: [Synth 8-638] synthesizing module 'kria_starter_kit_zynq_ultra_ps_e_0_0' [C:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.runs/synth_1/.Xil/Vivado-3496-Goose/realtime/kria_starter_kit_zynq_ultra_ps_e_0_0_stub.vhdl:58]
+INFO: [Synth 8-256] done synthesizing module 'kria_starter_kit' (0#1) [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/synth/kria_starter_kit.vhd:1498]
+INFO: [Synth 8-256] done synthesizing module 'kria_starter_kit_wrapper' (0#1) [C:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/hdl/kria_starter_kit_wrapper.vhd:21]
+WARNING: [Synth 8-7129] Port Din[1] in module xlslice_v1_0_4_xlslice is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[0] in module xlslice_v1_0_4_xlslice is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M_ACLK in module s00_couplers_imp_194WYE2 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M_ARESETN in module s00_couplers_imp_194WYE2 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M_ACLK in module m02_couplers_imp_19OT6GZ is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M_ARESETN in module m02_couplers_imp_19OT6GZ is either unconnected or has no load
+WARNING: [Synth 8-7129] Port S_ACLK in module m02_couplers_imp_19OT6GZ is either unconnected or has no load
+WARNING: [Synth 8-7129] Port S_ARESETN in module m02_couplers_imp_19OT6GZ is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M_ACLK in module m01_couplers_imp_O4WZJV is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M_ARESETN in module m01_couplers_imp_O4WZJV is either unconnected or has no load
+WARNING: [Synth 8-7129] Port S_ACLK in module m01_couplers_imp_O4WZJV is either unconnected or has no load
+WARNING: [Synth 8-7129] Port S_ARESETN in module m01_couplers_imp_O4WZJV is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M_ACLK in module m00_couplers_imp_1DCS57W is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M_ARESETN in module m00_couplers_imp_1DCS57W is either unconnected or has no load
+WARNING: [Synth 8-7129] Port S_ACLK in module m00_couplers_imp_1DCS57W is either unconnected or has no load
+WARNING: [Synth 8-7129] Port S_ARESETN in module m00_couplers_imp_1DCS57W is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M00_ACLK in module kria_starter_kit_ps8_0_axi_periph_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M00_ARESETN in module kria_starter_kit_ps8_0_axi_periph_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M01_ACLK in module kria_starter_kit_ps8_0_axi_periph_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M01_ARESETN in module kria_starter_kit_ps8_0_axi_periph_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M02_ACLK in module kria_starter_kit_ps8_0_axi_periph_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M02_ARESETN in module kria_starter_kit_ps8_0_axi_periph_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port S00_ACLK in module kria_starter_kit_ps8_0_axi_periph_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port S00_ARESETN in module kria_starter_kit_ps8_0_axi_periph_0 is either unconnected or has no load
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:07 ; elapsed = 00:00:08 . Memory (MB): peak = 2087.469 ; gain = 517.672
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:07 ; elapsed = 00:00:08 . Memory (MB): peak = 2087.469 ; gain = 517.672
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:07 ; elapsed = 00:00:08 . Memory (MB): peak = 2087.469 ; gain = 517.672
+---------------------------------------------------------------------------------
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.020 . Memory (MB): peak = 2087.469 ; gain = 0.000
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/ip/kria_starter_kit_zynq_ultra_ps_e_0_0/kria_starter_kit_zynq_ultra_ps_e_0_0/kria_starter_kit_zynq_ultra_ps_e_0_0_in_context.xdc] for cell 'kria_starter_kit_i/zynq_ultra_ps_e_0'
+Finished Parsing XDC File [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/ip/kria_starter_kit_zynq_ultra_ps_e_0_0/kria_starter_kit_zynq_ultra_ps_e_0_0/kria_starter_kit_zynq_ultra_ps_e_0_0_in_context.xdc] for cell 'kria_starter_kit_i/zynq_ultra_ps_e_0'
+Parsing XDC File [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/ip/kria_starter_kit_rst_ps8_0_99M_0/kria_starter_kit_rst_ps8_0_99M_0/kria_starter_kit_rst_ps8_0_99M_0_in_context.xdc] for cell 'kria_starter_kit_i/rst_ps8_0_99M'
+Finished Parsing XDC File [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/ip/kria_starter_kit_rst_ps8_0_99M_0/kria_starter_kit_rst_ps8_0_99M_0/kria_starter_kit_rst_ps8_0_99M_0_in_context.xdc] for cell 'kria_starter_kit_i/rst_ps8_0_99M'
+Parsing XDC File [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/ip/kria_starter_kit_axi_cfg_register_0_0/kria_starter_kit_axi_cfg_register_0_0/kria_starter_kit_axi_cfg_register_0_0_in_context.xdc] for cell 'kria_starter_kit_i/axi_cfg_register_0'
+Finished Parsing XDC File [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/ip/kria_starter_kit_axi_cfg_register_0_0/kria_starter_kit_axi_cfg_register_0_0/kria_starter_kit_axi_cfg_register_0_0_in_context.xdc] for cell 'kria_starter_kit_i/axi_cfg_register_0'
+Parsing XDC File [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/ip/kria_starter_kit_xbar_0/kria_starter_kit_xbar_0/kria_starter_kit_xbar_0_in_context.xdc] for cell 'kria_starter_kit_i/ps8_0_axi_periph/xbar'
+Finished Parsing XDC File [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/ip/kria_starter_kit_xbar_0/kria_starter_kit_xbar_0/kria_starter_kit_xbar_0_in_context.xdc] for cell 'kria_starter_kit_i/ps8_0_axi_periph/xbar'
+Parsing XDC File [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/ip/kria_starter_kit_auto_ds_0/kria_starter_kit_auto_ds_0/kria_starter_kit_auto_ds_0_in_context.xdc] for cell 'kria_starter_kit_i/ps8_0_axi_periph/s00_couplers/auto_ds'
+Finished Parsing XDC File [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/ip/kria_starter_kit_auto_ds_0/kria_starter_kit_auto_ds_0/kria_starter_kit_auto_ds_0_in_context.xdc] for cell 'kria_starter_kit_i/ps8_0_axi_periph/s00_couplers/auto_ds'
+Parsing XDC File [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/ip/kria_starter_kit_auto_pc_0/kria_starter_kit_auto_pc_0/kria_starter_kit_auto_pc_0_in_context.xdc] for cell 'kria_starter_kit_i/ps8_0_axi_periph/s00_couplers/auto_pc'
+Finished Parsing XDC File [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/ip/kria_starter_kit_auto_pc_0/kria_starter_kit_auto_pc_0/kria_starter_kit_auto_pc_0_in_context.xdc] for cell 'kria_starter_kit_i/ps8_0_axi_periph/s00_couplers/auto_pc'
+Parsing XDC File [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/ip/kria_starter_kit_axi_cfg_register_0_1/kria_starter_kit_axi_cfg_register_0_1/kria_starter_kit_axi_cfg_register_0_1_in_context.xdc] for cell 'kria_starter_kit_i/axi_cfg_register_1'
+Finished Parsing XDC File [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/ip/kria_starter_kit_axi_cfg_register_0_1/kria_starter_kit_axi_cfg_register_0_1/kria_starter_kit_axi_cfg_register_0_1_in_context.xdc] for cell 'kria_starter_kit_i/axi_cfg_register_1'
+Parsing XDC File [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/ip/kria_starter_kit_axi_cfg_register_1_0/kria_starter_kit_axi_cfg_register_1_0/kria_starter_kit_axi_cfg_register_1_0_in_context.xdc] for cell 'kria_starter_kit_i/axi_cfg_register_2'
+Finished Parsing XDC File [c:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.gen/sources_1/bd/kria_starter_kit/ip/kria_starter_kit_axi_cfg_register_1_0/kria_starter_kit_axi_cfg_register_1_0/kria_starter_kit_axi_cfg_register_1_0_in_context.xdc] for cell 'kria_starter_kit_i/axi_cfg_register_2'
+Parsing XDC File [C:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.srcs/constrs_1/imports/xdc/default.xdc]
+Finished Parsing XDC File [C:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.srcs/constrs_1/imports/xdc/default.xdc]
+INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [C:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.srcs/constrs_1/imports/xdc/default.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/kria_starter_kit_wrapper_propImpl.xdc].
+Resolution: To avoid this warning, move constraints listed in [.Xil/kria_starter_kit_wrapper_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
+Parsing XDC File [C:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.runs/synth_1/dont_touch.xdc]
+Finished Parsing XDC File [C:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.runs/synth_1/dont_touch.xdc]
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.001 . Memory (MB): peak = 2100.648 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.004 . Memory (MB): peak = 2100.648 ; gain = 0.000
+INFO: [Designutils 20-5440] No compile time benefit to using incremental synthesis; A full resynthesis will be run
+INFO: [Designutils 20-4379] Flow is switching to default flow due to incremental criteria not met. If you would like to alter this behaviour and have the flow terminate instead, please set the following parameter config_implementation {autoIncr.Synth.RejectBehavior Terminate}
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:20 ; elapsed = 00:00:21 . Memory (MB): peak = 2100.648 ; gain = 530.852
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xck26-sfvc784-2LV-c
+INFO: [Synth 8-6742] Reading net delay rules and data
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:20 ; elapsed = 00:00:21 . Memory (MB): peak = 2100.648 ; gain = 530.852
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+Applied set_property KEEP_HIERARCHY = SOFT for kria_starter_kit_i. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for kria_starter_kit_i/xlslice_0. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for kria_starter_kit_i/zynq_ultra_ps_e_0. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for kria_starter_kit_i/rst_ps8_0_99M. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for kria_starter_kit_i/axi_cfg_register_0. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for kria_starter_kit_i/ps8_0_axi_periph/xbar. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for kria_starter_kit_i/ps8_0_axi_periph/s00_couplers/auto_ds. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for kria_starter_kit_i/ps8_0_axi_periph/s00_couplers/auto_pc. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for kria_starter_kit_i/ps8_0_axi_periph. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for kria_starter_kit_i/axi_cfg_register_1. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for kria_starter_kit_i/axi_cfg_register_2. (constraint file  auto generated constraint).
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:20 ; elapsed = 00:00:21 . Memory (MB): peak = 2100.648 ; gain = 530.852
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:20 ; elapsed = 00:00:21 . Memory (MB): peak = 2100.648 ; gain = 530.852
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 1248 (col length:96)
+BRAMs: 288 (col length: RAMB18 96 RAMB36 48)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-7080] Parallel synthesis criteria is not met
+WARNING: [Synth 8-7129] Port Din[1] in module kria_starter_kit_xlslice_0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[0] in module kria_starter_kit_xlslice_0_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M00_ACLK in module kria_starter_kit_ps8_0_axi_periph_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M00_ARESETN in module kria_starter_kit_ps8_0_axi_periph_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M01_ACLK in module kria_starter_kit_ps8_0_axi_periph_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M01_ARESETN in module kria_starter_kit_ps8_0_axi_periph_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M02_ACLK in module kria_starter_kit_ps8_0_axi_periph_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M02_ARESETN in module kria_starter_kit_ps8_0_axi_periph_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port S00_ACLK in module kria_starter_kit_ps8_0_axi_periph_0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port S00_ARESETN in module kria_starter_kit_ps8_0_axi_periph_0 is either unconnected or has no load
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:22 ; elapsed = 00:00:23 . Memory (MB): peak = 2100.648 ; gain = 530.852
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:34 ; elapsed = 00:00:36 . Memory (MB): peak = 2578.508 ; gain = 1008.711
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:34 ; elapsed = 00:00:36 . Memory (MB): peak = 2578.879 ; gain = 1009.082
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:34 ; elapsed = 00:00:36 . Memory (MB): peak = 2588.945 ; gain = 1019.148
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:38 ; elapsed = 00:00:41 . Memory (MB): peak = 2603.613 ; gain = 1033.816
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:38 ; elapsed = 00:00:41 . Memory (MB): peak = 2603.613 ; gain = 1033.816
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:38 ; elapsed = 00:00:41 . Memory (MB): peak = 2603.613 ; gain = 1033.816
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:38 ; elapsed = 00:00:41 . Memory (MB): peak = 2603.613 ; gain = 1033.816
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:38 ; elapsed = 00:00:41 . Memory (MB): peak = 2603.613 ; gain = 1033.816
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:38 ; elapsed = 00:00:41 . Memory (MB): peak = 2603.613 ; gain = 1033.816
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++------+--------------------------------------+----------+
+|      |BlackBox name                         |Instances |
++------+--------------------------------------+----------+
+|1     |kria_starter_kit_xbar_0               |         1|
+|2     |kria_starter_kit_auto_ds_0            |         1|
+|3     |kria_starter_kit_auto_pc_0            |         1|
+|4     |kria_starter_kit_axi_cfg_register_0_0 |         1|
+|5     |kria_starter_kit_axi_cfg_register_0_1 |         1|
+|6     |kria_starter_kit_axi_cfg_register_1_0 |         1|
+|7     |kria_starter_kit_rst_ps8_0_99M_0      |         1|
+|8     |kria_starter_kit_zynq_ultra_ps_e_0_0  |         1|
++------+--------------------------------------+----------+
+
+Report Cell Usage: 
++------+-------------------------------------------+------+
+|      |Cell                                       |Count |
++------+-------------------------------------------+------+
+|1     |kria_starter_kit_auto_ds_0_bbox            |     1|
+|2     |kria_starter_kit_auto_pc_0_bbox            |     1|
+|3     |kria_starter_kit_axi_cfg_register_0_0_bbox |     1|
+|4     |kria_starter_kit_axi_cfg_register_0_1_bbox |     1|
+|5     |kria_starter_kit_axi_cfg_register_1_0_bbox |     1|
+|6     |kria_starter_kit_rst_ps8_0_99M_0_bbox      |     1|
+|7     |kria_starter_kit_xbar_0_bbox               |     1|
+|8     |kria_starter_kit_zynq_ultra_ps_e_0_0_bbox  |     1|
+|9     |OBUF                                       |     1|
++------+-------------------------------------------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:38 ; elapsed = 00:00:41 . Memory (MB): peak = 2603.613 ; gain = 1033.816
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 11 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:25 ; elapsed = 00:00:34 . Memory (MB): peak = 2603.613 ; gain = 1020.637
+Synthesis Optimization Complete : Time (s): cpu = 00:00:39 ; elapsed = 00:00:42 . Memory (MB): peak = 2603.613 ; gain = 1033.816
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.021 . Memory (MB): peak = 2603.613 ; gain = 0.000
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2603.613 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Synth Design complete | Checksum: e09b89aa
+INFO: [Common 17-83] Releasing license: Synthesis
+59 Infos, 35 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:48 ; elapsed = 00:00:52 . Memory (MB): peak = 2603.613 ; gain = 2031.363
+Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.001 . Memory (MB): peak = 2603.613 ; gain = 0.000
+INFO: [Common 17-1381] The checkpoint 'C:/Users/ASUS/Documents/PhD/kriask/prj/fan_ex/fan_ex.runs/synth_1/kria_starter_kit_wrapper.dcp' has been generated.
+INFO: [Vivado 12-24828] Executing command : report_utilization -file kria_starter_kit_wrapper_utilization_synth.rpt -pb kria_starter_kit_wrapper_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Wed Feb 19 09:12:26 2025...

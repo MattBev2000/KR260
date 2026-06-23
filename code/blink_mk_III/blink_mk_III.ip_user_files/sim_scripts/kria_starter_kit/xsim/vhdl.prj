@@ -1,0 +1,7 @@
+vhdl xil_defaultlib  \
+"../../../bd/kria_starter_kit/ip/kria_starter_kit_ila_0_0/sim/kria_starter_kit_ila_0_0.vhd" \
+"../../../bd/kria_starter_kit/ip/kria_starter_kit_prescaler_0_0/sim/kria_starter_kit_prescaler_0_0.vhd" \
+"../../../bd/kria_starter_kit/sim/kria_starter_kit.vhd" \
+
+# Do not sort compile order
+nosort

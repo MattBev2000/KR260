@@ -1,0 +1,12 @@
+# compile verilog/system verilog design source files
+verilog xil_defaultlib  --include "../../../../blink_mk_III.gen/sources_1/bd/kria_starter_kit/ipshared/ec67/hdl" --include "../../../../blink_mk_III.gen/sources_1/bd/kria_starter_kit/ipshared/a317/hdl" --include "../../../../blink_mk_III.gen/sources_1/bd/kria_starter_kit/ipshared/3242" --include "C:/Xilinx/Vivado/2024.1/data/xilinx_vip/include" \
+"../../../../blink_mk_III.ip_user_files/bd/kria_starter_kit/ip/kria_starter_kit_xlslice_0_0/sim/kria_starter_kit_xlslice_0_0.v" \
+"../../../../blink_mk_III.ip_user_files/bd/kria_starter_kit/ip/kria_starter_kit_zynq_ultra_ps_e_0_0/sim/kria_starter_kit_zynq_ultra_ps_e_0_0_vip_wrapper.v" \
+"../../../../blink_mk_III.ip_user_files/bd/kria_starter_kit/ip/kria_starter_kit_clk_wiz_0_0/kria_starter_kit_clk_wiz_0_0_clk_wiz.v" \
+"../../../../blink_mk_III.ip_user_files/bd/kria_starter_kit/ip/kria_starter_kit_clk_wiz_0_0/kria_starter_kit_clk_wiz_0_0.v" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort

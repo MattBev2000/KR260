@@ -1,0 +1,5 @@
+vhdl xil_defaultlib  \
+"../../../bd/core_init_mk_III/sim/core_init_mk_III.vhd" \
+
+# Do not sort compile order
+nosort

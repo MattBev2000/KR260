@@ -1,0 +1,24 @@
+#-----------------------------------------------------------
+# Vivado v2024.1 (64-bit)
+# SW Build 5076996 on Wed May 22 18:36:09 MDT 2024
+# IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
+# SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
+# Start of session at: Thu Jun  5 10:27:31 2025
+# Process ID: 1431130
+# Current directory: /data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.runs/design_1_clk_wiz_1_0_synth_1
+# Command line: vivado -log design_1_clk_wiz_1_0.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source design_1_clk_wiz_1_0.tcl
+# Log file: /data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.runs/design_1_clk_wiz_1_0_synth_1/design_1_clk_wiz_1_0.vds
+# Journal file: /data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.runs/design_1_clk_wiz_1_0_synth_1/vivado.jou
+# Running On        :aidevel
+# Platform          :unknown
+# Operating System  :unknown
+# Processor Detail  :Intel(R) Xeon(R) Gold 6338 CPU @ 2.00GHz
+# CPU Frequency     :3200.000 MHz
+# CPU Physical cores:4
+# CPU Logical cores :4
+# Host memory       :16777 MB
+# Swap memory       :8589 MB
+# Total Virtual     :25367 MB
+# Available Virtual :15740 MB
+#-----------------------------------------------------------
+source design_1_clk_wiz_1_0.tcl -notrace

@@ -1,0 +1,5 @@
+
+*** Running vivado
+    with args -log kria_starter_kit_ila_0_0.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source kria_starter_kit_ila_0_0.tcl
+
+

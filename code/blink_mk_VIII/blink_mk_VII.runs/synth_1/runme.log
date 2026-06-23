@@ -1,0 +1,452 @@
+
+*** Running vivado
+    with args -log design_1_wrapper.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source design_1_wrapper.tcl
+
+
+****** Vivado v2024.1 (64-bit)
+  **** SW Build 5076996 on Wed May 22 18:36:09 MDT 2024
+  **** IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
+  **** SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
+  **** Start of session at: Thu Jun  5 10:28:40 2025
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source design_1_wrapper.tcl -notrace
+create_project: Time (s): cpu = 00:00:05 ; elapsed = 00:00:05 . Memory (MB): peak = 1370.688 ; gain = 21.836 ; free physical = 10822 ; free virtual = 19527
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/data/Xilinx/Vivado/Vivado/2024.1/data/ip'.
+Command: read_checkpoint -auto_incremental -incremental /data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.srcs/utils_1/imports/synth_1/design_1_wrapper.dcp
+INFO: [Vivado 12-5825] Read reference checkpoint from /data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.srcs/utils_1/imports/synth_1/design_1_wrapper.dcp for incremental synthesis
+INFO: [Vivado 12-7989] Please ensure there are no constraint changes
+Command: synth_design -top design_1_wrapper -part xck26-sfvc784-2LV-c
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xck26'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xck26'
+INFO: [Device 21-403] Loading part xck26-sfvc784-2LV-c
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 4 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 1431546
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:04 ; elapsed = 00:00:04 . Memory (MB): peak = 2676.855 ; gain = 301.746 ; free physical = 9168 ; free virtual = 17883
+---------------------------------------------------------------------------------
+INFO: [Synth 8-638] synthesizing module 'design_1_wrapper' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/hdl/design_1_wrapper.vhd:24]
+INFO: [Synth 8-3491] module 'design_1' declared at '/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/synth/design_1.vhd:2203' bound to instance 'design_1_i' of component 'design_1' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/hdl/design_1_wrapper.vhd:34]
+INFO: [Synth 8-638] synthesizing module 'design_1' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/synth/design_1.vhd:2216]
+INFO: [Synth 8-3491] module 'design_1_axi_cfg_register_0_0' declared at '/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.runs/synth_1/.Xil/Vivado-1431514-aidevel/realtime/design_1_axi_cfg_register_0_0_stub.vhdl:6' bound to instance 'axi_cfg_register_0' of component 'design_1_axi_cfg_register_0_0' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/synth/design_1.vhd:2599]
+INFO: [Synth 8-638] synthesizing module 'design_1_axi_cfg_register_0_0' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.runs/synth_1/.Xil/Vivado-1431514-aidevel/realtime/design_1_axi_cfg_register_0_0_stub.vhdl:32]
+INFO: [Synth 8-3491] module 'design_1_clk_wiz_1_0' declared at '/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.runs/synth_1/.Xil/Vivado-1431514-aidevel/realtime/design_1_clk_wiz_1_0_stub.vhdl:6' bound to instance 'clk_wiz_1' of component 'design_1_clk_wiz_1_0' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/synth/design_1.vhd:2622]
+INFO: [Synth 8-638] synthesizing module 'design_1_clk_wiz_1_0' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.runs/synth_1/.Xil/Vivado-1431514-aidevel/realtime/design_1_clk_wiz_1_0_stub.vhdl:16]
+INFO: [Synth 8-3491] module 'design_1_axi_fifo_mm_s_0_1' declared at '/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.runs/synth_1/.Xil/Vivado-1431514-aidevel/realtime/design_1_axi_fifo_mm_s_0_1_stub.vhdl:6' bound to instance 'fifo_in' of component 'design_1_axi_fifo_mm_s_0_1' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/synth/design_1.vhd:2629]
+INFO: [Synth 8-638] synthesizing module 'design_1_axi_fifo_mm_s_0_1' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.runs/synth_1/.Xil/Vivado-1431514-aidevel/realtime/design_1_axi_fifo_mm_s_0_1_stub.vhdl:37]
+INFO: [Synth 8-3491] module 'design_1_axi_fifo_mm_s_0_0' declared at '/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.runs/synth_1/.Xil/Vivado-1431514-aidevel/realtime/design_1_axi_fifo_mm_s_0_0_stub.vhdl:6' bound to instance 'fifo_out' of component 'design_1_axi_fifo_mm_s_0_0' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/synth/design_1.vhd:2657]
+INFO: [Synth 8-638] synthesizing module 'design_1_axi_fifo_mm_s_0_0' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.runs/synth_1/.Xil/Vivado-1431514-aidevel/realtime/design_1_axi_fifo_mm_s_0_0_stub.vhdl:37]
+INFO: [Synth 8-3491] module 'design_1_proc_sys_reset_0_0' declared at '/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.runs/synth_1/.Xil/Vivado-1431514-aidevel/realtime/design_1_proc_sys_reset_0_0_stub.vhdl:6' bound to instance 'proc_sys_reset_0' of component 'design_1_proc_sys_reset_0_0' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/synth/design_1.vhd:2685]
+INFO: [Synth 8-638] synthesizing module 'design_1_proc_sys_reset_0_0' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.runs/synth_1/.Xil/Vivado-1431514-aidevel/realtime/design_1_proc_sys_reset_0_0_stub.vhdl:22]
+INFO: [Synth 8-638] synthesizing module 'design_1_ps8_0_axi_periph_0' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/synth/design_1.vhd:1462]
+INFO: [Synth 8-638] synthesizing module 'm00_couplers_imp_QJIMLI' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/synth/design_1.vhd:58]
+INFO: [Synth 8-256] done synthesizing module 'm00_couplers_imp_QJIMLI' (0#1) [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/synth/design_1.vhd:58]
+INFO: [Synth 8-638] synthesizing module 'm01_couplers_imp_1D3SAH3' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/synth/design_1.vhd:159]
+INFO: [Synth 8-256] done synthesizing module 'm01_couplers_imp_1D3SAH3' (0#1) [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/synth/design_1.vhd:159]
+INFO: [Synth 8-638] synthesizing module 'm02_couplers_imp_P3UMW5' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/synth/design_1.vhd:260]
+INFO: [Synth 8-256] done synthesizing module 'm02_couplers_imp_P3UMW5' (0#1) [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/synth/design_1.vhd:260]
+INFO: [Synth 8-638] synthesizing module 's00_couplers_imp_1A7ZMW4' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/synth/design_1.vhd:383]
+INFO: [Synth 8-3491] module 'design_1_auto_ds_0' declared at '/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.runs/synth_1/.Xil/Vivado-1431514-aidevel/realtime/design_1_auto_ds_0_stub.vhdl:6' bound to instance 'auto_ds' of component 'design_1_auto_ds_0' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/synth/design_1.vhd:676]
+INFO: [Synth 8-638] synthesizing module 'design_1_auto_ds_0' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.runs/synth_1/.Xil/Vivado-1431514-aidevel/realtime/design_1_auto_ds_0_stub.vhdl:88]
+INFO: [Synth 8-3491] module 'design_1_auto_pc_0' declared at '/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.runs/synth_1/.Xil/Vivado-1431514-aidevel/realtime/design_1_auto_pc_0_stub.vhdl:6' bound to instance 'auto_pc' of component 'design_1_auto_pc_0' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/synth/design_1.vhd:755]
+INFO: [Synth 8-638] synthesizing module 'design_1_auto_pc_0' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.runs/synth_1/.Xil/Vivado-1431514-aidevel/realtime/design_1_auto_pc_0_stub.vhdl:68]
+INFO: [Synth 8-256] done synthesizing module 's00_couplers_imp_1A7ZMW4' (0#1) [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/synth/design_1.vhd:383]
+INFO: [Synth 8-638] synthesizing module 's01_couplers_imp_KGUFR9' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/synth/design_1.vhd:884]
+INFO: [Synth 8-3491] module 'design_1_auto_ds_1' declared at '/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.runs/synth_1/.Xil/Vivado-1431514-aidevel/realtime/design_1_auto_ds_1_stub.vhdl:6' bound to instance 'auto_ds' of component 'design_1_auto_ds_1' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/synth/design_1.vhd:1177]
+INFO: [Synth 8-638] synthesizing module 'design_1_auto_ds_1' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.runs/synth_1/.Xil/Vivado-1431514-aidevel/realtime/design_1_auto_ds_1_stub.vhdl:88]
+INFO: [Synth 8-3491] module 'design_1_auto_pc_1' declared at '/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.runs/synth_1/.Xil/Vivado-1431514-aidevel/realtime/design_1_auto_pc_1_stub.vhdl:6' bound to instance 'auto_pc' of component 'design_1_auto_pc_1' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/synth/design_1.vhd:1256]
+INFO: [Synth 8-638] synthesizing module 'design_1_auto_pc_1' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.runs/synth_1/.Xil/Vivado-1431514-aidevel/realtime/design_1_auto_pc_1_stub.vhdl:68]
+INFO: [Synth 8-256] done synthesizing module 's01_couplers_imp_KGUFR9' (0#1) [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/synth/design_1.vhd:884]
+INFO: [Synth 8-3491] module 'design_1_xbar_0' declared at '/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.runs/synth_1/.Xil/Vivado-1431514-aidevel/realtime/design_1_xbar_0_stub.vhdl:6' bound to instance 'xbar' of component 'design_1_xbar_0' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/synth/design_1.vhd:2102]
+INFO: [Synth 8-638] synthesizing module 'design_1_xbar_0' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.runs/synth_1/.Xil/Vivado-1431514-aidevel/realtime/design_1_xbar_0_stub.vhdl:52]
+INFO: [Synth 8-256] done synthesizing module 'design_1_ps8_0_axi_periph_0' (0#1) [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/synth/design_1.vhd:1462]
+INFO: [Synth 8-3491] module 'design_1_xlconstant_0_0' declared at '/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ip/design_1_xlconstant_0_0/synth/design_1_xlconstant_0_0.v:53' bound to instance 'xlconstant_0' of component 'design_1_xlconstant_0_0' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/synth/design_1.vhd:2838]
+INFO: [Synth 8-6157] synthesizing module 'design_1_xlconstant_0_0' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ip/design_1_xlconstant_0_0/synth/design_1_xlconstant_0_0.v:53]
+INFO: [Synth 8-6157] synthesizing module 'xlconstant_v1_1_9_xlconstant' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ipshared/e2d2/hdl/xlconstant_v1_1_vl_rfs.v:68]
+INFO: [Synth 8-6155] done synthesizing module 'xlconstant_v1_1_9_xlconstant' (0#1) [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ipshared/e2d2/hdl/xlconstant_v1_1_vl_rfs.v:68]
+INFO: [Synth 8-6155] done synthesizing module 'design_1_xlconstant_0_0' (0#1) [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ip/design_1_xlconstant_0_0/synth/design_1_xlconstant_0_0.v:53]
+INFO: [Synth 8-3491] module 'design_1_xlslice_0_0' declared at '/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ip/design_1_xlslice_0_0/synth/design_1_xlslice_0_0.v:53' bound to instance 'xlslice_0' of component 'design_1_xlslice_0_0' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/synth/design_1.vhd:2842]
+INFO: [Synth 8-6157] synthesizing module 'design_1_xlslice_0_0' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ip/design_1_xlslice_0_0/synth/design_1_xlslice_0_0.v:53]
+INFO: [Synth 8-6157] synthesizing module 'xlslice_v1_0_4_xlslice' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ipshared/a97c/hdl/xlslice_v1_0_vl_rfs.v:58]
+INFO: [Synth 8-6155] done synthesizing module 'xlslice_v1_0_4_xlslice' (0#1) [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ipshared/a97c/hdl/xlslice_v1_0_vl_rfs.v:58]
+INFO: [Synth 8-6155] done synthesizing module 'design_1_xlslice_0_0' (0#1) [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ip/design_1_xlslice_0_0/synth/design_1_xlslice_0_0.v:53]
+INFO: [Synth 8-3491] module 'design_1_xlslice_1_0' declared at '/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ip/design_1_xlslice_1_0/synth/design_1_xlslice_1_0.v:53' bound to instance 'xlslice_1' of component 'design_1_xlslice_1_0' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/synth/design_1.vhd:2847]
+INFO: [Synth 8-6157] synthesizing module 'design_1_xlslice_1_0' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ip/design_1_xlslice_1_0/synth/design_1_xlslice_1_0.v:53]
+INFO: [Synth 8-6157] synthesizing module 'xlslice_v1_0_4_xlslice__parameterized0' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ipshared/a97c/hdl/xlslice_v1_0_vl_rfs.v:58]
+INFO: [Synth 8-6155] done synthesizing module 'xlslice_v1_0_4_xlslice__parameterized0' (0#1) [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ipshared/a97c/hdl/xlslice_v1_0_vl_rfs.v:58]
+INFO: [Synth 8-6155] done synthesizing module 'design_1_xlslice_1_0' (0#1) [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ip/design_1_xlslice_1_0/synth/design_1_xlslice_1_0.v:53]
+INFO: [Synth 8-3491] module 'design_1_zynq_ultra_ps_e_0_0' declared at '/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.runs/synth_1/.Xil/Vivado-1431514-aidevel/realtime/design_1_zynq_ultra_ps_e_0_0_stub.vhdl:6' bound to instance 'zynq_ultra_ps_e_0' of component 'design_1_zynq_ultra_ps_e_0_0' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/synth/design_1.vhd:2852]
+INFO: [Synth 8-638] synthesizing module 'design_1_zynq_ultra_ps_e_0_0' [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.runs/synth_1/.Xil/Vivado-1431514-aidevel/realtime/design_1_zynq_ultra_ps_e_0_0_stub.vhdl:103]
+INFO: [Synth 8-256] done synthesizing module 'design_1' (0#1) [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/synth/design_1.vhd:2216]
+INFO: [Synth 8-256] done synthesizing module 'design_1_wrapper' (0#1) [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/hdl/design_1_wrapper.vhd:24]
+WARNING: [Synth 8-3848] Net uf2 in module/entity design_1 does not have driver. [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/synth/design_1.vhd:2208]
+WARNING: [Synth 8-7129] Port Din[93] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[92] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[91] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[90] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[89] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[88] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[87] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[86] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[85] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[84] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[83] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[82] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[81] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[80] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[79] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[78] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[77] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[76] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[75] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[74] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[73] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[72] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[71] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[70] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[69] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[68] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[67] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[66] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[65] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[64] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[63] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[62] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[61] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[60] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[59] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[58] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[57] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[56] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[55] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[54] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[53] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[52] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[51] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[50] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[49] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[48] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[47] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[45] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[44] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[43] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[42] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[41] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[40] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[39] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[38] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[37] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[36] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[35] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[34] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[33] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[32] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[31] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[30] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[29] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[28] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[27] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[26] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[25] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[24] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[23] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[22] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[21] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[20] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[19] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[18] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[17] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[16] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[15] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[14] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[13] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[12] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[11] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[10] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[9] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[8] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[7] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[6] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[5] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[4] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[3] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[2] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[1] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[0] in module xlslice_v1_0_4_xlslice__parameterized0 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[2] in module xlslice_v1_0_4_xlslice is either unconnected or has no load
+WARNING: [Synth 8-7129] Port Din[1] in module xlslice_v1_0_4_xlslice is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M_ACLK in module s01_couplers_imp_KGUFR9 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M_ARESETN in module s01_couplers_imp_KGUFR9 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M_ACLK in module s00_couplers_imp_1A7ZMW4 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M_ARESETN in module s00_couplers_imp_1A7ZMW4 is either unconnected or has no load
+WARNING: [Synth 8-7129] Port M_ACLK in module m02_couplers_imp_P3UMW5 is either unconnected or has no load
+INFO: [Common 17-14] Message 'Synth 8-7129' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:05 ; elapsed = 00:00:05 . Memory (MB): peak = 2762.824 ; gain = 387.715 ; free physical = 9058 ; free virtual = 17777
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:05 ; elapsed = 00:00:05 . Memory (MB): peak = 2768.762 ; gain = 393.652 ; free physical = 9057 ; free virtual = 17776
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:05 ; elapsed = 00:00:05 . Memory (MB): peak = 2768.762 ; gain = 393.652 ; free physical = 9057 ; free virtual = 17776
+---------------------------------------------------------------------------------
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.02 . Memory (MB): peak = 2768.762 ; gain = 0.000 ; free physical = 9057 ; free virtual = 17776
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ip/design_1_zynq_ultra_ps_e_0_0/design_1_zynq_ultra_ps_e_0_0/design_1_zynq_ultra_ps_e_0_0_in_context.xdc] for cell 'design_1_i/zynq_ultra_ps_e_0'
+Finished Parsing XDC File [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ip/design_1_zynq_ultra_ps_e_0_0/design_1_zynq_ultra_ps_e_0_0/design_1_zynq_ultra_ps_e_0_0_in_context.xdc] for cell 'design_1_i/zynq_ultra_ps_e_0'
+Parsing XDC File [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ip/design_1_proc_sys_reset_0_0/design_1_proc_sys_reset_0_0/design_1_proc_sys_reset_0_0_in_context.xdc] for cell 'design_1_i/proc_sys_reset_0'
+Finished Parsing XDC File [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ip/design_1_proc_sys_reset_0_0/design_1_proc_sys_reset_0_0/design_1_proc_sys_reset_0_0_in_context.xdc] for cell 'design_1_i/proc_sys_reset_0'
+Parsing XDC File [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ip/design_1_axi_cfg_register_0_0/design_1_axi_cfg_register_0_0/design_1_axi_cfg_register_0_0_in_context.xdc] for cell 'design_1_i/axi_cfg_register_0'
+Finished Parsing XDC File [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ip/design_1_axi_cfg_register_0_0/design_1_axi_cfg_register_0_0/design_1_axi_cfg_register_0_0_in_context.xdc] for cell 'design_1_i/axi_cfg_register_0'
+Parsing XDC File [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ip/design_1_xbar_0/design_1_xbar_0/design_1_xbar_0_in_context.xdc] for cell 'design_1_i/ps8_0_axi_periph/xbar'
+Finished Parsing XDC File [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ip/design_1_xbar_0/design_1_xbar_0/design_1_xbar_0_in_context.xdc] for cell 'design_1_i/ps8_0_axi_periph/xbar'
+Parsing XDC File [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ip/design_1_auto_ds_0/design_1_auto_ds_0/design_1_auto_ds_0_in_context.xdc] for cell 'design_1_i/ps8_0_axi_periph/s00_couplers/auto_ds'
+Finished Parsing XDC File [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ip/design_1_auto_ds_0/design_1_auto_ds_0/design_1_auto_ds_0_in_context.xdc] for cell 'design_1_i/ps8_0_axi_periph/s00_couplers/auto_ds'
+Parsing XDC File [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ip/design_1_auto_pc_0/design_1_auto_pc_0/design_1_auto_pc_0_in_context.xdc] for cell 'design_1_i/ps8_0_axi_periph/s00_couplers/auto_pc'
+Finished Parsing XDC File [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ip/design_1_auto_pc_0/design_1_auto_pc_0/design_1_auto_pc_0_in_context.xdc] for cell 'design_1_i/ps8_0_axi_periph/s00_couplers/auto_pc'
+Parsing XDC File [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ip/design_1_auto_ds_1/design_1_auto_ds_1/design_1_auto_ds_0_in_context.xdc] for cell 'design_1_i/ps8_0_axi_periph/s01_couplers/auto_ds'
+Finished Parsing XDC File [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ip/design_1_auto_ds_1/design_1_auto_ds_1/design_1_auto_ds_0_in_context.xdc] for cell 'design_1_i/ps8_0_axi_periph/s01_couplers/auto_ds'
+Parsing XDC File [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ip/design_1_auto_pc_1/design_1_auto_pc_1/design_1_auto_pc_0_in_context.xdc] for cell 'design_1_i/ps8_0_axi_periph/s01_couplers/auto_pc'
+Finished Parsing XDC File [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ip/design_1_auto_pc_1/design_1_auto_pc_1/design_1_auto_pc_0_in_context.xdc] for cell 'design_1_i/ps8_0_axi_periph/s01_couplers/auto_pc'
+Parsing XDC File [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ip/design_1_axi_fifo_mm_s_0_0/design_1_axi_fifo_mm_s_0_0/design_1_axi_fifo_mm_s_0_0_in_context.xdc] for cell 'design_1_i/fifo_out'
+Finished Parsing XDC File [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ip/design_1_axi_fifo_mm_s_0_0/design_1_axi_fifo_mm_s_0_0/design_1_axi_fifo_mm_s_0_0_in_context.xdc] for cell 'design_1_i/fifo_out'
+Parsing XDC File [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ip/design_1_axi_fifo_mm_s_0_1/design_1_axi_fifo_mm_s_0_1/design_1_axi_fifo_mm_s_0_1_in_context.xdc] for cell 'design_1_i/fifo_in'
+Finished Parsing XDC File [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ip/design_1_axi_fifo_mm_s_0_1/design_1_axi_fifo_mm_s_0_1/design_1_axi_fifo_mm_s_0_1_in_context.xdc] for cell 'design_1_i/fifo_in'
+Parsing XDC File [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ip/design_1_clk_wiz_1_0/design_1_clk_wiz_1_0/design_1_clk_wiz_1_0_in_context.xdc] for cell 'design_1_i/clk_wiz_1'
+Finished Parsing XDC File [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ip/design_1_clk_wiz_1_0/design_1_clk_wiz_1_0/design_1_clk_wiz_1_0_in_context.xdc] for cell 'design_1_i/clk_wiz_1'
+Parsing XDC File [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.srcs/constrs_1/new/constraint.xdc]
+Finished Parsing XDC File [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.srcs/constrs_1/new/constraint.xdc]
+INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.srcs/constrs_1/new/constraint.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/design_1_wrapper_propImpl.xdc].
+Resolution: To avoid this warning, move constraints listed in [.Xil/design_1_wrapper_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
+Parsing XDC File [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.runs/synth_1/dont_touch.xdc]
+Finished Parsing XDC File [/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.runs/synth_1/dont_touch.xdc]
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 2872.441 ; gain = 0.000 ; free physical = 9047 ; free virtual = 17770
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2872.441 ; gain = 0.000 ; free physical = 9047 ; free virtual = 17770
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:15 ; elapsed = 00:00:15 . Memory (MB): peak = 2872.441 ; gain = 497.332 ; free physical = 8525 ; free virtual = 17272
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xck26-sfvc784-2LV-c
+INFO: [Synth 8-6742] Reading net delay rules and data
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:15 ; elapsed = 00:00:15 . Memory (MB): peak = 2872.441 ; gain = 497.332 ; free physical = 8524 ; free virtual = 17271
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+Applied set_property IO_BUFFER_TYPE = NONE for som240_1_connector_hpa_clk0p_clk. (constraint file  /data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ip/design_1_clk_wiz_1_0/design_1_clk_wiz_1_0/design_1_clk_wiz_1_0_in_context.xdc, line 3).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for som240_1_connector_hpa_clk0p_clk. (constraint file  /data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.gen/sources_1/bd/design_1/ip/design_1_clk_wiz_1_0/design_1_clk_wiz_1_0/design_1_clk_wiz_1_0_in_context.xdc, line 4).
+Applied set_property KEEP_HIERARCHY = SOFT for design_1_i. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for design_1_i/zynq_ultra_ps_e_0. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for design_1_i/proc_sys_reset_0. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for design_1_i/axi_cfg_register_0. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for design_1_i/xlslice_0. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for design_1_i/ps8_0_axi_periph/xbar. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for design_1_i/ps8_0_axi_periph/s00_couplers/auto_ds. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for design_1_i/ps8_0_axi_periph/s00_couplers/auto_pc. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for design_1_i/ps8_0_axi_periph/s01_couplers/auto_ds. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for design_1_i/ps8_0_axi_periph/s01_couplers/auto_pc. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for design_1_i/ps8_0_axi_periph. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for design_1_i/fifo_out. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for design_1_i/fifo_in. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for design_1_i/xlconstant_0. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for design_1_i/clk_wiz_1. (constraint file  auto generated constraint).
+Applied set_property KEEP_HIERARCHY = SOFT for design_1_i/xlslice_1. (constraint file  auto generated constraint).
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:15 ; elapsed = 00:00:15 . Memory (MB): peak = 2872.441 ; gain = 497.332 ; free physical = 8521 ; free virtual = 17268
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Preparing Guide Design
+---------------------------------------------------------------------------------
+CRITICAL WARNING: [Synth 8-6895] The reference checkpoint /data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.srcs/utils_1/imports/synth_1/design_1_wrapper.dcp is not suitable for use with incremental synthesis for this design. Please regenerate the checkpoint for this design with -incremental_synth switch in the same Vivado session that synth_design has been run. Synthesis will continue with the default flow
+---------------------------------------------------------------------------------
+Finished Doing Graph Differ : Time (s): cpu = 00:00:15 ; elapsed = 00:00:15 . Memory (MB): peak = 2872.441 ; gain = 497.332 ; free physical = 8507 ; free virtual = 17255
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Preparing Guide Design : Time (s): cpu = 00:00:15 ; elapsed = 00:00:15 . Memory (MB): peak = 2872.441 ; gain = 497.332 ; free physical = 8506 ; free virtual = 17254
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:15 ; elapsed = 00:00:15 . Memory (MB): peak = 2872.441 ; gain = 497.332 ; free physical = 8496 ; free virtual = 17244
+---------------------------------------------------------------------------------
+
+
+Incremental Synthesis Report Summary:
+
+1. Incremental synthesis run: no
+
+   Reason for not running incremental synthesis : 
+
+
+INFO: [Synth 8-7130] Flow is switching to default flow due to incremental criteria not met. If you would like to alter this behaviour and have the flow terminate instead, please set the following parameter config_implementation {autoIncr.Synth.RejectBehavior Terminate}
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 1248 (col length:96)
+BRAMs: 288 (col length: RAMB18 96 RAMB36 48)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-7080] Parallel synthesis criteria is not met
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:16 ; elapsed = 00:00:16 . Memory (MB): peak = 2872.441 ; gain = 497.332 ; free physical = 8380 ; free virtual = 17153
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:25 ; elapsed = 00:00:26 . Memory (MB): peak = 3300.020 ; gain = 924.910 ; free physical = 7804 ; free virtual = 16599
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:25 ; elapsed = 00:00:26 . Memory (MB): peak = 3301.020 ; gain = 925.910 ; free physical = 7803 ; free virtual = 16598
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:26 ; elapsed = 00:00:26 . Memory (MB): peak = 3311.027 ; gain = 935.918 ; free physical = 7792 ; free virtual = 16588
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:29 ; elapsed = 00:00:30 . Memory (MB): peak = 3325.902 ; gain = 950.793 ; free physical = 7697 ; free virtual = 16494
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:29 ; elapsed = 00:00:30 . Memory (MB): peak = 3325.902 ; gain = 950.793 ; free physical = 7697 ; free virtual = 16494
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:29 ; elapsed = 00:00:30 . Memory (MB): peak = 3325.902 ; gain = 950.793 ; free physical = 7697 ; free virtual = 16493
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:29 ; elapsed = 00:00:30 . Memory (MB): peak = 3325.902 ; gain = 950.793 ; free physical = 7696 ; free virtual = 16493
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:29 ; elapsed = 00:00:30 . Memory (MB): peak = 3325.902 ; gain = 950.793 ; free physical = 7696 ; free virtual = 16493
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:29 ; elapsed = 00:00:30 . Memory (MB): peak = 3325.902 ; gain = 950.793 ; free physical = 7696 ; free virtual = 16493
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++------+------------------------------+----------+
+|      |BlackBox name                 |Instances |
++------+------------------------------+----------+
+|1     |design_1_xbar_0               |         1|
+|2     |design_1_auto_ds_0            |         1|
+|3     |design_1_auto_pc_0            |         1|
+|4     |design_1_auto_ds_1            |         1|
+|5     |design_1_auto_pc_1            |         1|
+|6     |design_1_axi_cfg_register_0_0 |         1|
+|7     |design_1_clk_wiz_1_0          |         1|
+|8     |design_1_axi_fifo_mm_s_0_1    |         1|
+|9     |design_1_axi_fifo_mm_s_0_0    |         1|
+|10    |design_1_proc_sys_reset_0_0   |         1|
+|11    |design_1_zynq_ultra_ps_e_0_0  |         1|
++------+------------------------------+----------+
+
+Report Cell Usage: 
++------+-----------------------------------+------+
+|      |Cell                               |Count |
++------+-----------------------------------+------+
+|1     |design_1_auto_ds_0_bbox            |     1|
+|2     |design_1_auto_ds_1_bbox            |     1|
+|3     |design_1_auto_pc_0_bbox            |     1|
+|4     |design_1_auto_pc_1_bbox            |     1|
+|5     |design_1_axi_cfg_register_0_0_bbox |     1|
+|6     |design_1_axi_fifo_mm_s_0_0_bbox    |     1|
+|7     |design_1_axi_fifo_mm_s_0_1_bbox    |     1|
+|8     |design_1_clk_wiz_1_0_bbox          |     1|
+|9     |design_1_proc_sys_reset_0_0_bbox   |     1|
+|10    |design_1_xbar_0_bbox               |     1|
+|11    |design_1_zynq_ultra_ps_e_0_0_bbox  |     1|
+|12    |OBUF                               |     2|
+|13    |OBUFT                              |     1|
++------+-----------------------------------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:29 ; elapsed = 00:00:30 . Memory (MB): peak = 3325.902 ; gain = 950.793 ; free physical = 7696 ; free virtual = 16493
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 1 critical warnings and 107 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:24 ; elapsed = 00:00:25 . Memory (MB): peak = 3325.902 ; gain = 847.113 ; free physical = 7692 ; free virtual = 16488
+Synthesis Optimization Complete : Time (s): cpu = 00:00:29 ; elapsed = 00:00:30 . Memory (MB): peak = 3325.902 ; gain = 950.793 ; free physical = 7692 ; free virtual = 16488
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3325.902 ; gain = 0.000 ; free physical = 8031 ; free virtual = 16828
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3325.902 ; gain = 0.000 ; free physical = 8003 ; free virtual = 16800
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Synth Design complete | Checksum: ccf9f477
+INFO: [Common 17-83] Releasing license: Synthesis
+75 Infos, 102 Warnings, 1 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:39 ; elapsed = 00:00:37 . Memory (MB): peak = 3325.902 ; gain = 1887.457 ; free physical = 8002 ; free virtual = 16799
+INFO: [Common 17-2834] synth_design peak Physical Memory [PSS] (MB): overall = 2757.174; main = 2383.286; forked = 444.898
+INFO: [Common 17-2834] synth_design peak Virtual Memory [VSS] (MB): overall = 4341.797; main = 3252.203; forked = 1089.594
+INFO: [runtcl-6] Synthesis results are not added to the cache due to CRITICAL_WARNING
+Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3325.902 ; gain = 0.000 ; free physical = 8002 ; free virtual = 16799
+INFO: [Common 17-1381] The checkpoint '/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.runs/synth_1/design_1_wrapper.dcp' has been generated.
+INFO: [Vivado 12-24828] Executing command : report_utilization -file design_1_wrapper_utilization_synth.rpt -pb design_1_wrapper_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Thu Jun  5 10:29:28 2025...

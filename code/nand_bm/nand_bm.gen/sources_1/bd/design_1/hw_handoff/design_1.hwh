@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<EDKSYSTEM EDWVERSION="1.2" TIMESTAMP="Sun Dec 22 11:22:52 2024" VIVADOVERSION="2024.1">
+
+  <SYSTEMINFO ARCH="zynquplus" BOARD="xilinx.com:kr260_som:part0:1.1" DEVICE="xck26" NAME="design_1" PACKAGE="sfvc784" SPEEDGRADE="-2LV"/>
+
+  <EXTERNALPORTS>
+    <PORT DIR="I" NAME="rpi_16" SIGIS="undef" SIGNAME="External_Ports_rpi_16">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="nand_gate_0" PORT="a"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="I" NAME="rpi_18" SIGIS="undef" SIGNAME="External_Ports_rpi_18">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="nand_gate_0" PORT="b"/>
+      </CONNECTIONS>
+    </PORT>
+    <PORT DIR="O" NAME="uf1" SIGIS="undef" SIGNAME="nand_gate_0_y">
+      <CONNECTIONS>
+        <CONNECTION INSTANCE="nand_gate_0" PORT="y"/>
+      </CONNECTIONS>
+    </PORT>
+  </EXTERNALPORTS>
+
+  <EXTERNALINTERFACES/>
+
+  <MODULES>
+    <MODULE COREREVISION="1" FULLNAME="/nand_gate_0" HWVERSION="1.0" INSTANCE="nand_gate_0" IPTYPE="PERIPHERAL" IS_ENABLE="1" MODCLASS="PERIPHERAL" MODTYPE="nand_gate" VLNV="xilinx.com:module_ref:nand_gate:1.0">
+      <DOCUMENTS/>
+      <PARAMETERS>
+        <PARAMETER NAME="Component_Name" VALUE="design_1_nand_gate_0_0"/>
+        <PARAMETER NAME="EDK_IPTYPE" VALUE="PERIPHERAL"/>
+      </PARAMETERS>
+      <PORTS>
+        <PORT DIR="I" NAME="a" SIGIS="undef" SIGNAME="External_Ports_rpi_16">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="External_Ports" PORT="rpi_16"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" NAME="b" SIGIS="undef" SIGNAME="External_Ports_rpi_18">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="External_Ports" PORT="rpi_18"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="O" NAME="y" SIGIS="undef" SIGNAME="nand_gate_0_y">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="External_Ports" PORT="uf1"/>
+          </CONNECTIONS>
+        </PORT>
+      </PORTS>
+      <BUSINTERFACES/>
+    </MODULE>
+  </MODULES>
+
+</EDKSYSTEM>

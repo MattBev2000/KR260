@@ -1,0 +1,10 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/iCloudDrive/PhD-kriask/prj/blink_mk_III/blink_mk_III.ip_user_files/bd/kria_starter_kit/ip/kria_starter_kit_xlslice_0_0/sim/kria_starter_kit_xlslice_0_0.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module kria_starter_kit_xlslice_0_0
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/iCloudDrive/PhD-kriask/prj/blink_mk_III/blink_mk_III.ip_user_files/bd/kria_starter_kit/ip/kria_starter_kit_zynq_ultra_ps_e_0_0/sim/kria_starter_kit_zynq_ultra_ps_e_0_0_vip_wrapper.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module kria_starter_kit_zynq_ultra_ps_e_0_0
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/iCloudDrive/PhD-kriask/prj/blink_mk_III/blink_mk_III.ip_user_files/bd/kria_starter_kit/ip/kria_starter_kit_clk_wiz_0_0/kria_starter_kit_clk_wiz_0_0_clk_wiz.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module kria_starter_kit_clk_wiz_0_0_clk_wiz
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/iCloudDrive/PhD-kriask/prj/blink_mk_III/blink_mk_III.ip_user_files/bd/kria_starter_kit/ip/kria_starter_kit_clk_wiz_0_0/kria_starter_kit_clk_wiz_0_0.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module kria_starter_kit_clk_wiz_0_0
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/ASUS/iCloudDrive/PhD-kriask/prj/blink_mk_III/blink_mk_III.sim/sim_1/behav/xsim/glbl.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module glbl

@@ -1,0 +1,48 @@
+\chapter{Introduction}
+Approaching the world of Filed Programmable Gate Arrays (FPGAs) programming, specially when combined with micro processor units (uPs) to form the so-called System on Modules (SoMs), is far from being a straight procedure and one can easily get stuck trying to solve problems that can be avoided with a bit of experience. The aim of this guide is thus to share the experience and knowledge gained while working on such devices and give some standard procedure on how to approach and solve the problems that may be encountered. Some useful links are reported in the list below:
+\begin{itemize}
+	\item \textbf{Petalinux Build Host packages}:  \url{https://adaptivesupport.amd.com/s/article/73296?language=en\_US} 
+	
+	\item \textbf{AMD download page}:  \url{https://www.xilinx.com/support/download/index.html/content/xilinx/en/downloadNav/embedded-design-tools/archive.html}
+\end{itemize} 
+This guide presents an overview of four projects. Chapter 2 introduces the first project, which involves creating a classic blinking LED using only FPGA programming. Chapter 3 revisits  the same project but incorporates a custom operating system (OS) configuration. While this addition is not particularly necessary for the blinking LED, it establishes a foundation for the next projects. Chapter 4 focuses on implementing two First-In, First-Out (FIFO) memories to enhance communication capabilities. Finally, chapter 5 will implement the same R/W operations using the Direct Memory Access (DMA).  
+
+
+\section{Requirements}
+To program FPGA devices, software tools are usually provided by the manufacturer. Being hybrid devices, it is necessary to set up a custom environment through which the required design steps can be carried out and the final result translated into a language understandable by the device. The board used in this guide is the Xilinx Kria KR260 Robotics Starter Kit, which needs a toolchain in order to be fully exploited. Fundamental part of the toolchain are:
+\begin{itemize}
+	\item Vivado (v2024.1).
+	
+	\item Petalinux SDK (v2022.2).
+	
+	\item Linux based OS (for this guide CenOS stream 9 has been used).
+\end{itemize}
+Newest software releases might not be compatible with the procedure(s) listed and/or with the files used to support the processes. It is recommended to check resources availability and compatibility before the installation of both Vivado and Petalinux SDK.
+
+\section{Environment configuration}
+The installation of Vivado is a straightforward process with no complex steps, requiring no special attention. Downloading it from the Xilinx download page should be an easy step, thus it is not reported below. On the other hand, more attention is given to the configuration of Petalinux SDK. Before the actual installation, there are few steps needed to configure the foundations:
+\begin{enumerate}
+	\item Enable the 32-bit support. The 32-bit architecture is required on the host machine because some PetaLinux tools and dependencies rely on 32-bit libraries. From the terminal window type
+	\begin{lstlisting}[language=bash]
+		sudo yum install glibc.i686 libstdc++.i686 ncurses-libs.i686 zlib.i686	\end{lstlisting}
+	In the case the host machine is running on Ubuntu, the command to install the required architecture is
+	\begin{lstlisting}[language=bash]
+		sudo dpkg --add-architecture i386
+		dpkg --print-foreign-architectures	\end{lstlisting}
+	
+	\item Petalinux Build Host packages. These files are required to install all the secondary packages necessary for running PetaLinux commands on the system. First, create a directory where the PetaLinux SDK will be installed. From the  \href{https://adaptivesupport.amd.com/s/article/73296?language=en_US}{Petalinux Build Host packages} page download the file named \textit{plnx-env-setup.sh} and save it into the folder just created. To start the installation of all the packages type
+	\begin{lstlisting}[language=bash]
+		chmod +x <installer_file_name>
+		sudo ./<file_name>	\end{lstlisting}
+\end{enumerate}
+Once it is completed, all the packages should have been installed and the system should be ready for the Petalinux SDK installation. From the \href{https://www.xilinx.com/support/download/index.html/content/xilinx/en/downloadNav/embedded-design-tools/archive.html}{AMD download page}, download the needed version and move it to the installation folder. From this page also download the .BPS file relative to the board to be used. This latter file has to be moved into the folder in which the Petalinux project are saved. By typing
+	\begin{lstlisting}[language=bash]
+	chmod +x <installer_file_name>
+	sudo ./<file_name>	
+\end{lstlisting}
+the installation should begin. By following the instruction, the installation process
+should proceed without any inconvenience, even though it might take a while. Finally, to set the Petalinux environment into the directory in which it is installed, type
+\begin{lstlisting}[language=bash]
+	source settings.sh
+\end{lstlisting}
+Note that this latter step is needed each time a new project is created.

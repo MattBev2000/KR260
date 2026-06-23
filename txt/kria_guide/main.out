@@ -1,0 +1,9 @@
+\BOOKMARK [0][-]{chapter.1}{Introduction}{}% 1
+\BOOKMARK [0][-]{chapter.2}{Window\040Subsystems\040for\040Linux\040-\040WSL}{}% 2
+\BOOKMARK [1][-]{subsection.2.0.1}{How\040to...}{chapter.2}% 3
+\BOOKMARK [0][-]{chapter.3}{Petalinux\040-\040Creating\040tailor-made\040OS\040for\040FPGAs\040SoMs}{}% 4
+\BOOKMARK [1][-]{subsection.3.0.1}{Setting\040up\040the\040environment}{chapter.3}% 5
+\BOOKMARK [0][-]{chapter.4}{Petalinux\040project:\040from\040start\040to\040bottom}{}% 6
+\BOOKMARK [1][-]{subsection.4.0.1}{Building\040the\040project}{chapter.4}% 7
+\BOOKMARK [2][-]{subsection.4.0.2}{Preparing\040the\040SD-card}{subsection.4.0.1}% 8
+\BOOKMARK [2][-]{subsection.4.0.3}{Booting\040the\040board}{subsection.4.0.1}% 9

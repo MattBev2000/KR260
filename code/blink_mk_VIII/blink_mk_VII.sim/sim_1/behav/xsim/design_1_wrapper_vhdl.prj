@@ -1,0 +1,16 @@
+# compile vhdl design source files
+vhdl xil_defaultlib  \
+"../../../../blink_mk_VII.srcs/sources_1/new/demux.vhd" \
+"../../../../blink_mk_VII.srcs/sources_1/new/rampgen.vhd" \
+"../../../../blink_mk_VII.ip_user_files/bd/design_1/ip/design_1_proc_sys_reset_0_0/sim/design_1_proc_sys_reset_0_0.vhd" \
+"../../../../blink_mk_VII.ip_user_files/bd/design_1/ip/design_1_axi_cfg_register_0_0/sim/design_1_axi_cfg_register_0_0.vhd" \
+"../../../../blink_mk_VII.ip_user_files/bd/design_1/ip/design_1_ila_0_0/sim/design_1_ila_0_0.vhd" \
+"../../../../blink_mk_VII.ip_user_files/bd/design_1/ip/design_1_demux_0_0/sim/design_1_demux_0_0.vhd" \
+"../../../../blink_mk_VII.ip_user_files/bd/design_1/ip/design_1_rampgen_0_0/sim/design_1_rampgen_0_0.vhd" \
+"../../../../blink_mk_VII.ip_user_files/bd/design_1/ip/design_1_axi_fifo_mm_s_0_0/sim/design_1_axi_fifo_mm_s_0_0.vhd" \
+"../../../../blink_mk_VII.ip_user_files/bd/design_1/ip/design_1_axi_fifo_mm_s_0_1/sim/design_1_axi_fifo_mm_s_0_1.vhd" \
+"../../../../blink_mk_VII.ip_user_files/bd/design_1/sim/design_1.vhd" \
+"../../../../blink_mk_VII.gen/sources_1/bd/design_1/hdl/design_1_wrapper.vhd" \
+
+# Do not sort compile order
+nosort

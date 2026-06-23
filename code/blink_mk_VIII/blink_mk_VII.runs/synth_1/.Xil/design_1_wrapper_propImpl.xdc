@@ -1,0 +1,7 @@
+set_property SRC_FILE_INFO {cfile:/data/devel/kria_mb/vivado/blink_mk_VIII/blink_mk_VII.srcs/constrs_1/new/constraint.xdc rfile:../../../blink_mk_VII.srcs/constrs_1/new/constraint.xdc id:1} [current_design]
+set_property src_info {type:XDC file:1 line:5 export:INPUT save:INPUT read:READ} [current_design]
+set_property PACKAGE_PIN A12 [get_ports {fan_en_b}]
+set_property src_info {type:XDC file:1 line:11 export:INPUT save:INPUT read:READ} [current_design]
+set_property PACKAGE_PIN F8 [get_ports {uf1}]
+set_property src_info {type:XDC file:1 line:14 export:INPUT save:INPUT read:READ} [current_design]
+set_property PACKAGE_PIN E8 [get_ports {uf2}]

@@ -1,0 +1,53 @@
+{
+   "ActiveEmotionalView":"Grouping and No Loops",
+   "Default View_ScaleFactor":"0.724983",
+   "Default View_TopLeft":"-276,-124",
+   "ExpandedHierarchyInLayout":"",
+   "Grouping and No Loops_ExpandedHierarchyInLayout":"",
+   "Grouping and No Loops_Layout":"# # String gsaved with Nlview 7.7.1 2023-07-26 3bc4126617 VDI=43 GEI=38 GUI=JA:21.0
+#  -string -flagsOSRD
+preplace port port-id_som240_1_connector_hpa_clk0p_clk -pg 1 -lvl 0 -x -20 -y 400 -defaultsOSRD
+preplace port port-id_uf1 -pg 1 -lvl 6 -x 1520 -y 400 -defaultsOSRD
+preplace portBus fan_en_b -pg 1 -lvl 6 -x 1520 -y 460 -defaultsOSRD
+preplace inst xlslice_0 -pg 1 -lvl 5 -x 1400 -y 440 -defaultsOSRD -pinBusDir Din left -pinBusY Din 20L -pinBusDir Dout right -pinBusY Dout 20R
+preplace inst zynq_ultra_ps_e_0 -pg 1 -lvl 1 -x 340 -y 160 -swap {0 5 2 1 4 3} -defaultsOSRD -pinBusDir emio_enet0_enet_tsu_timer_cnt right -pinBusY emio_enet0_enet_tsu_timer_cnt 20R -pinBusDir emio_ttc0_wave_o right -pinBusY emio_ttc0_wave_o 180R -pinBusDir pl_ps_irq0 left -pinBusY pl_ps_irq0 20L -pinDir pl_resetn0 right -pinY pl_resetn0 40R -pinDir pl_clk0 right -pinY pl_clk0 100R -pinDir pl_clk1 right -pinY pl_clk1 60R
+preplace inst clk_wiz_0 -pg 1 -lvl 2 -x 800 -y 100 -defaultsOSRD -pinDir resetn left -pinY resetn 20L -pinDir clk_in1 left -pinY clk_in1 40L -pinDir clk_out1 right -pinY clk_out1 20R -pinDir locked right -pinY locked 40R
+preplace inst and_gate_0 -pg 1 -lvl 3 -x 980 -y 100 -defaultsOSRD -pinDir a left -pinY a 20L -pinDir b left -pinY b 40L -pinDir y right -pinY y 40R
+preplace inst prescaler_0 -pg 1 -lvl 4 -x 1170 -y 160 -defaultsOSRD -pinDir clk_in left -pinY clk_in 20L -pinDir reset left -pinY reset 40L -pinDir clk_out right -pinY clk_out 40R
+preplace inst ila_0 -pg 1 -lvl 5 -x 1400 -y 40 -swap {2 3 0 4 1 5 6} -defaultsOSRD -pinDir clk left -pinY clk 220L -pinBusDir probe0 left -pinBusY probe0 240L -pinBusDir probe1 left -pinBusY probe1 20L -pinBusDir probe2 left -pinBusY probe2 260L -pinBusDir probe3 left -pinBusY probe3 160L -pinBusDir probe4 left -pinBusY probe4 280L -pinBusDir probe5 left -pinBusY probe5 300L
+preplace netloc and_gate_0_y 1 3 2 1060 320 NJ
+preplace netloc clk_wiz_0_clk_out1 1 2 3 900 60 NJ 60 NJ
+preplace netloc clk_wiz_0_locked 1 2 3 900 300 NJ 300 NJ
+preplace netloc prescaler_0_clk_out 1 4 2 1300 400 NJ
+preplace netloc som240_1_connector_hpa_clk0p_clk_1 1 0 5 NJ 400 700 280 NJ 280 NJ 280 NJ
+preplace netloc xlslice_0_Dout 1 5 1 NJ 460
+preplace netloc zynq_ultra_ps_e_0_emio_ttc0_wave_o 1 1 4 N 340 NJ 340 NJ 340 1280
+preplace netloc zynq_ultra_ps_e_0_pl_clk0 1 1 4 N 260 NJ 260 NJ 260 NJ
+preplace netloc zynq_ultra_ps_e_0_pl_resetn0 1 1 3 680 200 NJ 200 NJ
+levelinfo -pg 1 -20 340 800 980 1170 1400 1520
+pagesize -pg 1 -db -bbox -sgen -300 0 1670 520
+",
+   "Grouping and No Loops_ScaleFactor":"0.546434",
+   "Grouping and No Loops_TopLeft":"-296,-225",
+   "guistr":"# # String gsaved with Nlview 7.7.1 2023-07-26 3bc4126617 VDI=43 GEI=38 GUI=JA:21.0
+#  -string -flagsOSRD
+preplace port port-id_som240_1_connector_hpa_clk0p_clk -pg 1 -lvl 0 -x 0 -y 200 -defaultsOSRD
+preplace portBus fan_en_b -pg 1 -lvl 4 -x 1060 -y 80 -defaultsOSRD
+preplace inst xlslice_0 -pg 1 -lvl 3 -x 940 -y 80 -defaultsOSRD
+preplace inst zynq_ultra_ps_e_0 -pg 1 -lvl 1 -x 340 -y 100 -defaultsOSRD
+preplace inst clk_wiz_0 -pg 1 -lvl 2 -x 750 -y 190 -defaultsOSRD
+preplace inst and_gate_0 -pg 1 -lvl 3 -x 940 -y 190 -defaultsOSRD
+preplace netloc xlslice_0_Dout 1 3 1 NJ 80
+preplace netloc zynq_ultra_ps_e_0_emio_ttc0_wave_o 1 1 2 NJ 80 NJ
+preplace netloc som240_1_connector_hpa_clk0p_clk_1 1 0 2 NJ 200 NJ
+preplace netloc zynq_ultra_ps_e_0_pl_resetn0 1 1 1 660 100n
+preplace netloc clk_wiz_0_clk_out1 1 2 1 N 180
+preplace netloc clk_wiz_0_locked 1 2 1 N 200
+levelinfo -pg 1 0 340 750 940 1060
+pagesize -pg 1 -db -bbox -sgen -280 0 1200 260
+"
+}
+{
+   "da_board_cnt":"2",
+   "da_clkrst_cnt":"1"
+}

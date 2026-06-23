@@ -1,0 +1,4 @@
+all:
+{
+  kria_starter_kit_wrapper.bit
+}

@@ -1,0 +1,72 @@
+#-----------------------------------------------------------
+# Vivado v2024.1 (64-bit)
+# SW Build 5076996 on Wed May 22 18:37:14 MDT 2024
+# IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
+# SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
+# Start of session at: Tue Feb 18 11:03:43 2025
+# Process ID: 22112
+# Current directory: C:/Users/ASUS/Documents/PhD/kriask/prj/blink_mk_VII
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent17512 C:\Users\ASUS\Documents\PhD\kriask\prj\blink_mk_VII\blink_mk_VII.xpr
+# Log file: C:/Users/ASUS/Documents/PhD/kriask/prj/blink_mk_VII/vivado.log
+# Journal file: C:/Users/ASUS/Documents/PhD/kriask/prj/blink_mk_VII\vivado.jou
+# Running On        :Goose
+# Platform          :Windows Server 2016 or Windows 10
+# Operating System  :26100
+# Processor Detail  :Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz
+# CPU Frequency     :2304 MHz
+# CPU Physical cores:4
+# CPU Logical cores :8
+# Host memory       :16979 MB
+# Swap memory       :1073 MB
+# Total Virtual     :18053 MB
+# Available Virtual :10471 MB
+#-----------------------------------------------------------
+start_gui
+open_project C:/Users/ASUS/Documents/PhD/kriask/prj/blink_mk_VII/blink_mk_VII.xpr
+update_compile_order -fileset sources_1
+open_bd_design {C:/Users/ASUS/Documents/PhD/kriask/prj/blink_mk_VII/blink_mk_VII.srcs/sources_1/bd/design_1/design_1.bd}
+regenerate_bd_layout
+file mkdir C:/Users/ASUS/Documents/PhD/kriask/prj/blink_mk_VII/blink_mk_VII.srcs/sources_1/new
+close [ open C:/Users/ASUS/Documents/PhD/kriask/prj/blink_mk_VII/blink_mk_VII.srcs/sources_1/new/demux.vhd w ]
+add_files C:/Users/ASUS/Documents/PhD/kriask/prj/blink_mk_VII/blink_mk_VII.srcs/sources_1/new/demux.vhd
+update_compile_order -fileset sources_1
+create_bd_cell -type module -reference demux demux_0
+delete_bd_objs [get_bd_nets axi_cfg_register_0_cfg_data]
+startgroup
+set_property CONFIG.CFG_DATA_WIDTH {32} [get_bd_cells axi_cfg_register_0]
+endgroup
+connect_bd_net [get_bd_pins demux_0/d_in] [get_bd_pins axi_cfg_register_0/cfg_data]
+connect_bd_net [get_bd_ports uf1] [get_bd_pins demux_0/d_out]
+connect_bd_net [get_bd_pins ila_0/probe1] [get_bd_pins demux_0/d_out]
+regenerate_bd_layout
+delete_bd_objs [get_bd_ports uf1]
+delete_bd_objs [get_bd_nets demux_0_d_out]
+startgroup
+make_bd_pins_external  [get_bd_pins demux_0/d_out]
+endgroup
+connect_bd_net [get_bd_pins ila_0/probe1] [get_bd_pins demux_0/d_out]
+set_property name uf1 [get_bd_ports d_out_0]
+regenerate_bd_layout
+regenerate_bd_layout
+regenerate_bd_layout
+regenerate_bd_layout
+regenerate_bd_layout
+regenerate_bd_layout
+regenerate_bd_layout
+regenerate_bd_layout
+regenerate_bd_layout
+regenerate_bd_layout
+regenerate_bd_layout
+regenerate_bd_layout
+regenerate_bd_layout
+regenerate_bd_layout
+regenerate_bd_layout
+regenerate_bd_layout
+regenerate_bd_layout
+regenerate_bd_layout
+save_bd_design
+update_compile_order -fileset sources_1
+reset_run synth_1
+reset_run design_1_axi_cfg_register_0_0_synth_1
+launch_runs impl_1 -to_step write_bitstream -jobs 8
+wait_on_run impl_1

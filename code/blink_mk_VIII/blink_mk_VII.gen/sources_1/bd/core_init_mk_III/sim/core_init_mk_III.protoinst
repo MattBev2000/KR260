@@ -1,0 +1,9 @@
+{
+	"version": "1.0",
+	"modules": {
+		"core_init_mk_III": {
+			"proto_instances": {
+			}
+		}
+	}
+}

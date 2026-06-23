@@ -1,0 +1,119 @@
+% Document class & environment definition -----------------------------------------------
+\documentclass[10pt]{report}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage[english]{babel}
+
+\usepackage[T1]{fontenc}
+
+\usepackage{setspace}
+
+\usepackage{amsfonts}
+
+\usepackage{harmony}
+
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+
+\usepackage{geometry}
+\geometry{a4paper, top=2cm, bottom=2cm, left=2cm, right=2cm}
+
+\usepackage{amsmath}
+\numberwithin{section}{chapter}
+\numberwithin{equation}{section}
+\numberwithin{figure}{chapter}
+
+\usepackage[a-2b,mathxmp]{pdfx}
+\usepackage[pdfa]{hyperref}
+
+\usepackage{xcolor}
+\usepackage{color}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+
+\usepackage{listings}
+\lstdefinestyle{mystyle}
+{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2
+}
+\lstset{style=mystyle}
+
+
+%\usepackage{fancyhdr}
+%\pagestyle{fancy}
+%\lhead{}
+%\chead{}
+%\rhead{}
+%\lfoot{Consorzio RFX - Ricerca, Formaxzione, Innovazione}
+%\cfoot{}
+%\rfoot{\thepage}
+
+\usepackage{subcaption}
+
+
+% Commands ------------------------------------------------------------------------------
+\newcommand{\Cels}{^{\circ}C}
+\newcommand{\half}{\frac{1}{2}}
+\renewcommand\thesection{\arabic{section}}
+%\renewcommand{\headrulewidth}{0.5pt}
+%\renewcommand{\footrulewidth}{0.5pt}
+
+
+\begin{document}
+	
+	\begin{titlepage}
+		\begin{center}
+			\includegraphics[width=0.5\textwidth]{images/rfx_logo.png}
+			\vspace{1.5cm}
+			\Huge 
+			\doublespacing 
+			\bfseries 
+			\begin{spacing}{1}
+				\textsc{KRIA KR260 Robotics Starter Kit: the first steps}
+			\end{spacing}
+			\vfill
+			\small
+			Authors: Gabriele Manduchi, Bevilacqua Mattia\\
+			Date : Dec. 2024 
+		\end{center}
+	\end{titlepage}
+	
+	\clearpage
+	\null
+	\thispagestyle{empty}
+	\clearpage
+	
+	\tableofcontents
+	
+	\clearpage
+	\null
+	\thispagestyle{empty}
+	\clearpage
+	
+	\input{introduction}
+	\input{bmp}
+	\input{osi}
+	%\input{memory}
+	\input{dma}
+	
+\end{document}

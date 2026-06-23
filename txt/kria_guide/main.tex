@@ -1,0 +1,87 @@
+% Document class & environment definition -----------------------------------------------
+\documentclass[11pt]{report}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage[english]{babel}
+
+\usepackage[T1]{fontenc}
+
+\usepackage{setspace}
+
+\usepackage{amsfonts}
+
+\usepackage{harmony}
+
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+
+\usepackage{geometry}
+\geometry{a4paper, top=3cm, bottom=3cm, left=3cm, right=3cm}
+
+\usepackage{amsmath}
+\numberwithin{section}{chapter}
+\numberwithin{equation}{subsection}
+\numberwithin{figure}{section}
+
+\usepackage[a-2b,mathxmp]{pdfx}
+\usepackage[pdfa]{hyperref}
+
+\usepackage{xcolor}
+\usepackage{color}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{}
+\chead{Consorzio RFX - Ricerca Formaxzione Innovazione}
+\rhead{}
+\lfoot{}
+\cfoot{\thepage}
+\rfoot{}
+
+
+% Commands ------------------------------------------------------------------------------
+\newcommand{\Cels}{^{\circ}C}
+\newcommand{\half}{\frac{1}{2}}
+\renewcommand\thesection{\arabic{section}}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0.5pt}
+
+
+\begin{document}
+
+	\begin{titlepage}
+	\begin{center}
+		\includegraphics[width=0.5\textwidth]{images/rfx_logo.png}
+		\vspace{1.5cm}
+		\Huge 
+		\doublespacing 
+		\bfseries 
+		\begin{spacing}{1}
+			\textsc{Petalinux environment set up}
+		\end{spacing}
+		\vfill
+		\small 
+		Author : Bevilacqua Mattia\\
+		Date : Dec. 2024 
+	\end{center}
+	\end{titlepage}
+	
+	\clearpage
+	\null
+	\thispagestyle{empty}
+	\clearpage
+	
+	\tableofcontents
+	
+	\clearpage
+	\null
+	\thispagestyle{empty}
+	\clearpage
+	
+	\input{intro}
+	\input{wsl}
+	\input{petalinux}
+	\input{prj}
+
+\end{document}

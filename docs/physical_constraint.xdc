@@ -10,7 +10,7 @@ set_property -dict {PACKAGE_PIN E8 IOSTANDARD LVCMOS18} [get_ports {uf2}]
 
 # RASPBERRY EXPANSION HEADER PINS ---------------------------------------------------------------------------------------------------------------------------------------
 # rpi_01, rpi_17 => 3V3
-# rpi_02, rpi_05 => 5V0
+# rpi_02, rpi_04 => 5V0
 # rpi_06, rpi_14, rpi_20, rpi_30, rpi_34, rpi_09, rpi_25, rpi_39 => 0V0
 #set_property -dict {PACKAGE_PIN  AE15  IOSTANDARD LVCMOS33}  [get_ports {rpi_03}]  
 #set_property -dict {PACKAGE_PIN  AE14  IOSTANDARD LVCMOS33}  [get_ports {rpi_05}]  

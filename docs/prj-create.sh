@@ -202,16 +202,22 @@ if [[ "$RESUME_PROJECT" == false ]]; then
 
     while true; do
 
-        read -r -p "Enter directory containing the XSA file: " XSA_DIR
+        read -r -p "Enter path to the XSA file (relative or absolute): " XSA_PATH
 
-        if [[ -d "$XSA_DIR" ]]; then
+        if [[ -f "$XSA_PATH" && "${XSA_PATH##*.}" == "xsa" ]]; then
+            XSA_PATH="$(realpath "$XSA_PATH")"
+            XSA_DIR="$(dirname "$XSA_PATH")"
             break
         fi
 
-        echo "ERROR: Directory not found."
+        echo "ERROR: XSA file not found."
     done
 
     echo
+    echo "Using XSA:"
+    echo "  $XSA_PATH"
+    echo
+
     echo "Importing hardware description..."
     petalinux-config --get-hw-description="$XSA_DIR"
     echo "Hardware configuration completed."

@@ -44,60 +44,74 @@ The FPGA manager will allow the FPGA to be programmed even during the operation 
 \end{figure}
 
 
+
 \subsection{Packages configuration}
-To allow the system to compile and run ad-hoc software, some packages need to be included, such as \textbf{bootget, gcc, XRT} and \textbf{acceleration}. The installation menu will open with the command
+\label{subsec:rootfs-packages}
+For the projects described in this guide, the root filesystem does not need the complete XRT/OpenCL acceleration stack. The target system must provide the basic Linux utilities, SSH access, native C/C++ compilation tools and the packages required to deploy custom FPGA applications based on FPGA Manager, device-tree overlays and kernel modules. Keeping the root filesystem minimal reduces both build time and image size.
+
+The installation menu will open with the command
 \vspace{0.1cm}
 \begin{lstlisting}[language=bash]
 	petalinux-config -c rootfs	
 \end{lstlisting}
 \vspace{0.1cm}
-from which the following packages have to be installed:
+from which the following packages are recommended:
 \begin{itemize}
+
+	\item \textbf{Filesystem Packages} $\rightarrow$ \textbf{base} $\rightarrow$ \textbf{util-linux}
+	
 	\item \textbf{Filesystem Packages} $\rightarrow$ \textbf{console} $\rightarrow$ \textbf{utils} $\rightarrow$ \textbf{git} $\rightarrow$ \textbf{[*]git}
 	
-	\item \textbf{Filesystem Packages} $\rightarrow$ \textbf{base} $\rightarrow$ \textbf{dnf} $\rightarrow$ \textbf{[*]dnf}
+	\item \textbf{Filesystem Packages} $\rightarrow$ \textbf{console} $\rightarrow$ \textbf{utiles} $\rightarrow$ \textbf{strace}
 	
-	\item \textbf{Filesystem Packages} $\rightarrow$ \textbf{x11} $\rightarrow$ \textbf{base} $\rightarrow$ \textbf{libdrm} $\rightarrow$ \textbf{[*]libdrm}, \textbf{[*]libdrm-tests}, \textbf{[*]libdrm-kms}
+	\item \textbf{Filesystem Packages} $\rightarrow$ \textbf{console} $\rightarrow$ \textbf{network} $\rightarrow$ \textbf{openssh} $\rightarrow$ \textbf{[*]openssh}, \textbf{[*]openssh-sshd}, \textbf{[*]openssh-sftp-server}
 	
-	\item \textbf{Filesystem Packages} $\rightarrow$ \textbf{libs} $\rightarrow$ \textbf{xrt} $\rightarrow$ \textbf{[*]xrt}, \textbf{[*]xrt-dev}
+	\item \textbf{Filesystem Packages} $\rightarrow$ \textbf{misc} $\rightarrow$ \textbf{packagegroup-core-buildessential} $\rightarrow$ \textbf{[*]packagegroup-core-buildessential}
 	
-	\item \textbf{Filesystem Packages} $\rightarrow$ \textbf{libs} $\rightarrow$ \textbf{zocl} $\rightarrow$ \textbf{[*]zocl}
+	\item \textbf{Filesystem Packages} $\rightarrow$ \textbf{misc} $\rightarrow$ \textbf{gcc-runtime} $\rightarrow$ \textbf{[*]libstdc++}
 	
-	\item \textbf{Filesystem Packages} $\rightarrow$ \textbf{libs} $\rightarrow$ \textbf{opencl-headers} $\rightarrow$ \textbf{[*]opencl-headers}
+	\item \textbf{Filesystem Packages} $\rightarrow$ \textbf{misc} $\rightarrow$ \textbf{gdb} $\rightarrow$ \textbf{[*]gdb}
 	
-	\item \textbf{Filesystem Packages} $\rightarrow$ \textbf{libs} $\rightarrow$ \textbf{opencl-clhpp} $\rightarrow$ \textbf{[*]opencl-clhpp},\\ \textbf{[*]opencl-clhpp-dev}
+	\item \textbf{Filesystem Packages} $\rightarrow$ \textbf{misc} $\rightarrow$ \textbf{glibc} $\rightarrow$ \textbf{[*]glibc}, \textbf{[*]ldd}
 	
-	\item \textbf{Filesystem Packages} $\rightarrow$ \textbf{bootgen} $\rightarrow$ \textbf{[*]bootgen}, \textbf{[*]bootgen-dev}
-	
-	\item \textbf{Filesystem Packages} $\rightarrow$ \textbf{misc} $\rightarrow$ \textbf{packagegroup-core-buildessential} $\rightarrow$\\ \textbf{[*]packagegroup-core-buildessential},\\ \textbf{[*]packagegroup-core-buildessential-dev}
-	
-	\item \textbf{Filesystem Packages} $\rightarrow$ \textbf{misc} $\rightarrow$ \textbf{gcc-runtime} $\rightarrow$ \textbf{[*]libstdc++}, \\ \textbf{[*]libstdc++-dev}
-	
-	\item \textbf{Filesystem Packages} $\rightarrow$ \textbf{misc} $\rightarrow$ \textbf{gcr} $\rightarrow$ \textbf{[*]gcr}, \textbf{[*]gcr-dev}
-	
-	\item \textbf{Filesystem Packages} $\rightarrow$ \textbf{misc} $\rightarrow$ \textbf{gcr} $\rightarrow$ \textbf{[*]gdb}, \textbf{[*]gdb-dev}
-	
-	\item \textbf{Filesystem Packages} $\rightarrow$ \textbf{misc} $\rightarrow$ \textbf{glib-2.0} $\rightarrow$ \textbf{[*]glib-2.0}, \textbf{[*]glib-2.0-dev}
-	
-	\item \textbf{Filesystem Packages} $\rightarrow$ \textbf{misc} $\rightarrow$ \textbf{glibc} $\rightarrow$ \textbf{[*]glibc}, \textbf{[*]glibc-dev}, \textbf{[*]ldd}
-	
-	\item \textbf{Petaliunx Package Groups} $\rightarrow$ \textbf{packagegroup-petalinux} $\rightarrow$ \\ \textbf{[*]packagegroup-petalinux}
-	
-	\item \textbf{Petaliunx Package Groups} $\rightarrow$ \textbf{packagegroup-petalinux-gstreamer} $\rightarrow$\\ \textbf{[*]packagegroup-petalinux-gstreamer}
-	
-	\item \textbf{Petaliunx Package Groups} $\rightarrow$ \textbf{packagegroup-petalinux-opencv} $\rightarrow$\\ \textbf{[*]packagegroup-petalinux-opencv}
-	
-	\item \textbf{Petaliunx Package Groups} $\rightarrow$ \textbf{packagegroup-petalinux-v4lutils} $\rightarrow$\\ \textbf{[*]packagegroup-petalinux-v4lutils}
-	
-	\item \textbf{Petaliunx Package Groups} $\rightarrow$ \textbf{packagegroup-petalinux-x11} $\rightarrow$\\ \textbf{[*]packagegroup-petalinux-x11}
+	\item \textbf{PetaLinux Package Groups} $\rightarrow$ \textbf{packagegroup-petalinux} $\rightarrow$ \textbf{[*]packagegroup-petalinux}
 \end{itemize}
+
+This configuration provides the following features:
+\begin{itemize}
+	\item basic Linux command-line functionality;
+	\item SSH remote access to the board;
+	\item native C/C++ compilation directly on the KR260;
+	\item basic debugging tools such as \texttt{gdb}, \texttt{dmesg} and \texttt{strace};
+	\item FPGA Manager support for loading a \texttt{.bin} bitstream at run time;
+	\item support for deploying device-tree overlays (\texttt{.dtbo});
+	\item support for loading custom kernel modules (\texttt{.ko});
+	\item support for the DMA-based user-space applications discussed in Chapter~\ref{ch:dma}.
+\end{itemize}
+
+The following packages are not required for the DMA implementation presented in this guide and can be disabled unless OpenCL/XRT acceleration, graphics or multimedia applications are explicitly needed:
+\begin{itemize}
+	\item \textbf{xrt}, \textbf{xrt-dev};
+	\item \textbf{zocl};
+	\item \textbf{opencl-headers};
+	\item \textbf{opencl-clhpp}, \textbf{opencl-clhpp-dev};
+	\item \textbf{libdrm}, \textbf{libdrm-tests}, \textbf{libdrm-kms};
+	\item \textbf{bootgen}, \textbf{bootgen-dev};
+	\item \textbf{dnf};
+	\item \textbf{gcr}, \textbf{gcr-dev};
+	\item \textbf{packagegroup-petalinux-gstreamer};
+	\item \textbf{packagegroup-petalinux-opencv};
+	\item \textbf{packagegroup-petalinux-v4lutils};
+	\item \textbf{packagegroup-petalinux-x11}.
+\end{itemize}
+
 \begin{figure}[h!t!]
 	\centering
 	\includegraphics[width=0.8\textwidth]{images/prj2_3}
 	\caption{rootfs configuration window.}
 	\label{fig:prj2_3}
 \end{figure}
-After having installed all the needed packages, it is time rebuild the project with the command
+After having installed all the needed packages, it is time to rebuild the project with the command
 \vspace{0.1cm}
 \begin{lstlisting}[language=bash]
 	petalinux-build

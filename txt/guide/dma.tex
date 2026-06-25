@@ -1,4 +1,5 @@
 \chapter{Direct Memory Access - DMA - implementation}
+\label{ch:dma}
 So far, the Programmable Logic (PL) and Processing System (PS) sections of the System on Module (SoM) have been utilized independently, without establishing a direct interconnection for communication or control. This project shifts the focus towards the development of a design that enables the system processor to interact with the programmable logic by reading from a specific memory address.
 
 To achieve this, a dedicated component is implemented, which assigns a fixed memory address that supports read and write (R/W) operations. This enables seamless data exchange between the PL and PS, facilitating efficient communication. The key digital components utilized in this design include a register and a First-In, First-Out (FIFO) memory, both of which help manage data flow between the programmable logic and the processor. In addition, also the Direct Memory Access (DMA) has been exploited. The DMA is a feature in computer systems which allows hardware components to directly accessing the system memory without involving the CPU for every transfer. The data transfer is managed by a DMA controller, which is initially set by the CPU. This type of communication is used in embedded systems, high-speed networking, and storage devices to optimize performance. 
@@ -29,6 +30,8 @@ The block scheme is composed by the following blocks:
 
 
 \section{Petalinux project}
+The root filesystem configuration required for this chapter is the minimal development configuration described in Section~\ref{subsec:rootfs-packages}. In particular, XRT, ZOCL and OpenCL are not required for the custom AXI DMA flow used here. The design relies instead on FPGA Manager, a device-tree overlay, a custom kernel module and a user-space test program.
+
 Despite having created the Vivado project and established a design flow, the current approach does not work in this case. The previous method was discovered through trial and error rather than a structured research effort like this one. The main issue arises during board boot: the DMA controller attempts to access memory addresses defined in the Vivado block design before the FPGA has been programmed. To address this, the device tree is modified after boot, creating a custom configuration to ensure proper memory access and system functionality. To upload the code relative to the DMA testing, there are few steps to follow:
 \begin{itemize}
 	\item The first step is to create the file \textbf{pl-<projectname>.dtsi}. The file has to be modified as shown in the following code. The node \textit{fragment@1} is copied from \textbf{pl.dtsi} (found in \textit{components/plnx\_workspace/device-tree/device-tree/}. In addition all the data relative to the DMA and the memory instantiation are copied. \textbf{dmatest\_0} has to be written anew instead, since it is not found in any file.

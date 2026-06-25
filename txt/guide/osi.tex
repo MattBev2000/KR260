@@ -18,6 +18,7 @@ to initialize the environment. To create now the project related to the exported
 \vspace{0.1cm}
 in which the .BSP file is saved in the same folder as the project and once it is done, move into the folder just created. The following two steps are quite important, so it is recommended to pay a bit more of attention.
 
+
 \subsection{Hardware configuration}
 The first configuration procedure aims to configure the core of the OS, i.e. to which architecture is addressed and which features are to be enabled. With the command
 \vspace{0.1cm}
@@ -57,14 +58,12 @@ The installation menu will open with the command
 \vspace{0.1cm}
 from which the following packages are recommended:
 \begin{itemize}
-
-	\item \textbf{Filesystem Packages} $\rightarrow$ \textbf{base} $\rightarrow$ \textbf{util-linux}
+	
+	\item \textbf{Filesystem Packages} $\rightarrow$ \textbf{base} $\rightarrow$ \textbf{util-linux} \textit{(optional, if available)}
 	
 	\item \textbf{Filesystem Packages} $\rightarrow$ \textbf{console} $\rightarrow$ \textbf{utils} $\rightarrow$ \textbf{git} $\rightarrow$ \textbf{[*]git}
 	
-	\item \textbf{Filesystem Packages} $\rightarrow$ \textbf{console} $\rightarrow$ \textbf{utiles} $\rightarrow$ \textbf{strace}
-	
-	\item \textbf{Filesystem Packages} $\rightarrow$ \textbf{console} $\rightarrow$ \textbf{network} $\rightarrow$ \textbf{openssh} $\rightarrow$ \textbf{[*]openssh}, \textbf{[*]openssh-sshd}, \textbf{[*]openssh-sftp-server}
+	\item \textbf{Filesystem Packages} $\rightarrow$ \textbf{console} $\rightarrow$ \textbf{utils} $\rightarrow$ \textbf{strace}
 	
 	\item \textbf{Filesystem Packages} $\rightarrow$ \textbf{misc} $\rightarrow$ \textbf{packagegroup-core-buildessential} $\rightarrow$ \textbf{[*]packagegroup-core-buildessential}
 	
@@ -76,6 +75,40 @@ from which the following packages are recommended:
 	
 	\item \textbf{PetaLinux Package Groups} $\rightarrow$ \textbf{packagegroup-petalinux} $\rightarrow$ \textbf{[*]packagegroup-petalinux}
 \end{itemize}
+
+
+\paragraph{Dropbear and OpenSSH}
+Only one SSH server should be enabled in the root filesystem. The KR260 BSP
+typically enables \textbf{Dropbear}, which is the recommended choice for this
+guide because it provides a lightweight SSH server and integrates well with the
+default PetaLinux configuration.
+
+Enabling both \textbf{Dropbear} and \textbf{OpenSSH} at the same time may cause
+the \texttt{do\_rootfs} task to fail due to package conflicts. Therefore, use
+either Dropbear or OpenSSH, but never both simultaneously.
+
+If OpenSSH is required (for example to provide a complete SFTP server), disable
+Dropbear and enable the following packages:
+\begin{itemize}
+	\item \textbf{openssh}
+	\item \textbf{openssh-sshd}
+	\item \textbf{openssh-sftp-server}
+\end{itemize}
+
+If Dropbear is used, recent OpenSSH clients may attempt to use the SFTP
+protocol internally when executing \texttt{scp}. If the target image does not
+include an SFTP server, an error similar to
+
+\begin{lstlisting}[language=bash]
+	/usr/libexec/sftp-server: No such file or directory
+\end{lstlisting}
+
+may appear. In this case, force the legacy SCP protocol from the host machine:
+
+\begin{lstlisting}[language=bash]
+	scp -O file_name petalinux@board_ip:/home/petalinux/
+\end{lstlisting}
+
 
 This configuration provides the following features:
 \begin{itemize}
@@ -124,7 +157,6 @@ In the case of building failure with error messages not related to the implement
 \end{lstlisting}
 \vspace{0.1cm}
 command which is used to deep cleaning the workspace, similar to how it's used in the Linux kernel build system.
-
 
 \subsection{Board booting}
 Since the board boots from a SD card, the system configuration just created has to be converted into a bootable image for the card itself. First step to carry out is the creation of the image files, which are then to be flashed into the SD card. To do so, after the project build, the command is (on the same line)

@@ -1,5 +1,5 @@
 namespace eval ::optrace {
-  variable script "C:/Users/ASUS/iCloudDrive/PhD/kriask/prj/blink_mk_VI/blink_mk_VI.runs/impl_1/design_1_wrapper.tcl"
+  variable script "C:/Users/bevilacqua/Documents/projects/KR260/code/blink_mk_VI/blink_mk_VI.runs/impl_1/design_1_wrapper.tcl"
   variable category "vivado_impl"
 }
 
@@ -104,9 +104,8 @@ start_step init_design
 set ACTIVE_STEP init_design
 set rc [catch {
   create_msg_db init_design.pb
-  set_param chipscope.maxJobs 2
-  set_param ced.repoPaths C:/Users/ASUS/AppData/Roaming/Xilinx/Vivado/2024.1/xhub/ced_store/Vivado_example_project
-  set_param runs.launchOptions { -jobs 8  }
+  set_param chipscope.maxJobs 3
+  set_param runs.launchOptions { -jobs 12  }
 OPTRACE "create in-memory project" START { }
   create_project -in_memory -part xck26-sfvc784-2LV-c
   set_property board_part xilinx.com:kr260_som:part0:1.1 [current_project]
@@ -115,20 +114,20 @@ OPTRACE "create in-memory project" START { }
   set_param project.singleFileAddWarning.threshold 0
 OPTRACE "create in-memory project" END { }
 OPTRACE "set parameters" START { }
-  set_property webtalk.parent_dir C:/Users/ASUS/iCloudDrive/PhD/kriask/prj/blink_mk_VI/blink_mk_VI.cache/wt [current_project]
-  set_property parent.project_path C:/Users/ASUS/iCloudDrive/PhD/kriask/prj/blink_mk_VI/blink_mk_VI.xpr [current_project]
-  set_property ip_output_repo C:/Users/ASUS/iCloudDrive/PhD/kriask/prj/blink_mk_VI/blink_mk_VI.cache/ip [current_project]
+  set_property webtalk.parent_dir C:/Users/bevilacqua/Documents/projects/KR260/code/blink_mk_VI/blink_mk_VI.cache/wt [current_project]
+  set_property parent.project_path C:/Users/bevilacqua/Documents/projects/KR260/code/blink_mk_VI/blink_mk_VI.xpr [current_project]
+  set_property ip_output_repo C:/Users/bevilacqua/Documents/projects/KR260/code/blink_mk_VI/blink_mk_VI.cache/ip [current_project]
   set_property ip_cache_permissions {read write} [current_project]
   set_property XPM_LIBRARIES {XPM_CDC XPM_MEMORY} [current_project]
 OPTRACE "set parameters" END { }
 OPTRACE "add files" START { }
-  add_files -quiet C:/Users/ASUS/iCloudDrive/PhD/kriask/prj/blink_mk_VI/blink_mk_VI.runs/synth_1/design_1_wrapper.dcp
+  add_files -quiet C:/Users/bevilacqua/Documents/projects/KR260/code/blink_mk_VI/blink_mk_VI.runs/synth_1/design_1_wrapper.dcp
   set_msg_config -source 4 -id {BD 41-1661} -limit 0
   set_param project.isImplRun true
-  add_files C:/Users/ASUS/iCloudDrive/PhD/kriask/prj/blink_mk_VI/blink_mk_VI.srcs/sources_1/bd/design_1/design_1.bd
+  add_files C:/Users/bevilacqua/Documents/projects/KR260/code/blink_mk_VI/blink_mk_VI.srcs/sources_1/bd/design_1/design_1.bd
   set_param project.isImplRun false
 OPTRACE "read constraints: implementation" START { }
-  read_xdc C:/Users/ASUS/iCloudDrive/PhD/kriask/prj/blink_mk_VI/blink_mk_VI.srcs/constrs_1/imports/xdc/default.xdc
+  read_xdc C:/Users/bevilacqua/Documents/projects/KR260/code/blink_mk_VI/blink_mk_VI.srcs/constrs_1/imports/xdc/default.xdc
 OPTRACE "read constraints: implementation" END { }
 OPTRACE "read constraints: implementation_pre" START { }
 OPTRACE "read constraints: implementation_pre" END { }
@@ -298,7 +297,7 @@ OPTRACE "read constraints: write_bitstream" END { }
   catch { write_mem_info -force -no_partial_mmi design_1_wrapper.mmi }
 OPTRACE "write_bitstream setup" END { }
 OPTRACE "write_bitstream" START { }
-  write_bitstream -force design_1_wrapper.bit 
+  write_bitstream -force design_1_wrapper.bit -bin_file
 OPTRACE "write_bitstream" END { }
 OPTRACE "write_bitstream misc" START { }
 OPTRACE "read constraints: write_bitstream_post" START { }

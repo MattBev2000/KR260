@@ -1,9 +1,9 @@
 --Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
 --Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------
---Tool Version: Vivado v.2024.1 (win64) Build 5076996 Wed May 22 18:37:14 MDT 2024
---Date        : Wed Jan  8 11:31:23 2025
---Host        : Goose running 64-bit major release  (build 9200)
+--Tool Version: Vivado v.2024.2 (win64) Build 5239630 Fri Nov 08 22:35:27 MST 2024
+--Date        : Mon Jul  6 14:10:39 2026
+--Host        : win1217 running 64-bit major release  (build 9200)
 --Command     : generate_target design_1.bd
 --Design      : design_1
 --Purpose     : IP block netlist
@@ -77,9 +77,7 @@ architecture STRUCTURE of design_1 is
   signal and_gate_0_y : STD_LOGIC;
   signal clk_wiz_0_clk_out1 : STD_LOGIC;
   signal clk_wiz_0_locked : STD_LOGIC;
-  signal prescaler_0_clk_out : STD_LOGIC;
-  signal som240_1_connector_hpa_clk0p_clk_1 : STD_LOGIC;
-  signal xlslice_0_Dout : STD_LOGIC_VECTOR ( 0 to 0 );
+  signal \^uf1\ : STD_LOGIC;
   signal zynq_ultra_ps_e_0_emio_ttc0_wave_o : STD_LOGIC_VECTOR ( 2 downto 0 );
   signal zynq_ultra_ps_e_0_pl_clk0 : STD_LOGIC;
   signal zynq_ultra_ps_e_0_pl_resetn0 : STD_LOGIC;
@@ -90,9 +88,7 @@ architecture STRUCTURE of design_1 is
   attribute X_INTERFACE_PARAMETER : string;
   attribute X_INTERFACE_PARAMETER of som240_1_connector_hpa_clk0p_clk : signal is "XIL_INTERFACENAME CLK.SOM240_1_CONNECTOR_HPA_CLK0P_CLK, CLK_DOMAIN design_1_som240_1_connector_hpa_clk0p_clk, FREQ_HZ 25000000, FREQ_TOLERANCE_HZ 0, INSERT_VIP 0, PHASE 0.0";
 begin
-  fan_en_b(0) <= xlslice_0_Dout(0);
-  som240_1_connector_hpa_clk0p_clk_1 <= som240_1_connector_hpa_clk0p_clk;
-  uf1 <= prescaler_0_clk_out;
+  uf1 <= \^uf1\;
 and_gate_0: component design_1_and_gate_0_2
      port map (
       a => clk_wiz_0_clk_out1,
@@ -101,7 +97,7 @@ and_gate_0: component design_1_and_gate_0_2
     );
 clk_wiz_0: component design_1_clk_wiz_0_0
      port map (
-      clk_in1 => som240_1_connector_hpa_clk0p_clk_1,
+      clk_in1 => som240_1_connector_hpa_clk0p_clk,
       clk_out1 => clk_wiz_0_clk_out1,
       locked => clk_wiz_0_locked,
       resetn => zynq_ultra_ps_e_0_pl_resetn0
@@ -109,23 +105,23 @@ clk_wiz_0: component design_1_clk_wiz_0_0
 ila_0: component design_1_ila_0_0
      port map (
       clk => zynq_ultra_ps_e_0_pl_clk0,
-      probe0(0) => som240_1_connector_hpa_clk0p_clk_1,
+      probe0(0) => som240_1_connector_hpa_clk0p_clk,
       probe1(0) => clk_wiz_0_clk_out1,
       probe2(0) => clk_wiz_0_locked,
-      probe3(0) => prescaler_0_clk_out,
+      probe3(0) => \^uf1\,
       probe4(0) => and_gate_0_y,
       probe5(2 downto 0) => zynq_ultra_ps_e_0_emio_ttc0_wave_o(2 downto 0)
     );
 prescaler_0: component design_1_prescaler_0_0
      port map (
       clk_in => and_gate_0_y,
-      clk_out => prescaler_0_clk_out,
+      clk_out => \^uf1\,
       reset => zynq_ultra_ps_e_0_pl_resetn0
     );
 xlslice_0: component design_1_xlslice_0_0
      port map (
       Din(2 downto 0) => zynq_ultra_ps_e_0_emio_ttc0_wave_o(2 downto 0),
-      Dout(0) => xlslice_0_Dout(0)
+      Dout(0) => fan_en_b(0)
     );
 zynq_ultra_ps_e_0: component design_1_zynq_ultra_ps_e_0_0
      port map (

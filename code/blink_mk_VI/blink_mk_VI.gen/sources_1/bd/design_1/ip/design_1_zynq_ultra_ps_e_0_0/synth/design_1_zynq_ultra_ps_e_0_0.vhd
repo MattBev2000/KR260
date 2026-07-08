@@ -1,5 +1,5 @@
 -- (c) Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
--- (c) Copyright 2022-2025 Advanced Micro Devices, Inc. All rights reserved.
+-- (c) Copyright 2022-2026 Advanced Micro Devices, Inc. All rights reserved.
 -- 
 -- This file contains confidential and proprietary information
 -- of AMD and is protected under U.S. and international copyright
@@ -47,7 +47,7 @@
 -- DO NOT MODIFY THIS FILE.
 
 -- IP VLNV: xilinx.com:ip:zynq_ultra_ps_e:3.5
--- IP Revision: 3
+-- IP Revision: 5
 
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
@@ -67,7 +67,7 @@ END design_1_zynq_ultra_ps_e_0_0;
 ARCHITECTURE design_1_zynq_ultra_ps_e_0_0_arch OF design_1_zynq_ultra_ps_e_0_0 IS
   ATTRIBUTE DowngradeIPIdentifiedWarnings : STRING;
   ATTRIBUTE DowngradeIPIdentifiedWarnings OF design_1_zynq_ultra_ps_e_0_0_arch: ARCHITECTURE IS "yes";
-  COMPONENT zynq_ultra_ps_e_v3_5_3_zynq_ultra_ps_e IS
+  COMPONENT zynq_ultra_ps_e_v3_5_5_zynq_ultra_ps_e IS
     GENERIC (
       C_DP_USE_AUDIO : INTEGER;
       C_DP_USE_VIDEO : INTEGER;
@@ -1596,27 +1596,32 @@ ARCHITECTURE design_1_zynq_ultra_ps_e_0_0_arch OF design_1_zynq_ultra_ps_e_0_0 I
       emio_spi1_so_t_n : OUT STD_LOGIC;
       emio_spi1_ss_n_t_n : OUT STD_LOGIC
     );
-  END COMPONENT zynq_ultra_ps_e_v3_5_3_zynq_ultra_ps_e;
+  END COMPONENT zynq_ultra_ps_e_v3_5_5_zynq_ultra_ps_e;
   ATTRIBUTE X_CORE_INFO : STRING;
-  ATTRIBUTE X_CORE_INFO OF design_1_zynq_ultra_ps_e_0_0_arch: ARCHITECTURE IS "zynq_ultra_ps_e_v3_5_3_zynq_ultra_ps_e,Vivado 2024.1";
+  ATTRIBUTE X_CORE_INFO OF design_1_zynq_ultra_ps_e_0_0_arch: ARCHITECTURE IS "zynq_ultra_ps_e_v3_5_5_zynq_ultra_ps_e,Vivado 2024.2";
   ATTRIBUTE CHECK_LICENSE_TYPE : STRING;
-  ATTRIBUTE CHECK_LICENSE_TYPE OF design_1_zynq_ultra_ps_e_0_0_arch : ARCHITECTURE IS "design_1_zynq_ultra_ps_e_0_0,zynq_ultra_ps_e_v3_5_3_zynq_ultra_ps_e,{}";
+  ATTRIBUTE CHECK_LICENSE_TYPE OF design_1_zynq_ultra_ps_e_0_0_arch : ARCHITECTURE IS "design_1_zynq_ultra_ps_e_0_0,zynq_ultra_ps_e_v3_5_5_zynq_ultra_ps_e,{}";
   ATTRIBUTE CORE_GENERATION_INFO : STRING;
-  ATTRIBUTE CORE_GENERATION_INFO OF design_1_zynq_ultra_ps_e_0_0_arch: ARCHITECTURE IS "design_1_zynq_ultra_ps_e_0_0,zynq_ultra_ps_e_v3_5_3_zynq_ultra_ps_e,{x_ipProduct=Vivado 2024.1,x_ipVendor=xilinx.com,x_ipLibrary=ip,x_ipName=zynq_ultra_ps_e,x_ipVersion=3.5,x_ipCoreRevision=3,x_ipLanguage=VHDL,x_ipSimLanguage=MIXED,C_DP_USE_AUDIO=0,C_DP_USE_VIDEO=0,C_MAXIGP0_DATA_WIDTH=128,C_MAXIGP1_DATA_WIDTH=128,C_MAXIGP2_DATA_WIDTH=32,C_SAXIGP0_DATA_WIDTH=128,C_SAXIGP1_DATA_WIDTH=128,C_SAXIGP2_DATA_WIDTH=128,C_SAXIGP3_DATA_WIDTH=128,C_SAXIGP4_DATA_WIDTH=128,C_SAXIGP5_DATA_WIDTH=128,C_SAXIGP6_" & 
+  ATTRIBUTE CORE_GENERATION_INFO OF design_1_zynq_ultra_ps_e_0_0_arch: ARCHITECTURE IS "design_1_zynq_ultra_ps_e_0_0,zynq_ultra_ps_e_v3_5_5_zynq_ultra_ps_e,{x_ipProduct=Vivado 2024.2,x_ipVendor=xilinx.com,x_ipLibrary=ip,x_ipName=zynq_ultra_ps_e,x_ipVersion=3.5,x_ipCoreRevision=5,x_ipLanguage=VHDL,x_ipSimLanguage=MIXED,C_DP_USE_AUDIO=0,C_DP_USE_VIDEO=0,C_MAXIGP0_DATA_WIDTH=128,C_MAXIGP1_DATA_WIDTH=128,C_MAXIGP2_DATA_WIDTH=32,C_SAXIGP0_DATA_WIDTH=128,C_SAXIGP1_DATA_WIDTH=128,C_SAXIGP2_DATA_WIDTH=128,C_SAXIGP3_DATA_WIDTH=128,C_SAXIGP4_DATA_WIDTH=128,C_SAXIGP5_DATA_WIDTH=128,C_SAXIGP6_" & 
 "DATA_WIDTH=128,C_USE_DIFF_RW_CLK_GP0=0,C_USE_DIFF_RW_CLK_GP1=0,C_USE_DIFF_RW_CLK_GP2=0,C_USE_DIFF_RW_CLK_GP3=0,C_USE_DIFF_RW_CLK_GP4=0,C_USE_DIFF_RW_CLK_GP5=0,C_USE_DIFF_RW_CLK_GP6=0,C_EN_FIFO_ENET0=0,C_EN_FIFO_ENET1=0,C_EN_FIFO_ENET2=0,C_EN_FIFO_ENET3=0,C_PL_CLK0_BUF=TRUE,C_PL_CLK1_BUF=TRUE,C_PL_CLK2_BUF=FALSE,C_PL_CLK3_BUF=FALSE,C_TRACE_PIPELINE_WIDTH=8,C_EN_EMIO_TRACE=0,C_TRACE_DATA_WIDTH=32,C_USE_DEBUG_TEST=0,C_SD0_INTERNAL_BUS_WIDTH=5,C_SD1_INTERNAL_BUS_WIDTH=5,C_NUM_F2P_0_INTR_INPUTS=1,C_N" & 
 "UM_F2P_1_INTR_INPUTS=1,C_EMIO_GPIO_WIDTH=1,C_NUM_FABRIC_RESETS=1}";
   ATTRIBUTE X_INTERFACE_INFO : STRING;
+  ATTRIBUTE X_INTERFACE_MODE : STRING;
   ATTRIBUTE X_INTERFACE_PARAMETER : STRING;
-  ATTRIBUTE X_INTERFACE_PARAMETER OF pl_clk0: SIGNAL IS "XIL_INTERFACENAME PL_CLK0, FREQ_HZ 99999001, FREQ_TOLERANCE_HZ 0, PHASE 0.0, CLK_DOMAIN design_1_zynq_ultra_ps_e_0_0_pl_clk0, INSERT_VIP 0";
   ATTRIBUTE X_INTERFACE_INFO OF pl_clk0: SIGNAL IS "xilinx.com:signal:clock:1.0 PL_CLK0 CLK";
-  ATTRIBUTE X_INTERFACE_PARAMETER OF pl_clk1: SIGNAL IS "XIL_INTERFACENAME PL_CLK1, FREQ_HZ 99999001, FREQ_TOLERANCE_HZ 0, PHASE 0.0, CLK_DOMAIN design_1_zynq_ultra_ps_e_0_0_pl_clk1, INSERT_VIP 0";
+  ATTRIBUTE X_INTERFACE_MODE OF pl_clk0: SIGNAL IS "master PL_CLK0";
+  ATTRIBUTE X_INTERFACE_PARAMETER OF pl_clk0: SIGNAL IS "XIL_INTERFACENAME PL_CLK0, FREQ_HZ 99999001, FREQ_TOLERANCE_HZ 0, PHASE 0.0, CLK_DOMAIN design_1_zynq_ultra_ps_e_0_0_pl_clk0, INSERT_VIP 0";
   ATTRIBUTE X_INTERFACE_INFO OF pl_clk1: SIGNAL IS "xilinx.com:signal:clock:1.0 PL_CLK1 CLK";
-  ATTRIBUTE X_INTERFACE_PARAMETER OF pl_ps_irq0: SIGNAL IS "XIL_INTERFACENAME PL_PS_IRQ0, SENSITIVITY LEVEL_HIGH, PortWidth 1";
+  ATTRIBUTE X_INTERFACE_MODE OF pl_clk1: SIGNAL IS "master PL_CLK1";
+  ATTRIBUTE X_INTERFACE_PARAMETER OF pl_clk1: SIGNAL IS "XIL_INTERFACENAME PL_CLK1, FREQ_HZ 99999001, FREQ_TOLERANCE_HZ 0, PHASE 0.0, CLK_DOMAIN design_1_zynq_ultra_ps_e_0_0_pl_clk1, INSERT_VIP 0";
   ATTRIBUTE X_INTERFACE_INFO OF pl_ps_irq0: SIGNAL IS "xilinx.com:signal:interrupt:1.0 PL_PS_IRQ0 INTERRUPT";
-  ATTRIBUTE X_INTERFACE_PARAMETER OF pl_resetn0: SIGNAL IS "XIL_INTERFACENAME PL_RESETN0, POLARITY ACTIVE_LOW, INSERT_VIP 0";
+  ATTRIBUTE X_INTERFACE_MODE OF pl_ps_irq0: SIGNAL IS "slave PL_PS_IRQ0";
+  ATTRIBUTE X_INTERFACE_PARAMETER OF pl_ps_irq0: SIGNAL IS "XIL_INTERFACENAME PL_PS_IRQ0, SENSITIVITY LEVEL_HIGH, PortWidth 1";
   ATTRIBUTE X_INTERFACE_INFO OF pl_resetn0: SIGNAL IS "xilinx.com:signal:reset:1.0 PL_RESETN0 RST";
+  ATTRIBUTE X_INTERFACE_MODE OF pl_resetn0: SIGNAL IS "master PL_RESETN0";
+  ATTRIBUTE X_INTERFACE_PARAMETER OF pl_resetn0: SIGNAL IS "XIL_INTERFACENAME PL_RESETN0, POLARITY ACTIVE_LOW, INSERT_VIP 0";
 BEGIN
-  U0 : zynq_ultra_ps_e_v3_5_3_zynq_ultra_ps_e
+  U0 : zynq_ultra_ps_e_v3_5_5_zynq_ultra_ps_e
     GENERIC MAP (
       C_DP_USE_AUDIO => 0,
       C_DP_USE_VIDEO => 0,

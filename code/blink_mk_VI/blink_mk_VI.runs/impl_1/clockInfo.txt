@@ -1,7 +1,7 @@
 -------------------------------------
-| Tool Version : Vivado v.2024.1
-| Date         : Wed Jan  8 11:41:47 2025
-| Host         : Goose
+| Tool Version : Vivado v.2024.2
+| Date         : Mon Jul  6 14:17:18 2026
+| Host         : win1217
 | Design       : design_1
 | Device       : xck26-sfvc784-2LV-C-
 -------------------------------------

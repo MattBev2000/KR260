@@ -4,7 +4,7 @@
 
 set TIME_start [clock seconds] 
 namespace eval ::optrace {
-  variable script "C:/Users/ASUS/iCloudDrive/PhD-kriask/prj/blink_mk_VI/blink_mk_VI.runs/design_1_and_gate_0_2_synth_1/design_1_and_gate_0_2.tcl"
+  variable script "C:/Users/bevilacqua/Documents/projects/KR260/code/blink_mk_VI/blink_mk_VI.runs/design_1_and_gate_0_2_synth_1/design_1_and_gate_0_2.tcl"
   variable category "vivado_synth"
 }
 
@@ -56,30 +56,29 @@ if {$::dispatch::connected} {
 }
 
 OPTRACE "design_1_and_gate_0_2_synth_1" START { ROLLUP_AUTO }
-set_param ced.repoPaths C:/Users/ASUS/AppData/Roaming/Xilinx/Vivado/2024.1/xhub/ced_store/Vivado_example_project
 set_param project.vivado.isBlockSynthRun true
 OPTRACE "Creating in-memory project" START { }
-set_param ips.modRefOverrideMrefDirPath c:/Users/ASUS/iCloudDrive/PhD-kriask/prj/blink_mk_VI/blink_mk_VI.gen/sources_1/bd/mref
+set_param ips.modRefOverrideMrefDirPath c:/Users/bevilacqua/Documents/projects/KR260/code/blink_mk_VI/blink_mk_VI.gen/sources_1/bd/mref
 create_project -in_memory -part xck26-sfvc784-2LV-c
 
 set_param project.singleFileAddWarning.threshold 0
 set_param project.compositeFile.enableAutoGeneration 0
 set_param synth.vivado.isSynthRun true
 set_msg_config -source 4 -id {IP_Flow 19-2162} -severity warning -new_severity info
-set_property webtalk.parent_dir C:/Users/ASUS/iCloudDrive/PhD-kriask/prj/blink_mk_VI/blink_mk_VI.cache/wt [current_project]
-set_property parent.project_path C:/Users/ASUS/iCloudDrive/PhD-kriask/prj/blink_mk_VI/blink_mk_VI.xpr [current_project]
+set_property webtalk.parent_dir C:/Users/bevilacqua/Documents/projects/KR260/code/blink_mk_VI/blink_mk_VI.cache/wt [current_project]
+set_property parent.project_path C:/Users/bevilacqua/Documents/projects/KR260/code/blink_mk_VI/blink_mk_VI.xpr [current_project]
 set_property XPM_LIBRARIES {XPM_CDC XPM_MEMORY} [current_project]
 set_property default_lib xil_defaultlib [current_project]
 set_property target_language VHDL [current_project]
 set_property board_part xilinx.com:kr260_som:part0:1.1 [current_project]
 set_property board_connections {som240_1_connector xilinx.com:kr260_carrier:som240_1_connector:1.1 som240_2_connector xilinx.com:kr260_carrier:som240_2_connector:1.1} [current_project]
 update_ip_catalog
-set_property ip_output_repo c:/Users/ASUS/iCloudDrive/PhD-kriask/prj/blink_mk_VI/blink_mk_VI.cache/ip [current_project]
+set_property ip_output_repo c:/Users/bevilacqua/Documents/projects/KR260/code/blink_mk_VI/blink_mk_VI.cache/ip [current_project]
 set_property ip_cache_permissions {read write} [current_project]
 OPTRACE "Creating in-memory project" END { }
 OPTRACE "Adding files" START { }
-read_vhdl -library xil_defaultlib C:/Users/ASUS/iCloudDrive/PhD-kriask/prj/blink_mk_VI/blink_mk_VI.srcs/sources_1/new/and_gate.vhd
-read_ip -quiet c:/Users/ASUS/iCloudDrive/PhD-kriask/prj/blink_mk_VI/blink_mk_VI.srcs/sources_1/bd/design_1/ip/design_1_and_gate_0_2/design_1_and_gate_0_2.xci
+read_vhdl -library xil_defaultlib C:/Users/bevilacqua/Documents/projects/KR260/code/blink_mk_VI/blink_mk_VI.srcs/sources_1/new/and_gate.vhd
+read_ip -quiet C:/Users/bevilacqua/Documents/projects/KR260/code/blink_mk_VI/blink_mk_VI.srcs/sources_1/bd/design_1/ip/design_1_and_gate_0_2/design_1_and_gate_0_2.xci
 
 OPTRACE "Adding files" END { }
 # Mark all dcp files as not used in implementation to prevent them from being
@@ -112,45 +111,45 @@ generate_parallel_reports -reports { "report_utilization -file design_1_and_gate
 OPTRACE "synth reports" END { }
 
 if { [catch {
-  file copy -force C:/Users/ASUS/iCloudDrive/PhD-kriask/prj/blink_mk_VI/blink_mk_VI.runs/design_1_and_gate_0_2_synth_1/design_1_and_gate_0_2.dcp c:/Users/ASUS/iCloudDrive/PhD-kriask/prj/blink_mk_VI/blink_mk_VI.gen/sources_1/bd/design_1/ip/design_1_and_gate_0_2/design_1_and_gate_0_2.dcp
+  file copy -force C:/Users/bevilacqua/Documents/projects/KR260/code/blink_mk_VI/blink_mk_VI.runs/design_1_and_gate_0_2_synth_1/design_1_and_gate_0_2.dcp c:/Users/bevilacqua/Documents/projects/KR260/code/blink_mk_VI/blink_mk_VI.gen/sources_1/bd/design_1/ip/design_1_and_gate_0_2/design_1_and_gate_0_2.dcp
 } _RESULT ] } { 
   send_msg_id runtcl-3 status "ERROR: Unable to successfully create or copy the sub-design checkpoint file."
   error "ERROR: Unable to successfully create or copy the sub-design checkpoint file."
 }
 
 if { [catch {
-  write_verilog -force -mode synth_stub c:/Users/ASUS/iCloudDrive/PhD-kriask/prj/blink_mk_VI/blink_mk_VI.gen/sources_1/bd/design_1/ip/design_1_and_gate_0_2/design_1_and_gate_0_2_stub.v
+  write_verilog -force -mode synth_stub c:/Users/bevilacqua/Documents/projects/KR260/code/blink_mk_VI/blink_mk_VI.gen/sources_1/bd/design_1/ip/design_1_and_gate_0_2/design_1_and_gate_0_2_stub.v
 } _RESULT ] } { 
   puts "CRITICAL WARNING: Unable to successfully create a Verilog synthesis stub for the sub-design. This may lead to errors in top level synthesis of the design. Error reported: $_RESULT"
 }
 
 if { [catch {
-  write_vhdl -force -mode synth_stub c:/Users/ASUS/iCloudDrive/PhD-kriask/prj/blink_mk_VI/blink_mk_VI.gen/sources_1/bd/design_1/ip/design_1_and_gate_0_2/design_1_and_gate_0_2_stub.vhdl
+  write_vhdl -force -mode synth_stub c:/Users/bevilacqua/Documents/projects/KR260/code/blink_mk_VI/blink_mk_VI.gen/sources_1/bd/design_1/ip/design_1_and_gate_0_2/design_1_and_gate_0_2_stub.vhdl
 } _RESULT ] } { 
   puts "CRITICAL WARNING: Unable to successfully create a VHDL synthesis stub for the sub-design. This may lead to errors in top level synthesis of the design. Error reported: $_RESULT"
 }
 
 if { [catch {
-  write_verilog -force -mode funcsim c:/Users/ASUS/iCloudDrive/PhD-kriask/prj/blink_mk_VI/blink_mk_VI.gen/sources_1/bd/design_1/ip/design_1_and_gate_0_2/design_1_and_gate_0_2_sim_netlist.v
+  write_verilog -force -mode funcsim c:/Users/bevilacqua/Documents/projects/KR260/code/blink_mk_VI/blink_mk_VI.gen/sources_1/bd/design_1/ip/design_1_and_gate_0_2/design_1_and_gate_0_2_sim_netlist.v
 } _RESULT ] } { 
   puts "CRITICAL WARNING: Unable to successfully create the Verilog functional simulation sub-design file. Post-Synthesis Functional Simulation with this file may not be possible or may give incorrect results. Error reported: $_RESULT"
 }
 
 if { [catch {
-  write_vhdl -force -mode funcsim c:/Users/ASUS/iCloudDrive/PhD-kriask/prj/blink_mk_VI/blink_mk_VI.gen/sources_1/bd/design_1/ip/design_1_and_gate_0_2/design_1_and_gate_0_2_sim_netlist.vhdl
+  write_vhdl -force -mode funcsim c:/Users/bevilacqua/Documents/projects/KR260/code/blink_mk_VI/blink_mk_VI.gen/sources_1/bd/design_1/ip/design_1_and_gate_0_2/design_1_and_gate_0_2_sim_netlist.vhdl
 } _RESULT ] } { 
   puts "CRITICAL WARNING: Unable to successfully create the VHDL functional simulation sub-design file. Post-Synthesis Functional Simulation with this file may not be possible or may give incorrect results. Error reported: $_RESULT"
 }
 
-if {[file isdir C:/Users/ASUS/iCloudDrive/PhD-kriask/prj/blink_mk_VI/blink_mk_VI.ip_user_files/ip/design_1_and_gate_0_2]} {
+if {[file isdir C:/Users/bevilacqua/Documents/projects/KR260/code/blink_mk_VI/blink_mk_VI.ip_user_files/ip/design_1_and_gate_0_2]} {
   catch { 
-    file copy -force c:/Users/ASUS/iCloudDrive/PhD-kriask/prj/blink_mk_VI/blink_mk_VI.gen/sources_1/bd/design_1/ip/design_1_and_gate_0_2/design_1_and_gate_0_2_stub.v C:/Users/ASUS/iCloudDrive/PhD-kriask/prj/blink_mk_VI/blink_mk_VI.ip_user_files/ip/design_1_and_gate_0_2
+    file copy -force c:/Users/bevilacqua/Documents/projects/KR260/code/blink_mk_VI/blink_mk_VI.gen/sources_1/bd/design_1/ip/design_1_and_gate_0_2/design_1_and_gate_0_2_stub.v C:/Users/bevilacqua/Documents/projects/KR260/code/blink_mk_VI/blink_mk_VI.ip_user_files/ip/design_1_and_gate_0_2
   }
 }
 
-if {[file isdir C:/Users/ASUS/iCloudDrive/PhD-kriask/prj/blink_mk_VI/blink_mk_VI.ip_user_files/ip/design_1_and_gate_0_2]} {
+if {[file isdir C:/Users/bevilacqua/Documents/projects/KR260/code/blink_mk_VI/blink_mk_VI.ip_user_files/ip/design_1_and_gate_0_2]} {
   catch { 
-    file copy -force c:/Users/ASUS/iCloudDrive/PhD-kriask/prj/blink_mk_VI/blink_mk_VI.gen/sources_1/bd/design_1/ip/design_1_and_gate_0_2/design_1_and_gate_0_2_stub.vhdl C:/Users/ASUS/iCloudDrive/PhD-kriask/prj/blink_mk_VI/blink_mk_VI.ip_user_files/ip/design_1_and_gate_0_2
+    file copy -force c:/Users/bevilacqua/Documents/projects/KR260/code/blink_mk_VI/blink_mk_VI.gen/sources_1/bd/design_1/ip/design_1_and_gate_0_2/design_1_and_gate_0_2_stub.vhdl C:/Users/bevilacqua/Documents/projects/KR260/code/blink_mk_VI/blink_mk_VI.ip_user_files/ip/design_1_and_gate_0_2
   }
 }
 file delete __synthesis_is_running__

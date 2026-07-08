@@ -1,4 +1,4 @@
-set_property SRC_FILE_INFO {cfile:C:/Users/ASUS/iCloudDrive/PhD/kriask/prj/blink_mk_VI/blink_mk_VI.srcs/constrs_1/imports/xdc/default.xdc rfile:../../../blink_mk_VI.srcs/constrs_1/imports/xdc/default.xdc id:1} [current_design]
+set_property SRC_FILE_INFO {cfile:C:/Users/bevilacqua/Documents/projects/KR260/code/blink_mk_VI/blink_mk_VI.srcs/constrs_1/imports/xdc/default.xdc rfile:../../../blink_mk_VI.srcs/constrs_1/imports/xdc/default.xdc id:1} [current_design]
 set_property src_info {type:XDC file:1 line:8 export:INPUT save:INPUT read:READ} [current_design]
 set_property PACKAGE_PIN A12 [get_ports {fan_en_b}]
 set_property src_info {type:XDC file:1 line:14 export:INPUT save:INPUT read:READ} [current_design]

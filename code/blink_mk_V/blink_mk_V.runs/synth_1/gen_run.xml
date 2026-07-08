@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GenRun Id="synth_1" LaunchPart="xck26-sfvc784-2LV-c" LaunchTime="1735994156">
-  <File Type="PA-TCL" Name="prescaler.tcl"/>
   <File Type="REPORTS-TCL" Name="prescaler_reports.tcl"/>
-  <File Type="RDS-RDS" Name="prescaler.vds"/>
   <File Type="RDS-UTIL" Name="prescaler_utilization_synth.rpt"/>
   <File Type="RDS-UTIL-PB" Name="prescaler_utilization_synth.pb"/>
+  <File Type="PA-TCL" Name="prescaler.tcl"/>
+  <File Type="RDS-RDS" Name="prescaler.vds"/>
   <File Type="RDS-DCP" Name="prescaler.dcp"/>
   <FileSet Name="sources" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1" RelGenDir="$PGENDIR/sources_1">
     <Filter Type="Srcs"/>

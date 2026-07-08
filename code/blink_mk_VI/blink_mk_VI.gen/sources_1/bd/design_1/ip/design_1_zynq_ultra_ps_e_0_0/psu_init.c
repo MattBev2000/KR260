@@ -16,10 +16,20 @@
 #include <sleep.h>
 #include "psu_init.h"
 #define    DPLL_CFG_LOCK_DLY        63
-#define    DPLL_CFG_LOCK_CNT        625
+#define    DPLL_CFG_LOCK_CNT        600
 #define    DPLL_CFG_LFHF            3
 #define    DPLL_CFG_CP              3
 #define    DPLL_CFG_RES             2
+
+#define    DPLL_CFG_FBDIV           64
+#define    DPLL_CFG_DIV2            1
+
+
+#define    DPLL_CFG_LOCK_DLY_SLOW_BOOT        63
+#define    DPLL_CFG_LOCK_CNT_SLOW_BOOT        750
+#define    DPLL_CFG_LFHF_SLOW_BOOT            3
+#define    DPLL_CFG_CP_SLOW_BOOT              3
+#define    DPLL_CFG_RES_SLOW_BOOT             12
 
 static int mask_pollOnValue(u32 add, u32 mask, u32 value);
 

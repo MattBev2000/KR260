@@ -1,5 +1,5 @@
 -- (c) Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
--- (c) Copyright 2022-2025 Advanced Micro Devices, Inc. All rights reserved.
+-- (c) Copyright 2022-2026 Advanced Micro Devices, Inc. All rights reserved.
 -- 
 -- This file contains confidential and proprietary information
 -- of AMD and is protected under U.S. and international copyright
@@ -72,11 +72,11 @@ ARCHITECTURE design_1_and_gate_0_2_arch OF design_1_and_gate_0_2 IS
     );
   END COMPONENT and_gate;
   ATTRIBUTE X_CORE_INFO : STRING;
-  ATTRIBUTE X_CORE_INFO OF design_1_and_gate_0_2_arch: ARCHITECTURE IS "and_gate,Vivado 2024.1";
+  ATTRIBUTE X_CORE_INFO OF design_1_and_gate_0_2_arch: ARCHITECTURE IS "and_gate,Vivado 2024.2";
   ATTRIBUTE CHECK_LICENSE_TYPE : STRING;
   ATTRIBUTE CHECK_LICENSE_TYPE OF design_1_and_gate_0_2_arch : ARCHITECTURE IS "design_1_and_gate_0_2,and_gate,{}";
   ATTRIBUTE CORE_GENERATION_INFO : STRING;
-  ATTRIBUTE CORE_GENERATION_INFO OF design_1_and_gate_0_2_arch: ARCHITECTURE IS "design_1_and_gate_0_2,and_gate,{x_ipProduct=Vivado 2024.1,x_ipVendor=xilinx.com,x_ipLibrary=module_ref,x_ipName=and_gate,x_ipVersion=1.0,x_ipCoreRevision=1,x_ipLanguage=VHDL,x_ipSimLanguage=MIXED}";
+  ATTRIBUTE CORE_GENERATION_INFO OF design_1_and_gate_0_2_arch: ARCHITECTURE IS "design_1_and_gate_0_2,and_gate,{x_ipProduct=Vivado 2024.2,x_ipVendor=xilinx.com,x_ipLibrary=module_ref,x_ipName=and_gate,x_ipVersion=1.0,x_ipCoreRevision=1,x_ipLanguage=VHDL,x_ipSimLanguage=MIXED}";
   ATTRIBUTE IP_DEFINITION_SOURCE : STRING;
   ATTRIBUTE IP_DEFINITION_SOURCE OF design_1_and_gate_0_2_arch: ARCHITECTURE IS "module_ref";
 BEGIN

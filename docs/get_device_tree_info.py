@@ -1,40 +1,60 @@
-import sys
-if len(sys.argv) < 3:
-  print('Usage: python get_device_tree_info <device name> <device tree path> [synch_fifo]')
-  sys.exit(0)
+#!/usr/bin/env python3
 
-if len(sys.argv) > 3:
-  isSynchFifo = True
-  SYNCH_FIFO = sys.argv[3]
-else:
-  isSynchFifo = False
-  
-  
+import re
+import sys
+
+
+def usage():
+    print(
+        "Usage: python3 get_device_tree_info.py "
+        "<device_name> <device_tree_path> [synch_fifo]"
+    )
+
+
+if len(sys.argv) < 3:
+    usage()
+    sys.exit(1)
+
+
 DEVICE_NAME = sys.argv[1]
 DEVICE_TREE = sys.argv[2]
 
-import re
-f = open(DEVICE_TREE, 'r')
-t = f.read()
-isDma = False;
-if len(re.findall('dma@',t)) > 0:
-  isDma = True
-  print ('IS DMA!')
-  
-  
+if len(sys.argv) > 3:
+    isSynchFifo = True
+    SYNCH_FIFO = sys.argv[3]
+else:
+    isSynchFifo = False
+    SYNCH_FIFO = ""
 
-  
-  
-# Match a DTSI node label followed by one of the supported AXI node types.
-#
-# Example:
-#   REG_ICOMP: axi_cfg_register@a00f0000 {
-#   axi_fifo_mm_s_0: axi_fifo_mm_s@a0000000 {
-#
-# Addresses may contain hexadecimal digits from 0 to 9 and a to f.
+
+try:
+    with open(DEVICE_TREE, "r", encoding="utf-8") as device_tree_file:
+        t = device_tree_file.read()
+except OSError as error:
+    print(
+        f"Error: cannot open device tree file '{DEVICE_TREE}': {error}",
+        file=sys.stderr,
+    )
+    sys.exit(1)
+
+
+# -------------------------------------------------------------------------
+# Detect DMA nodes
+# -------------------------------------------------------------------------
+
+isDma = len(re.findall(r"dma@", t)) > 0
+
+if isDma:
+    print("IS DMA!")
+
+
+# -------------------------------------------------------------------------
+# Device-tree parsing
+# -------------------------------------------------------------------------
 
 label_pattern = r"([a-zA-Z_][a-zA-Z0-9_-]*)"
 address_pattern = r"[0-9a-fA-F]+"
+
 
 # AXI configuration registers.
 regexp = re.compile(
@@ -43,7 +63,8 @@ regexp = re.compile(
     re.MULTILINE,
 )
 
-registers = regexp.findall(t)
+configuration_registers = regexp.findall(t)
+
 
 # AXI status registers.
 regexp = re.compile(
@@ -52,7 +73,13 @@ regexp = re.compile(
     re.MULTILINE,
 )
 
-registers.extend(regexp.findall(t))
+status_registers = regexp.findall(t)
+
+
+# Preserve the order used by the original generator:
+# configuration registers first, then status registers.
+registers = configuration_registers + status_registers
+
 
 # AXI FIFO MM-S peripherals.
 regexpr = re.compile(
@@ -63,8 +90,9 @@ regexpr = re.compile(
 
 fifos = regexpr.findall(t)
 
-# Find only devices managed by this driver.
-# AXI BRAM controllers and other AXI peripherals are intentionally excluded.
+
+# Find the devices managed by this driver.
+# AXI BRAM controllers and unsupported AXI peripherals are excluded.
 regexpr = re.compile(
     rf"^\s*{label_pattern}\s*:\s*"
     rf"(axi_cfg_register|axi_sts_register|axi_fifo_mm_s)"
@@ -80,16 +108,19 @@ for match in regexpr.finditer(t):
     device_type = match.group(2)
 
     fifosRegs.append(device_label)
+
     isRegs.append(
         device_type == "axi_cfg_register"
         or device_type == "axi_sts_register"
     )
 
+
 print("Registers:", registers)
 print("FIFOs:", fifos)
 print("Supported devices:", fifosRegs)
 
-if len(fifosRegs) == 0:
+
+if not fifosRegs:
     print(
         "Error: no supported AXI devices were found in the device tree.",
         file=sys.stderr,
@@ -102,198 +133,685 @@ if len(fifosRegs) == 0:
     print(f"Device tree: {DEVICE_TREE}", file=sys.stderr)
     sys.exit(1)
 
-regConf = ''
+
+if isSynchFifo and SYNCH_FIFO not in fifos:
+    print(
+        f"Error: the FIFO '{SYNCH_FIFO}' was not found "
+        "in the device tree.",
+        file=sys.stderr,
+    )
+
+    if fifos:
+        print(
+            "Available FIFO labels: " + ", ".join(fifos),
+            file=sys.stderr,
+        )
+    else:
+        print(
+            "No AXI FIFO MM-S device was found.",
+            file=sys.stderr,
+        )
+
+    sys.exit(1)
+
+
+def get_iomap_name(device_label):
+    """
+    Return the C structure member suffix for a device-tree label.
+
+    The FIFO selected through the third command-line argument is always
+    exposed in the generated C code as:
+
+        iomap_stream_fifo
+
+    All other devices keep their device-tree label.
+    """
+
+    if isSynchFifo and device_label == SYNCH_FIFO:
+        return "stream_fifo"
+
+    return device_label
+
+
+# -------------------------------------------------------------------------
+# Generate IOCTL definitions
+# -------------------------------------------------------------------------
+
+regConf = ""
 baseId = 20
+
+
 for reg in registers:
-  regConf += ('#define '+DEVICE_NAME.upper()+'_GET_'+reg.upper()+'\t\t'+'_IO('+DEVICE_NAME.upper()+'_IOCTL_BASE, '+str(baseId)+')\n')
-  baseId = baseId + 1 
-  regConf += ('#define '+DEVICE_NAME.upper()+'_SET_'+reg.upper()+'\t\t'+'_IO('+DEVICE_NAME.upper()+'_IOCTL_BASE, '+str(baseId)+')\n')
-  baseId = baseId + 1 
+    regConf += (
+        "#define "
+        + DEVICE_NAME.upper()
+        + "_GET_"
+        + reg.upper()
+        + "\t\t"
+        + "_IO("
+        + DEVICE_NAME.upper()
+        + "_IOCTL_BASE, "
+        + str(baseId)
+        + ")\n"
+    )
+
+    baseId += 1
+
+    regConf += (
+        "#define "
+        + DEVICE_NAME.upper()
+        + "_SET_"
+        + reg.upper()
+        + "\t\t"
+        + "_IO("
+        + DEVICE_NAME.upper()
+        + "_IOCTL_BASE, "
+        + str(baseId)
+        + ")\n"
+    )
+
+    baseId += 1
+
 
 for fifo in fifos:
-  regConf += ('#define '+DEVICE_NAME.upper()+'_GET_'+fifo.upper()+'_LEN\t\t'+'_IO('+DEVICE_NAME.upper()+'_IOCTL_BASE, '+str(baseId)+')\n')
-  baseId = baseId + 1 
-  regConf += ('#define '+DEVICE_NAME.upper()+'_GET_'+fifo.upper()+'_VAL\t\t'+'_IO('+DEVICE_NAME.upper()+'_IOCTL_BASE, '+str(baseId)+')\n')
-  baseId = baseId + 1 
-  regConf += ('#define '+DEVICE_NAME.upper()+'_SET_'+fifo.upper()+'_VAL\t\t'+'_IO('+DEVICE_NAME.upper()+'_IOCTL_BASE, '+str(baseId)+')\n')
-  baseId = baseId + 1 
-  regConf += ('#define '+DEVICE_NAME.upper()+'_CLEAR_'+fifo.upper()+'\t\t'+'_IO('+DEVICE_NAME.upper()+'_IOCTL_BASE, '+str(baseId)+')\n')
-  baseId = baseId + 1 
-  
-regStruct = ''
+    regConf += (
+        "#define "
+        + DEVICE_NAME.upper()
+        + "_GET_"
+        + fifo.upper()
+        + "_LEN\t\t"
+        + "_IO("
+        + DEVICE_NAME.upper()
+        + "_IOCTL_BASE, "
+        + str(baseId)
+        + ")\n"
+    )
+
+    baseId += 1
+
+    regConf += (
+        "#define "
+        + DEVICE_NAME.upper()
+        + "_GET_"
+        + fifo.upper()
+        + "_VAL\t\t"
+        + "_IO("
+        + DEVICE_NAME.upper()
+        + "_IOCTL_BASE, "
+        + str(baseId)
+        + ")\n"
+    )
+
+    baseId += 1
+
+    regConf += (
+        "#define "
+        + DEVICE_NAME.upper()
+        + "_SET_"
+        + fifo.upper()
+        + "_VAL\t\t"
+        + "_IO("
+        + DEVICE_NAME.upper()
+        + "_IOCTL_BASE, "
+        + str(baseId)
+        + ")\n"
+    )
+
+    baseId += 1
+
+    regConf += (
+        "#define "
+        + DEVICE_NAME.upper()
+        + "_CLEAR_"
+        + fifo.upper()
+        + "\t\t"
+        + "_IO("
+        + DEVICE_NAME.upper()
+        + "_IOCTL_BASE, "
+        + str(baseId)
+        + ")\n"
+    )
+
+    baseId += 1
+
+
+# -------------------------------------------------------------------------
+# Generate register structure
+# -------------------------------------------------------------------------
+
+regStruct = ""
+
 for reg in registers:
-  regStruct += ('\tchar '+reg+'_enable;\n')
-  regStruct += ('\tunsigned int '+reg+';\n')
+    regStruct += "\tchar " + reg + "_enable;\n"
+    regStruct += "\tunsigned int " + reg + ";\n"
 
-include = open('zynq_device.h.template', 'r').read()
-include = include.replace('$$DEFINE_REGISTER_CODES$$', regConf)
-include = include.replace('$$DEFINE_REGISTER_STRUCT$$', regStruct)
-include = include.replace('$$DEVICE_NAME_U$$', DEVICE_NAME.upper())
-include = include.replace('$$DEVICE_NAME_L$$', DEVICE_NAME.lower())
 
-outF = open(DEVICE_NAME.lower()+'.h','w')
-outF.write(include)
-outF.close()
+# -------------------------------------------------------------------------
+# Generate header file
+# -------------------------------------------------------------------------
 
-source = open('zynq_device.c.template', 'r').read()
+try:
+    with open(
+        "zynq_device.h.template",
+        "r",
+        encoding="utf-8",
+    ) as template_file:
+        include = template_file.read()
+except OSError as error:
+    print(
+        f"Error: cannot open zynq_device.h.template: {error}",
+        file=sys.stderr,
+    )
+    sys.exit(1)
 
-declReg = ''
+
+include = include.replace(
+    "$$DEFINE_REGISTER_CODES$$",
+    regConf,
+)
+
+include = include.replace(
+    "$$DEFINE_REGISTER_STRUCT$$",
+    regStruct,
+)
+
+include = include.replace(
+    "$$DEVICE_NAME_U$$",
+    DEVICE_NAME.upper(),
+)
+
+include = include.replace(
+    "$$DEVICE_NAME_L$$",
+    DEVICE_NAME.lower(),
+)
+
+
+header_output = DEVICE_NAME.lower() + ".h"
+
+try:
+    with open(
+        header_output,
+        "w",
+        encoding="utf-8",
+    ) as output_file:
+        output_file.write(include)
+except OSError as error:
+    print(
+        f"Error: cannot write '{header_output}': {error}",
+        file=sys.stderr,
+    )
+    sys.exit(1)
+
+
+# -------------------------------------------------------------------------
+# Read C source template
+# -------------------------------------------------------------------------
+
+try:
+    with open(
+        "zynq_device.c.template",
+        "r",
+        encoding="utf-8",
+    ) as template_file:
+        source = template_file.read()
+except OSError as error:
+    print(
+        f"Error: cannot open zynq_device.c.template: {error}",
+        file=sys.stderr,
+    )
+    sys.exit(1)
+
+
+# -------------------------------------------------------------------------
+# Declare register and FIFO mapping pointers
+# -------------------------------------------------------------------------
+
+declReg = ""
+
 for reg in registers:
-#  declReg += '\tvoid * iomap_'+reg.lower()+';\n';
-  declReg += '\tvoid * iomap_'+reg+';\n';
+    declReg += "\tvoid * iomap_" + reg + ";\n"
+
+
 for fifo in fifos:
-  declReg += '\tvoid * iomap_'+fifo+';\n';
-#  declReg += '\tvoid * iomap_'+fifo.lower()+';\n';
-#  declReg += '\tvoid * iomap1_'+fifo.lower()+';\n';
+    iomap_name = get_iomap_name(fifo)
+    declReg += "\tvoid * iomap_" + iomap_name + ";\n"
 
-source = source.replace('$$DECLARE_REGISTERS_IN_STRUCT$$', declReg)
 
-iomapReg = ''
+source = source.replace(
+    "$$DECLARE_REGISTERS_IN_STRUCT$$",
+    declReg,
+)
+
+
+# -------------------------------------------------------------------------
+# Generate IOCTL implementation
+# -------------------------------------------------------------------------
+
+iomapReg = ""
+
+
 for reg in registers:
-  iomapReg += '\tcase '+DEVICE_NAME.upper()+'_GET_'+reg.upper()+':\n'
-  iomapReg += '\t{\n'
-  iomapReg += '\t\tcopy_to_user ((void __user *)arg, dev->iomap_'+reg+', sizeof(u32));\n'
-  iomapReg += '\t\treturn 0;\n'
-  iomapReg += '\t}\n'
-  iomapReg += '\tcase '+DEVICE_NAME.upper()+'_SET_'+reg.upper()+':\n'
-  iomapReg += '\t{\n'
-  iomapReg += '\t\tcopy_from_user (dev->iomap_'+reg+', (void __user *)arg, sizeof(u32));\n'
-  iomapReg += '\t\treturn 0;\n'
-  iomapReg += '\t}\n'
-  
+    iomapReg += (
+        "\tcase "
+        + DEVICE_NAME.upper()
+        + "_GET_"
+        + reg.upper()
+        + ":\n"
+    )
+
+    iomapReg += "\t{\n"
+
+    iomapReg += (
+        "\t\tif (copy_to_user("
+        "(void __user *)arg, "
+        "dev->iomap_"
+        + reg
+        + ", sizeof(u32)))\n"
+    )
+
+    iomapReg += "\t\t\treturn -EFAULT;\n"
+    iomapReg += "\t\treturn 0;\n"
+    iomapReg += "\t}\n"
+
+
+    iomapReg += (
+        "\tcase "
+        + DEVICE_NAME.upper()
+        + "_SET_"
+        + reg.upper()
+        + ":\n"
+    )
+
+    iomapReg += "\t{\n"
+
+    iomapReg += (
+        "\t\tif (copy_from_user("
+        "dev->iomap_"
+        + reg
+        + ", "
+        "(void __user *)arg, "
+        "sizeof(u32)))\n"
+    )
+
+    iomapReg += "\t\t\treturn -EFAULT;\n"
+    iomapReg += "\t\treturn 0;\n"
+    iomapReg += "\t}\n"
+
+
 for fifo in fifos:
-  iomapReg += '\tcase '+DEVICE_NAME.upper()+'_GET_'+fifo.upper()+'_LEN:\n'
-  iomapReg += '\t{\n'
-  iomapReg += '\t\tu32 val = readFifo(dev->iomap_'+fifo.lower()+',RDFO);\n'
-  iomapReg += '\t\tcopy_to_user ((void __user *)arg, &val, sizeof(u32));\n'
-  iomapReg += '\t\treturn 0;\n'
-  iomapReg += '\t}\n'
-  iomapReg += '\tcase '+DEVICE_NAME.upper()+'_GET_'+fifo.upper()+'_VAL:\n'
-  iomapReg += '\t{\n'
-  iomapReg += '\t\tu32 val = readFifo(dev->iomap_'+fifo.lower()+',RDFD);\n'
-  iomapReg += '\t\tcopy_to_user ((void __user *)arg, &val, sizeof(u32));\n'
-  iomapReg += '\t\treturn 0;\n'
-  iomapReg += '\t}\n'
-  iomapReg += '\tcase '+DEVICE_NAME.upper()+'_SET_'+fifo.upper()+'_VAL:\n'
-  iomapReg += '\t{\n'
-  iomapReg += '\t\tu32 val;\n'
-  iomapReg += '\t\tcopy_from_user (&val, (void __user *)arg, sizeof(u32));\n'
-#  iomapReg += '\t\twriteFifo(dev->iomap1_'+fifo.lower()+',0, val);\n'
-  iomapReg += '\t\twriteFifo(dev->iomap_'+fifo.lower()+',TLR, 1);\n'
-  iomapReg += '\t\treturn 0;\n'
-  iomapReg += '\t}\n'
-  iomapReg += '\tcase '+DEVICE_NAME.upper()+'_CLEAR_'+fifo.upper()+':\n'
-  iomapReg += '\t{\n'
-  iomapReg += '\t\tclearFifo(dev->iomap_'+fifo.lower()+');\n'
-#  iomapReg += '\t\tclearFifo(dev->iomap_'+fifo.lower()+',dev->iomap1_'+fifo.lower()+');\n'
-  iomapReg += '\t\treturn 0;\n'
-  iomapReg += '\t}\n'
-iomapReg += '\tcase '+DEVICE_NAME.upper()+'_GET_REGISTERS:\n'
-iomapReg += '\t{\n'
-iomapReg += '\t\tstruct '+DEVICE_NAME.lower()+'_registers currConf;\n'
-iomapReg += '\t\tmemset(&currConf, 0, sizeof(currConf));\n'
+    iomap_name = get_iomap_name(fifo)
+
+    iomapReg += (
+        "\tcase "
+        + DEVICE_NAME.upper()
+        + "_GET_"
+        + fifo.upper()
+        + "_LEN:\n"
+    )
+
+    iomapReg += "\t{\n"
+
+    iomapReg += (
+        "\t\tu32 val = readFifo("
+        "dev->iomap_"
+        + iomap_name
+        + ", RDFO);\n"
+    )
+
+    iomapReg += (
+        "\t\tif (copy_to_user("
+        "(void __user *)arg, "
+        "&val, sizeof(u32)))\n"
+    )
+
+    iomapReg += "\t\t\treturn -EFAULT;\n"
+    iomapReg += "\t\treturn 0;\n"
+    iomapReg += "\t}\n"
+
+
+    iomapReg += (
+        "\tcase "
+        + DEVICE_NAME.upper()
+        + "_GET_"
+        + fifo.upper()
+        + "_VAL:\n"
+    )
+
+    iomapReg += "\t{\n"
+
+    iomapReg += (
+        "\t\tu32 val = readFifo("
+        "dev->iomap_"
+        + iomap_name
+        + ", RDFD);\n"
+    )
+
+    iomapReg += (
+        "\t\tif (copy_to_user("
+        "(void __user *)arg, "
+        "&val, sizeof(u32)))\n"
+    )
+
+    iomapReg += "\t\t\treturn -EFAULT;\n"
+    iomapReg += "\t\treturn 0;\n"
+    iomapReg += "\t}\n"
+
+
+    iomapReg += (
+        "\tcase "
+        + DEVICE_NAME.upper()
+        + "_SET_"
+        + fifo.upper()
+        + "_VAL:\n"
+    )
+
+    iomapReg += "\t{\n"
+    iomapReg += "\t\tu32 val;\n"
+
+    iomapReg += (
+        "\t\tif (copy_from_user("
+        "&val, "
+        "(void __user *)arg, "
+        "sizeof(u32)))\n"
+    )
+
+    iomapReg += "\t\t\treturn -EFAULT;\n"
+
+    iomapReg += (
+        "\t\twriteFifo("
+        "dev->iomap_"
+        + iomap_name
+        + ", TLR, 1);\n"
+    )
+
+    iomapReg += "\t\treturn 0;\n"
+    iomapReg += "\t}\n"
+
+
+    iomapReg += (
+        "\tcase "
+        + DEVICE_NAME.upper()
+        + "_CLEAR_"
+        + fifo.upper()
+        + ":\n"
+    )
+
+    iomapReg += "\t{\n"
+
+    iomapReg += (
+        "\t\tclearFifo("
+        "dev->iomap_"
+        + iomap_name
+        + ");\n"
+    )
+
+    iomapReg += "\t\treturn 0;\n"
+    iomapReg += "\t}\n"
+
+
+# GET_REGISTERS
+iomapReg += (
+    "\tcase "
+    + DEVICE_NAME.upper()
+    + "_GET_REGISTERS:\n"
+)
+
+iomapReg += "\t{\n"
+
+iomapReg += (
+    "\t\tstruct "
+    + DEVICE_NAME.lower()
+    + "_registers currConf;\n"
+)
+
+iomapReg += "\t\tmemset(&currConf, 0, sizeof(currConf));\n"
+
 for reg in registers:
-  iomapReg += '\t\tcurrConf.'+reg+' = *((u32 *)dev->iomap_'+reg+');\n'
-iomapReg += '\t\tcopy_to_user ((void __user *)arg, &currConf, sizeof(currConf));\n'
-iomapReg += '\t}\n'
+    iomapReg += (
+        "\t\tcurrConf."
+        + reg
+        + " = *((u32 *)dev->iomap_"
+        + reg
+        + ");\n"
+    )
 
-iomapReg += '\tcase '+DEVICE_NAME.upper()+'_SET_REGISTERS:\n'
-iomapReg += '\t{\n'
-iomapReg += '\t\tstruct '+DEVICE_NAME.lower()+'_registers currConf;\n'
-iomapReg += '\t\tcopy_from_user (&currConf, (void __user *)arg, sizeof(currConf));\n'
+iomapReg += (
+    "\t\tif (copy_to_user("
+    "(void __user *)arg, "
+    "&currConf, "
+    "sizeof(currConf)))\n"
+)
+
+iomapReg += "\t\t\treturn -EFAULT;\n"
+iomapReg += "\t\treturn 0;\n"
+iomapReg += "\t}\n"
+
+
+# SET_REGISTERS
+iomapReg += (
+    "\tcase "
+    + DEVICE_NAME.upper()
+    + "_SET_REGISTERS:\n"
+)
+
+iomapReg += "\t{\n"
+
+iomapReg += (
+    "\t\tstruct "
+    + DEVICE_NAME.lower()
+    + "_registers currConf;\n"
+)
+
+iomapReg += (
+    "\t\tif (copy_from_user("
+    "&currConf, "
+    "(void __user *)arg, "
+    "sizeof(currConf)))\n"
+)
+
+iomapReg += "\t\t\treturn -EFAULT;\n"
+
 for reg in registers:
-  iomapReg += '\t\tif(currConf.'+reg+'_enable)\n'
-  iomapReg += '\t\t\t*((u32 *)dev->iomap_'+reg+') = currConf.'+reg+';\n'
-iomapReg += '\t}\n'
-source = source.replace('$$MAP_IOCTL$$', iomapReg)
+    iomapReg += (
+        "\t\tif (currConf."
+        + reg
+        + "_enable)\n"
+    )
 
-mapFirstReg = ''
+    iomapReg += (
+        "\t\t\t*((u32 *)dev->iomap_"
+        + reg
+        + ") = currConf."
+        + reg
+        + ";\n"
+    )
 
-if isRegs[0]:
-  mapFirstReg += '\tr_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);\n'
-  mapFirstReg += '\toff = r_mem->start & ~PAGE_MASK;\n'
-  mapFirstReg += '\tstaticPrivateInfo.iomap_'+fifosRegs[0]+' = devm_ioremap(&pdev->dev,r_mem->start+off,0xffff);\n'
-else:
-  mapFirstReg += '\tr_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);\n'
-  mapFirstReg += '\toff = r_mem->start & ~PAGE_MASK;\n'
-  mapFirstReg += '\tstaticPrivateInfo.iomap_'+fifosRegs[0]+' = devm_ioremap(&pdev->dev,r_mem->start+off,0xffff);\n'
-#  mapFirstReg += '\tr_mem = platform_get_resource(pdev, IORESOURCE_MEM, 1);\n'
-#  mapFirstReg += '\toff = r_mem->start & ~PAGE_MASK;\n'
-#  mapFirstReg += '\tstaticPrivateInfo.iomap1_'+fifosRegs[0]+' = devm_ioremap(&pdev->dev,r_mem->start+off,0xffff);\n'
-#  if fifosRegs[0] == SYNCH_FIFO:
-#    mapFirstReg+= '\tsetIrq(pdev);\n'
+iomapReg += "\t\treturn 0;\n"
+iomapReg += "\t}\n"
 
 
+source = source.replace(
+    "$$MAP_IOCTL$$",
+    iomapReg,
+)
 
-mapReg = ''
-idx = 0
+
+# -------------------------------------------------------------------------
+# Map the first supported peripheral
+# -------------------------------------------------------------------------
+
+mapFirstReg = ""
+
+first_iomap_name = get_iomap_name(fifosRegs[0])
+
+mapFirstReg += (
+    "\tr_mem = platform_get_resource("
+    "pdev, IORESOURCE_MEM, 0);\n"
+)
+
+mapFirstReg += "\tif (!r_mem)\n"
+mapFirstReg += "\t\treturn -ENODEV;\n"
+
+mapFirstReg += "\toff = r_mem->start & ~PAGE_MASK;\n"
+
+mapFirstReg += (
+    "\tstaticPrivateInfo.iomap_"
+    + first_iomap_name
+    + " = devm_ioremap("
+    "&pdev->dev, "
+    "r_mem->start + off, "
+    "resource_size(r_mem));\n"
+)
+
+mapFirstReg += (
+    "\tif (!staticPrivateInfo.iomap_"
+    + first_iomap_name
+    + ")\n"
+)
+
+mapFirstReg += "\t\treturn -ENOMEM;\n"
+
+
+# -------------------------------------------------------------------------
+# Map the remaining supported peripherals
+# -------------------------------------------------------------------------
+
+mapReg = ""
 
 
 if isDma:
-  for i in range(0, len(fifosRegs)):
-    if isRegs[i]:
-      mapReg += '\tcase '+str(i)+':\n'
-      mapReg += '\t\tr_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);\n'
-      mapReg += '\t\toff = r_mem->start & ~PAGE_MASK;\n'
-      mapReg += '\t\tstaticPrivateInfo.iomap_'+fifosRegs[i]+' = devm_ioremap(&pdev->dev,r_mem->start+off,0xffff); break;\n'
-    else:
-      mapReg += '\tcase '+str(i)+':\n'
-      mapReg += '\t\tr_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);\n'
-      mapReg += '\t\toff = r_mem->start & ~PAGE_MASK;\n'
-      mapReg += '\t\tstaticPrivateInfo.iomap_'+fifosRegs[i]+' = devm_ioremap(&pdev->dev,r_mem->start+off,0xffff);\n'
-#      mapReg += '\t\tr_mem = platform_get_resource(pdev, IORESOURCE_MEM, 1);\n'
-#      mapReg += '\t\toff = r_mem->start & ~PAGE_MASK;\n'
-#      mapReg += '\t\tstaticPrivateInfo.iomap1_'+fifosRegs[i]+' = devm_ioremap(&pdev->dev,r_mem->start+off,0xffff);\n'
-#      if isSynchFifo and fifosRegs[i] == SYNCH_FIFO:
-#        mapReg+= '\t\tsetIrq(pdev);\n'
-      mapReg += '\tbreak;\n'  
+    start_index = 0
+else:
+    start_index = 1
 
-else:
-  for i in range(1, len(fifosRegs)):
-    if isRegs[i]:
-      mapReg += '\tcase '+str(i)+':\n'
-      mapReg += '\t\tr_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);\n'
-      mapReg += '\t\toff = r_mem->start & ~PAGE_MASK;\n'
-      mapReg += '\t\tstaticPrivateInfo.iomap_'+fifosRegs[i]+' = devm_ioremap(&pdev->dev,r_mem->start+off,0xffff); break;\n'
-    else:
-      mapReg += '\tcase '+str(i)+':\n'
-      mapReg += '\t\tr_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);\n'
-      mapReg += '\t\toff = r_mem->start & ~PAGE_MASK;\n'
-      mapReg += '\t\tstaticPrivateInfo.iomap_'+fifosRegs[i]+' = devm_ioremap(&pdev->dev,r_mem->start+off,0xffff);\n'
-      mapReg += '\t\tr_mem = platform_get_resource(pdev, IORESOURCE_MEM, 1);\n'
-      mapReg += '\t\toff = r_mem->start & ~PAGE_MASK;\n'
-#      mapReg += '\t\tstaticPrivateInfo.iomap1_'+fifosRegs[i]+' = devm_ioremap(&pdev->dev,r_mem->start+off,0xffff);\n'
-#      if isSynchFifo and fifosRegs[i] == SYNCH_FIFO:
-#        mapReg+= '\t\tsetIrq(pdev);\n'
-      mapReg += '\tbreak;\n'  
-  idx = idx+1
-  
-  
-if isDma:  
-  source = source.replace('$$MAP_FIRST_REGISTER$$', '')
-else: 
-  source = source.replace('$$MAP_FIRST_REGISTER$$', mapFirstReg)
-source = source.replace('$$MAP_REGISTERS$$', mapReg)
-source = source.replace('$$DEVICE_NAME_U$$', DEVICE_NAME.upper())
-source = source.replace('$$DEVICE_NAME_L$$', DEVICE_NAME.lower())
+
+for i in range(start_index, len(fifosRegs)):
+    iomap_name = get_iomap_name(fifosRegs[i])
+
+    mapReg += "\tcase " + str(i) + ":\n"
+
+    mapReg += (
+        "\t\tr_mem = platform_get_resource("
+        "pdev, IORESOURCE_MEM, 0);\n"
+    )
+
+    mapReg += "\t\tif (!r_mem)\n"
+    mapReg += "\t\t\treturn -ENODEV;\n"
+
+    mapReg += "\t\toff = r_mem->start & ~PAGE_MASK;\n"
+
+    mapReg += (
+        "\t\tstaticPrivateInfo.iomap_"
+        + iomap_name
+        + " = devm_ioremap("
+        "&pdev->dev, "
+        "r_mem->start + off, "
+        "resource_size(r_mem));\n"
+    )
+
+    mapReg += (
+        "\t\tif (!staticPrivateInfo.iomap_"
+        + iomap_name
+        + ")\n"
+    )
+
+    mapReg += "\t\t\treturn -ENOMEM;\n"
+    mapReg += "\t\tbreak;\n"
+
+
+# -------------------------------------------------------------------------
+# Replace source placeholders
+# -------------------------------------------------------------------------
+
 if isDma:
-  source = source.replace('$$SET_DEVICE_DMA_MODE$$', '#define HAS_DMA')
+    source = source.replace(
+        "$$MAP_FIRST_REGISTER$$",
+        "",
+    )
 else:
-  source = source.replace('$$SET_DEVICE_DMA_MODE$$', '')
-  
+    source = source.replace(
+        "$$MAP_FIRST_REGISTER$$",
+        mapFirstReg,
+    )
+
+
+source = source.replace(
+    "$$MAP_REGISTERS$$",
+    mapReg,
+)
+
+source = source.replace(
+    "$$DEVICE_NAME_U$$",
+    DEVICE_NAME.upper(),
+)
+
+source = source.replace(
+    "$$DEVICE_NAME_L$$",
+    DEVICE_NAME.lower(),
+)
+
+
+if isDma:
+    source = source.replace(
+        "$$SET_DEVICE_DMA_MODE$$",
+        "#define HAS_DMA",
+    )
+else:
+    source = source.replace(
+        "$$SET_DEVICE_DMA_MODE$$",
+        "",
+    )
+
+
 if isSynchFifo:
-  source = source.replace('$$SET_DEVICE_FIFO_MODE$$', '#define HAS_FIFO_INTERRUPT')
-  source = source.replace('$$SYNCH_FIFO$$', SYNCH_FIFO)
+    source = source.replace(
+        "$$SET_DEVICE_FIFO_MODE$$",
+        "#define HAS_FIFO_INTERRUPT",
+    )
+
+    source = source.replace(
+        "$$SYNCH_FIFO$$",
+        SYNCH_FIFO,
+    )
 else:
-  source = source.replace('$$SET_DEVICE_FIFO_MODE$$', '')
-  
+    source = source.replace(
+        "$$SET_DEVICE_FIFO_MODE$$",
+        "",
+    )
 
-outF = open(DEVICE_NAME.lower()+'.c','w')
-outF.write(source)
-outF.close()
+    source = source.replace(
+        "$$SYNCH_FIFO$$",
+        "",
+    )
 
 
+# -------------------------------------------------------------------------
+# Generate C source file
+# -------------------------------------------------------------------------
+
+source_output = DEVICE_NAME.lower() + ".c"
+
+try:
+    with open(
+        source_output,
+        "w",
+        encoding="utf-8",
+    ) as output_file:
+        output_file.write(source)
+except OSError as error:
+    print(
+        f"Error: cannot write '{source_output}': {error}",
+        file=sys.stderr,
+    )
+    sys.exit(1)
 
 
+print("")
+print("Driver files generated successfully:")
+print(f"  {source_output}")
+print(f"  {header_output}")
 
-
+if isSynchFifo:
+    print("")
+    print(f"Synchronous FIFO label : {SYNCH_FIFO}")
+    print("Generated C member     : iomap_stream_fifo")

@@ -21,28 +21,86 @@ if len(re.findall('dma@',t)) > 0:
   isDma = True
   print ('IS DMA!')
   
-print(t)
   
-regexpr = '[\s\t]*[a-zA-Z0-9\-_]+:\saxi_[a-zA-Z0-9\-_]+@[a-zA-Z0-9]+'
-fl = re.findall(regexpr, t)
+
+  
+  
+# Match a DTSI node label followed by one of the supported AXI node types.
+#
+# Example:
+#   REG_ICOMP: axi_cfg_register@a00f0000 {
+#   axi_fifo_mm_s_0: axi_fifo_mm_s@a0000000 {
+#
+# Addresses may contain hexadecimal digits from 0 to 9 and a to f.
+
+label_pattern = r"([a-zA-Z_][a-zA-Z0-9_-]*)"
+address_pattern = r"[0-9a-fA-F]+"
+
+# AXI configuration registers.
+regexp = re.compile(
+    rf"^\s*{label_pattern}\s*:\s*"
+    rf"axi_cfg_register@{address_pattern}\s*\{{",
+    re.MULTILINE,
+)
+
+registers = regexp.findall(t)
+
+# AXI status registers.
+regexp = re.compile(
+    rf"^\s*{label_pattern}\s*:\s*"
+    rf"axi_sts_register@{address_pattern}\s*\{{",
+    re.MULTILINE,
+)
+
+registers.extend(regexp.findall(t))
+
+# AXI FIFO MM-S peripherals.
+regexpr = re.compile(
+    rf"^\s*{label_pattern}\s*:\s*"
+    rf"axi_fifo_mm_s@{address_pattern}\s*\{{",
+    re.MULTILINE,
+)
+
+fifos = regexpr.findall(t)
+
+# Find only devices managed by this driver.
+# AXI BRAM controllers and other AXI peripherals are intentionally excluded.
+regexpr = re.compile(
+    rf"^\s*{label_pattern}\s*:\s*"
+    rf"(axi_cfg_register|axi_sts_register|axi_fifo_mm_s)"
+    rf"@{address_pattern}\s*\{{",
+    re.MULTILINE,
+)
+
 fifosRegs = []
 isRegs = []
-fifos = []
-registers = []
-print(fl)
-for f in fl:
-#  print(f)
-  fifosRegs.append(f.split()[0][:-1])
-  if 'axi_cfg_register' in f or 'axi_sts_register' in f:
-      isRegs.append(True)
-      registers.append(f.split()[0][:-1])
-  else:
-      isRegs.append(False)
-      fifos.append(f.split()[0][:-1])
 
-print('FIFOREGS: ', fifosRegs)
-print('REGS: ', registers)
-print('FIFOS: ', fifos)
+for match in regexpr.finditer(t):
+    device_label = match.group(1)
+    device_type = match.group(2)
+
+    fifosRegs.append(device_label)
+    isRegs.append(
+        device_type == "axi_cfg_register"
+        or device_type == "axi_sts_register"
+    )
+
+print("Registers:", registers)
+print("FIFOs:", fifos)
+print("Supported devices:", fifosRegs)
+
+if len(fifosRegs) == 0:
+    print(
+        "Error: no supported AXI devices were found in the device tree.",
+        file=sys.stderr,
+    )
+    print(
+        "Expected node types: axi_cfg_register, "
+        "axi_sts_register or axi_fifo_mm_s.",
+        file=sys.stderr,
+    )
+    print(f"Device tree: {DEVICE_TREE}", file=sys.stderr)
+    sys.exit(1)
 
 regConf = ''
 baseId = 20
@@ -120,13 +178,14 @@ for fifo in fifos:
   iomapReg += '\t{\n'
   iomapReg += '\t\tu32 val;\n'
   iomapReg += '\t\tcopy_from_user (&val, (void __user *)arg, sizeof(u32));\n'
-  iomapReg += '\t\twriteFifo(dev->iomap_'+fifo.lower()+',TDFD, val);\n'
-  iomapReg += '\t\twriteFifo(dev->iomap_'+fifo.lower()+',TLR, 4);\n'
+#  iomapReg += '\t\twriteFifo(dev->iomap1_'+fifo.lower()+',0, val);\n'
+  iomapReg += '\t\twriteFifo(dev->iomap_'+fifo.lower()+',TLR, 1);\n'
   iomapReg += '\t\treturn 0;\n'
   iomapReg += '\t}\n'
   iomapReg += '\tcase '+DEVICE_NAME.upper()+'_CLEAR_'+fifo.upper()+':\n'
   iomapReg += '\t{\n'
   iomapReg += '\t\tclearFifo(dev->iomap_'+fifo.lower()+');\n'
+#  iomapReg += '\t\tclearFifo(dev->iomap_'+fifo.lower()+',dev->iomap1_'+fifo.lower()+');\n'
   iomapReg += '\t\treturn 0;\n'
   iomapReg += '\t}\n'
 iomapReg += '\tcase '+DEVICE_NAME.upper()+'_GET_REGISTERS:\n'
@@ -148,18 +207,72 @@ for reg in registers:
 iomapReg += '\t}\n'
 source = source.replace('$$MAP_IOCTL$$', iomapReg)
 
+mapFirstReg = ''
 
-mapReg = '\n'
+if isRegs[0]:
+  mapFirstReg += '\tr_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);\n'
+  mapFirstReg += '\toff = r_mem->start & ~PAGE_MASK;\n'
+  mapFirstReg += '\tstaticPrivateInfo.iomap_'+fifosRegs[0]+' = devm_ioremap(&pdev->dev,r_mem->start+off,0xffff);\n'
+else:
+  mapFirstReg += '\tr_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);\n'
+  mapFirstReg += '\toff = r_mem->start & ~PAGE_MASK;\n'
+  mapFirstReg += '\tstaticPrivateInfo.iomap_'+fifosRegs[0]+' = devm_ioremap(&pdev->dev,r_mem->start+off,0xffff);\n'
+#  mapFirstReg += '\tr_mem = platform_get_resource(pdev, IORESOURCE_MEM, 1);\n'
+#  mapFirstReg += '\toff = r_mem->start & ~PAGE_MASK;\n'
+#  mapFirstReg += '\tstaticPrivateInfo.iomap1_'+fifosRegs[0]+' = devm_ioremap(&pdev->dev,r_mem->start+off,0xffff);\n'
+#  if fifosRegs[0] == SYNCH_FIFO:
+#    mapFirstReg+= '\tsetIrq(pdev);\n'
 
-for i in range(0, len(fifosRegs)):
-  mapReg += '\tcase '+str(i)+':\n'
-  mapReg += '\t\tr_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);\n'
-  mapReg += '\t\tif(!r_mem) {\n\t\t\tprintk("Failed to get MEM resource\\n");\n\t\t\t return(-ENODEV);\n\t\t }\n'
-  mapReg += '\t\tstaticPrivateInfo.iomap_'+fifosRegs[i]+' = devm_ioremap_resource(&pdev->dev,r_mem);\n'
-  mapReg += '\t\tif(IS_ERR(staticPrivateInfo.iomap_'+fifosRegs[i]+')) {\n\t\t\tprintk("Failed to map staticPrivateInfo.iomap_'+fifosRegs[i]+'\\n");\n\t\t\treturn(-ENODEV);\n\t\t}\n'
-  mapReg += '\tbreak;\n'
 
+
+mapReg = ''
+idx = 0
+
+
+if isDma:
+  for i in range(0, len(fifosRegs)):
+    if isRegs[i]:
+      mapReg += '\tcase '+str(i)+':\n'
+      mapReg += '\t\tr_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);\n'
+      mapReg += '\t\toff = r_mem->start & ~PAGE_MASK;\n'
+      mapReg += '\t\tstaticPrivateInfo.iomap_'+fifosRegs[i]+' = devm_ioremap(&pdev->dev,r_mem->start+off,0xffff); break;\n'
+    else:
+      mapReg += '\tcase '+str(i)+':\n'
+      mapReg += '\t\tr_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);\n'
+      mapReg += '\t\toff = r_mem->start & ~PAGE_MASK;\n'
+      mapReg += '\t\tstaticPrivateInfo.iomap_'+fifosRegs[i]+' = devm_ioremap(&pdev->dev,r_mem->start+off,0xffff);\n'
+#      mapReg += '\t\tr_mem = platform_get_resource(pdev, IORESOURCE_MEM, 1);\n'
+#      mapReg += '\t\toff = r_mem->start & ~PAGE_MASK;\n'
+#      mapReg += '\t\tstaticPrivateInfo.iomap1_'+fifosRegs[i]+' = devm_ioremap(&pdev->dev,r_mem->start+off,0xffff);\n'
+#      if isSynchFifo and fifosRegs[i] == SYNCH_FIFO:
+#        mapReg+= '\t\tsetIrq(pdev);\n'
+      mapReg += '\tbreak;\n'  
+
+else:
+  for i in range(1, len(fifosRegs)):
+    if isRegs[i]:
+      mapReg += '\tcase '+str(i)+':\n'
+      mapReg += '\t\tr_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);\n'
+      mapReg += '\t\toff = r_mem->start & ~PAGE_MASK;\n'
+      mapReg += '\t\tstaticPrivateInfo.iomap_'+fifosRegs[i]+' = devm_ioremap(&pdev->dev,r_mem->start+off,0xffff); break;\n'
+    else:
+      mapReg += '\tcase '+str(i)+':\n'
+      mapReg += '\t\tr_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);\n'
+      mapReg += '\t\toff = r_mem->start & ~PAGE_MASK;\n'
+      mapReg += '\t\tstaticPrivateInfo.iomap_'+fifosRegs[i]+' = devm_ioremap(&pdev->dev,r_mem->start+off,0xffff);\n'
+      mapReg += '\t\tr_mem = platform_get_resource(pdev, IORESOURCE_MEM, 1);\n'
+      mapReg += '\t\toff = r_mem->start & ~PAGE_MASK;\n'
+#      mapReg += '\t\tstaticPrivateInfo.iomap1_'+fifosRegs[i]+' = devm_ioremap(&pdev->dev,r_mem->start+off,0xffff);\n'
+#      if isSynchFifo and fifosRegs[i] == SYNCH_FIFO:
+#        mapReg+= '\t\tsetIrq(pdev);\n'
+      mapReg += '\tbreak;\n'  
+  idx = idx+1
   
+  
+if isDma:  
+  source = source.replace('$$MAP_FIRST_REGISTER$$', '')
+else: 
+  source = source.replace('$$MAP_FIRST_REGISTER$$', mapFirstReg)
 source = source.replace('$$MAP_REGISTERS$$', mapReg)
 source = source.replace('$$DEVICE_NAME_U$$', DEVICE_NAME.upper())
 source = source.replace('$$DEVICE_NAME_L$$', DEVICE_NAME.lower())

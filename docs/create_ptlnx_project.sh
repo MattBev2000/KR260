@@ -5,8 +5,8 @@
 ###############################################################################
 #
 # Usage examples:
-#   ./prj_create.sh -xsa /path/to/design.xsa -bit /path/to/design.bit
-#   ./prj_create.sh -xsa /path/to/design.xsa -bit /path/to/design.bit -n DCCT_v2.1
+#   ./create_ptlnx_project.sh -xsa /path/to/design.xsa -bit /path/to/design.bit
+#   ./create_ptlnx_project.sh -xsa /path/to/design.xsa -bit /path/to/design.bit -n DCCT_v2.1
 #
 ###############################################################################
 

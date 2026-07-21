@@ -259,7 +259,7 @@ DRIVER_FILES_DIR="$DRIVER_MODULE_DIR/files"
 echo ""
 echo "Driver name        : $DRIVER_NAME"
 echo "Python generator   : $SOURCE_PY_ABS"
-echo "PL DTSI            : $PL_DTSI_FILE_ABS"
+echo "Original PL DTSI   : $PL_DTSI_FILE_ABS"
 echo "FIFO name          : $FIFO_NAME"
 echo "Project root       : $PROJECT_ROOT"
 echo "Driver directory   : $DRIVER_MODULE_DIR"
@@ -372,220 +372,6 @@ echo ""
 
 
 ###############################################################################
-# Run Python generator
-###############################################################################
-
-echo "Running Python generator:"
-echo ""
-echo "Driver:"
-echo "  $DRIVER_NAME"
-echo ""
-echo "DTSI:"
-echo "  $PL_DTSI_FILE_ABS"
-echo ""
-echo "FIFO:"
-echo "  $FIFO_NAME"
-echo ""
-
-
-
-if (
-    cd "$PROJECT_ROOT"
-
-
-    "$PYTHON_BIN" \
-        "$COPIED_SOURCE_PY" \
-        "$DRIVER_NAME" \
-        "$PL_DTSI_FILE_ABS" \
-        "$FIFO_NAME"
-
-)
-then
-
-    echo ""
-    echo "Python generator completed successfully."
-
-else
-
-    RETVAL=$?
-
-
-    echo ""
-    echo "Python generator failed."
-    echo "Return code: $RETVAL"
-
-    exit "$RETVAL"
-
-fi
-
-
-
-
-###############################################################################
-# Locate generated driver files
-###############################################################################
-
-DRIVER_NAME_LOWER="${DRIVER_NAME,,}"
-
-
-GENERATED_SOURCE="$PROJECT_ROOT/${DRIVER_NAME_LOWER}.c"
-
-GENERATED_HEADER="$PROJECT_ROOT/${DRIVER_NAME_LOWER}.h"
-
-
-
-if [[ ! -f "$GENERATED_SOURCE" ]]; then
-
-    echo "Error: generated source file not found:"
-    echo "$GENERATED_SOURCE"
-
-    exit 1
-
-fi
-
-
-
-if [[ ! -f "$GENERATED_HEADER" ]]; then
-
-    echo "Error: generated header file not found:"
-    echo "$GENERATED_HEADER"
-
-    exit 1
-
-fi
-
-
-
-###############################################################################
-# Copy driver files into PetaLinux module
-###############################################################################
-
-echo ""
-echo "Copying generated driver files..."
-echo ""
-
-
-
-cp -f \
-    "$GENERATED_SOURCE" \
-    "$DRIVER_FILES_DIR/${DRIVER_NAME}.c"
-
-
-
-cp -f \
-    "$GENERATED_HEADER" \
-    "$DRIVER_FILES_DIR/${DRIVER_NAME}.h"
-
-
-
-echo "Driver files installed:"
-echo ""
-echo "  $DRIVER_FILES_DIR/${DRIVER_NAME}.c"
-echo "  $DRIVER_FILES_DIR/${DRIVER_NAME}.h"
-echo ""
-
-
-
-###############################################################################
-# Update Makefile
-###############################################################################
-
-MAKEFILE="$DRIVER_FILES_DIR/Makefile"
-
-
-if [[ ! -f "$MAKEFILE" ]]; then
-
-    echo "Error: Makefile not found:"
-    echo "$MAKEFILE"
-
-    exit 1
-
-fi
-
-
-
-INCLUDE_OPTION="-I$DRIVER_FILES_DIR"
-
-
-
-echo "Updating Makefile..."
-
-
-
-if grep -Fq -- "$INCLUDE_OPTION" "$MAKEFILE"; then
-
-    echo "Include path already present."
-
-else
-
-
-    if grep -Eq '^[[:space:]]*MY_CFLAGS[[:space:]]*\+=' "$MAKEFILE"; then
-
-
-        sed -i \
-            "/^[[:space:]]*MY_CFLAGS[[:space:]]*+=/ s|\$| $INCLUDE_OPTION|" \
-            "$MAKEFILE"
-
-
-    else
-
-
-        echo "MY_CFLAGS += -g -DDEBUG $INCLUDE_OPTION" \
-            >> "$MAKEFILE"
-
-
-    fi
-
-
-fi
-
-
-
-echo ""
-echo "Current MY_CFLAGS:"
-grep -E '^[[:space:]]*MY_CFLAGS[[:space:]]*\+=' "$MAKEFILE" || true
-
-echo ""
-
-
-
-###############################################################################
-# Build kernel module
-###############################################################################
-
-echo ""
-echo "Building PetaLinux module:"
-echo "  $DRIVER_NAME"
-echo ""
-
-
-
-if "$PETALINUX_BUILD_BIN" -c "$DRIVER_NAME"; then
-
-
-    echo ""
-    echo "Kernel module built successfully."
-
-
-else
-
-
-    RETVAL=$?
-
-
-    echo ""
-    echo "petalinux-build failed."
-    echo "Return code: $RETVAL"
-
-    exit "$RETVAL"
-
-
-fi
-
-
-
-
-###############################################################################
 # Create wrapper directory
 ###############################################################################
 
@@ -616,108 +402,6 @@ mkdir -p "$WRAPPER_DIR"
 
 echo "Wrapper:"
 echo "  $WRAPPER_DIR"
-echo ""
-
-
-
-###############################################################################
-# Locate kernel module
-###############################################################################
-
-KO_SEARCH_ROOT="$PROJECT_ROOT/build/tmp/sysroots-components/xilinx_k26_kr/$DRIVER_NAME"
-
-
-
-KO_FILE="$KO_SEARCH_ROOT/lib/modules/5.15.36-xilinx-v2022.2/extra/${DRIVER_NAME}.ko"
-
-
-
-if [[ ! -f "$KO_FILE" ]]; then
-
-
-    KO_FILE="$(
-        find "$KO_SEARCH_ROOT" \
-            -type f \
-            -name "${DRIVER_NAME}.ko" \
-            -print \
-            -quit 2>/dev/null || true
-    )"
-
-
-fi
-
-
-
-if [[ -z "$KO_FILE" || ! -f "$KO_FILE" ]]; then
-
-
-    echo "Error: kernel module not found:"
-    echo "$DRIVER_NAME.ko"
-
-    exit 1
-
-
-fi
-
-
-
-cp -f \
-    "$KO_FILE" \
-    "$WRAPPER_DIR/${DRIVER_NAME}.ko"
-
-
-
-echo "Kernel module copied:"
-echo "  $WRAPPER_DIR/${DRIVER_NAME}.ko"
-
-
-
-###############################################################################
-# Copy generated source and header into wrapper
-###############################################################################
-
-DRIVER_SOURCE_FILE="$DRIVER_FILES_DIR/${DRIVER_NAME}.c"
-
-DRIVER_HEADER_FILE="$DRIVER_FILES_DIR/${DRIVER_NAME}.h"
-
-
-
-if [[ ! -f "$DRIVER_SOURCE_FILE" ]]; then
-
-    echo "Error: driver source file not found:"
-    echo "$DRIVER_SOURCE_FILE"
-
-    exit 1
-
-fi
-
-
-
-if [[ ! -f "$DRIVER_HEADER_FILE" ]]; then
-
-    echo "Error: driver header file not found:"
-    echo "$DRIVER_HEADER_FILE"
-
-    exit 1
-
-fi
-
-
-
-cp -f \
-    "$DRIVER_SOURCE_FILE" \
-    "$WRAPPER_DIR/"
-
-
-
-cp -f \
-    "$DRIVER_HEADER_FILE" \
-    "$WRAPPER_DIR/"
-
-
-
-echo ""
-echo "Driver source/header copied into wrapper."
 echo ""
 
 
@@ -1088,6 +772,322 @@ fi
 echo "Generated DTBO:"
 echo "  $PL_DTBO_FILE"
 echo ""
+
+###############################################################################
+# Run Python generator
+###############################################################################
+
+echo "Running Python generator:"
+echo ""
+echo "Driver:"
+echo "  $DRIVER_NAME"
+echo ""
+echo "DTSI:"
+echo "  $PL_OVERLAY_DTSI_FILE"
+echo ""
+echo "FIFO:"
+echo "  $FIFO_NAME"
+echo ""
+
+
+
+if (
+    cd "$PROJECT_ROOT"
+
+
+    "$PYTHON_BIN" \
+        "$COPIED_SOURCE_PY" \
+        "$DRIVER_NAME" \
+        "$PL_OVERLAY_DTSI_FILE" \
+        "$FIFO_NAME"
+
+)
+then
+
+    echo ""
+    echo "Python generator completed successfully."
+
+else
+
+    RETVAL=$?
+
+
+    echo ""
+    echo "Python generator failed."
+    echo "Return code: $RETVAL"
+
+    exit "$RETVAL"
+
+fi
+
+
+
+
+###############################################################################
+# Locate generated driver files
+###############################################################################
+
+DRIVER_NAME_LOWER="${DRIVER_NAME,,}"
+
+
+GENERATED_SOURCE="$PROJECT_ROOT/${DRIVER_NAME_LOWER}.c"
+
+GENERATED_HEADER="$PROJECT_ROOT/${DRIVER_NAME_LOWER}.h"
+
+
+
+if [[ ! -f "$GENERATED_SOURCE" ]]; then
+
+    echo "Error: generated source file not found:"
+    echo "$GENERATED_SOURCE"
+
+    exit 1
+
+fi
+
+
+
+if [[ ! -f "$GENERATED_HEADER" ]]; then
+
+    echo "Error: generated header file not found:"
+    echo "$GENERATED_HEADER"
+
+    exit 1
+
+fi
+
+
+
+###############################################################################
+# Copy driver files into PetaLinux module
+###############################################################################
+
+echo ""
+echo "Copying generated driver files..."
+echo ""
+
+
+
+cp -f \
+    "$GENERATED_SOURCE" \
+    "$DRIVER_FILES_DIR/${DRIVER_NAME}.c"
+
+
+
+cp -f \
+    "$GENERATED_HEADER" \
+    "$DRIVER_FILES_DIR/${DRIVER_NAME}.h"
+
+
+
+echo "Driver files installed:"
+echo ""
+echo "  $DRIVER_FILES_DIR/${DRIVER_NAME}.c"
+echo "  $DRIVER_FILES_DIR/${DRIVER_NAME}.h"
+echo ""
+
+
+
+###############################################################################
+# Update Makefile
+###############################################################################
+
+MAKEFILE="$DRIVER_FILES_DIR/Makefile"
+
+
+if [[ ! -f "$MAKEFILE" ]]; then
+
+    echo "Error: Makefile not found:"
+    echo "$MAKEFILE"
+
+    exit 1
+
+fi
+
+
+
+INCLUDE_OPTION="-I$DRIVER_FILES_DIR"
+
+
+
+echo "Updating Makefile..."
+
+
+
+if grep -Fq -- "$INCLUDE_OPTION" "$MAKEFILE"; then
+
+    echo "Include path already present."
+
+else
+
+
+    if grep -Eq '^[[:space:]]*MY_CFLAGS[[:space:]]*\+=' "$MAKEFILE"; then
+
+
+        sed -i \
+            "/^[[:space:]]*MY_CFLAGS[[:space:]]*+=/ s|\$| $INCLUDE_OPTION|" \
+            "$MAKEFILE"
+
+
+    else
+
+
+        echo "MY_CFLAGS += -g -DDEBUG $INCLUDE_OPTION" \
+            >> "$MAKEFILE"
+
+
+    fi
+
+
+fi
+
+
+
+echo ""
+echo "Current MY_CFLAGS:"
+grep -E '^[[:space:]]*MY_CFLAGS[[:space:]]*\+=' "$MAKEFILE" || true
+
+echo ""
+
+
+
+###############################################################################
+# Build kernel module
+###############################################################################
+
+echo ""
+echo "Building PetaLinux module:"
+echo "  $DRIVER_NAME"
+echo ""
+
+
+
+if "$PETALINUX_BUILD_BIN" -c "$DRIVER_NAME"; then
+
+
+    echo ""
+    echo "Kernel module built successfully."
+
+
+else
+
+
+    RETVAL=$?
+
+
+    echo ""
+    echo "petalinux-build failed."
+    echo "Return code: $RETVAL"
+
+    exit "$RETVAL"
+
+
+fi
+
+
+
+
+###############################################################################
+# Locate kernel module
+###############################################################################
+
+KO_SEARCH_ROOT="$PROJECT_ROOT/build/tmp/sysroots-components/xilinx_k26_kr/$DRIVER_NAME"
+
+
+
+KO_FILE="$KO_SEARCH_ROOT/lib/modules/5.15.36-xilinx-v2022.2/extra/${DRIVER_NAME}.ko"
+
+
+
+if [[ ! -f "$KO_FILE" ]]; then
+
+
+    KO_FILE="$(
+        find "$KO_SEARCH_ROOT" \
+            -type f \
+            -name "${DRIVER_NAME}.ko" \
+            -print \
+            -quit 2>/dev/null || true
+    )"
+
+
+fi
+
+
+
+if [[ -z "$KO_FILE" || ! -f "$KO_FILE" ]]; then
+
+
+    echo "Error: kernel module not found:"
+    echo "$DRIVER_NAME.ko"
+
+    exit 1
+
+
+fi
+
+
+
+cp -f \
+    "$KO_FILE" \
+    "$WRAPPER_DIR/${DRIVER_NAME}.ko"
+
+
+
+echo "Kernel module copied:"
+echo "  $WRAPPER_DIR/${DRIVER_NAME}.ko"
+
+
+
+###############################################################################
+# Copy generated source and header into wrapper
+###############################################################################
+
+DRIVER_SOURCE_FILE="$DRIVER_FILES_DIR/${DRIVER_NAME}.c"
+
+DRIVER_HEADER_FILE="$DRIVER_FILES_DIR/${DRIVER_NAME}.h"
+
+
+
+if [[ ! -f "$DRIVER_SOURCE_FILE" ]]; then
+
+    echo "Error: driver source file not found:"
+    echo "$DRIVER_SOURCE_FILE"
+
+    exit 1
+
+fi
+
+
+
+if [[ ! -f "$DRIVER_HEADER_FILE" ]]; then
+
+    echo "Error: driver header file not found:"
+    echo "$DRIVER_HEADER_FILE"
+
+    exit 1
+
+fi
+
+
+
+cp -f \
+    "$DRIVER_SOURCE_FILE" \
+    "$WRAPPER_DIR/"
+
+
+
+cp -f \
+    "$DRIVER_HEADER_FILE" \
+    "$WRAPPER_DIR/"
+
+
+
+echo ""
+echo "Driver source/header copied into wrapper."
+echo ""
+
+
 
 ###############################################################################
 # Locate WIC image

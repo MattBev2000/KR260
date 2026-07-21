@@ -61,7 +61,6 @@ while [[ $# -gt 0 ]]; do
             shift 2
             ;;
 
-
         -h|--help)
             usage
             exit 0
@@ -149,7 +148,6 @@ if [[ ! "$DRIVER_NAME" =~ ^[A-Za-z0-9][A-Za-z0-9_-]*$ ]]; then
     exit 1
 
 fi
-
 
 
 ###############################################################################
@@ -725,43 +723,371 @@ echo ""
 
 
 ###############################################################################
-# Copy programmable logic device-tree overlay into wrapper
+# Create reduced PL overlay and compile it from pl.dtsi
 ###############################################################################
 
-echo "Copying programmable-logic device-tree overlay..."
+echo "Creating reduced programmable-logic device-tree overlay..."
 echo ""
 
-PL_DTBO_FILE="$PROJECT_ROOT/images/linux/pl.dtbo"
+DTC_BIN="$(command -v dtc || true)"
 
-if [[ ! -f "$PL_DTBO_FILE" ]]; then
+if [[ -z "$DTC_BIN" ]]; then
+    DTC_BIN="$PROJECT_ROOT/build/tmp/sysroots-components/x86_64/dtc-native/usr/bin/dtc"
+fi
 
-    echo "Error: pl.dtbo not found:"
-    echo "  $PL_DTBO_FILE"
-    echo ""
-    echo "Generate it before running this script, for example with:"
-    echo "  petalinux-build -c device-tree"
-
+if [[ ! -x "$DTC_BIN" ]]; then
+    echo "Error: device-tree compiler 'dtc' was not found." >&2
+    echo "Checked PATH and:" >&2
+    echo "  $PROJECT_ROOT/build/tmp/sysroots-components/x86_64/dtc-native/usr/bin/dtc" >&2
+    echo "" >&2
+    echo "Build the PetaLinux device-tree component first, for example:" >&2
+    echo "  petalinux-build -c device-tree" >&2
     exit 1
+fi
 
+PL_OVERLAY_DTSI_FILE="$WRAPPER_DIR/pl.dtsi"
+PL_DTBO_FILE="$WRAPPER_DIR/pl.dtbo"
+
+# Generate a reduced overlay by:
+#   1. removing fragment@0;
+#   2. keeping fragment@1;
+#   3. moving every top-level property of fragment@2's __overlay__ to the
+#      beginning of fragment@1's __overlay__;
+#   4. appending all child nodes of fragment@2 after the child nodes already
+#      present in fragment@1;
+#   5. removing fragment@2.
+#
+# Device Tree properties must precede child nodes. A brace-aware Python parser
+# is used so the transformation is independent of indentation and nested nodes.
+"$PYTHON_BIN" - "$PL_DTSI_FILE_ABS" "$PL_OVERLAY_DTSI_FILE" <<'PY_DTSI'
+import re
+import sys
+from pathlib import Path
+
+source_path = Path(sys.argv[1])
+destination_path = Path(sys.argv[2])
+text = source_path.read_text(encoding="utf-8")
+
+
+def matching_brace(data: str, opening: int) -> int:
+    depth = 0
+    state = "normal"
+    i = opening
+
+    while i < len(data):
+        ch = data[i]
+        nxt = data[i + 1] if i + 1 < len(data) else ""
+
+        if state == "normal":
+            if ch == '"':
+                state = "string"
+            elif ch == "/" and nxt == "*":
+                state = "block_comment"
+                i += 1
+            elif ch == "/" and nxt == "/":
+                state = "line_comment"
+                i += 1
+            elif ch == "{":
+                depth += 1
+            elif ch == "}":
+                depth -= 1
+                if depth == 0:
+                    return i
+
+        elif state == "string":
+            if ch == "\\":
+                i += 1
+            elif ch == '"':
+                state = "normal"
+
+        elif state == "block_comment":
+            if ch == "*" and nxt == "/":
+                state = "normal"
+                i += 1
+
+        elif state == "line_comment":
+            if ch == "\n":
+                state = "normal"
+
+        i += 1
+
+    raise ValueError("unbalanced braces")
+
+
+def find_fragment(data: str, number: int):
+    pattern = re.compile(rf"(?m)^[ \t]*fragment@{number}[ \t]*\{{")
+    matches = list(pattern.finditer(data))
+
+    if len(matches) != 1:
+        raise ValueError(
+            f"expected exactly one fragment@{number}, found {len(matches)}"
+        )
+
+    match = matches[0]
+    opening = data.find("{", match.start(), match.end())
+    closing = matching_brace(data, opening)
+
+    end = closing + 1
+    while end < len(data) and data[end] in " \t":
+        end += 1
+    if end < len(data) and data[end] == ";":
+        end += 1
+    if end < len(data) and data[end] == "\r":
+        end += 1
+    if end < len(data) and data[end] == "\n":
+        end += 1
+
+    return match.start(), end, data[match.start():end]
+
+
+def find_overlay_body(fragment: str):
+    pattern = re.compile(
+        r"(?m)^[ \t]*(?:[A-Za-z_][A-Za-z0-9_]*[ \t]*:[ \t]*)?"
+        r"__overlay__[ \t]*\{"
+    )
+    matches = list(pattern.finditer(fragment))
+
+    if len(matches) != 1:
+        raise ValueError(
+            f"expected exactly one __overlay__ node, found {len(matches)}"
+        )
+
+    match = matches[0]
+    opening = fragment.find("{", match.start(), match.end())
+    closing = matching_brace(fragment, opening)
+    return opening + 1, closing
+
+
+def split_top_level_items(body: str):
+    """Return top-level DTS properties and child nodes from an overlay body."""
+    items = []
+    start = 0
+    depth = 0
+    state = "normal"
+    i = 0
+
+    while i < len(body):
+        ch = body[i]
+        nxt = body[i + 1] if i + 1 < len(body) else ""
+
+        if state == "normal":
+            if ch == '"':
+                state = "string"
+            elif ch == "/" and nxt == "*":
+                state = "block_comment"
+                i += 1
+            elif ch == "/" and nxt == "/":
+                state = "line_comment"
+                i += 1
+            elif ch == "{":
+                depth += 1
+            elif ch == "}":
+                depth -= 1
+                if depth < 0:
+                    raise ValueError("unexpected closing brace in overlay body")
+            elif ch == ";" and depth == 0:
+                item = body[start:i + 1].strip()
+                if item:
+                    items.append(item)
+                start = i + 1
+
+        elif state == "string":
+            if ch == "\\":
+                i += 1
+            elif ch == '"':
+                state = "normal"
+
+        elif state == "block_comment":
+            if ch == "*" and nxt == "/":
+                state = "normal"
+                i += 1
+
+        elif state == "line_comment":
+            if ch == "\n":
+                state = "normal"
+
+        i += 1
+
+    trailing = body[start:].strip()
+    if trailing:
+        raise ValueError(f"unparsed trailing overlay content: {trailing[:80]!r}")
+
+    properties = []
+    children = []
+
+    for item in items:
+        if "{" in item:
+            children.append(item)
+        else:
+            properties.append(item)
+
+    return properties, children
+
+
+def property_name(statement: str):
+    match = re.match(r"\s*([#A-Za-z_][#A-Za-z0-9_,+.-]*)\s*=", statement)
+    return match.group(1) if match else None
+
+
+def indent_block(block: str, indentation: str) -> str:
+    lines = block.splitlines()
+    nonempty = [line for line in lines if line.strip()]
+    if not nonempty:
+        return ""
+
+    common = min(len(line) - len(line.lstrip()) for line in nonempty)
+    normalized = [line[common:] if line.strip() else "" for line in lines]
+    return "\n".join(indentation + line if line else "" for line in normalized)
+
+
+try:
+    fragment0 = find_fragment(text, 0)
+    fragment1 = find_fragment(text, 1)
+    fragment2 = find_fragment(text, 2)
+
+    body1_start, body1_end = find_overlay_body(fragment1[2])
+    body2_start, body2_end = find_overlay_body(fragment2[2])
+
+    fragment1_text = fragment1[2]
+    body1 = fragment1_text[body1_start:body1_end]
+    body2 = fragment2[2][body2_start:body2_end]
+
+    properties1, children1 = split_top_level_items(body1)
+    properties2, children2 = split_top_level_items(body2)
+
+    # Merge properties while avoiding duplicate property names. Properties
+    # already present in fragment@1 take precedence.
+    merged_properties = []
+    seen_property_names = set()
+
+    for statement in properties1 + properties2:
+        name = property_name(statement)
+        if name is not None and name in seen_property_names:
+            continue
+        if name is not None:
+            seen_property_names.add(name)
+        merged_properties.append(statement)
+
+    required = {"#address-cells", "#size-cells"}
+    missing = required - seen_property_names
+    if missing:
+        raise ValueError(
+            "missing required overlay properties: " + ", ".join(sorted(missing))
+        )
+
+    overlay_line_start = fragment1_text.rfind("\n", 0, body1_start) + 1
+    overlay_line = fragment1_text[overlay_line_start:body1_start]
+    overlay_indent = re.match(r"[ \t]*", overlay_line).group(0)
+    item_indent = overlay_indent + "        "
+
+    ordered_items = merged_properties + children1 + children2
+    merged_body = "\n".join(
+        indent_block(item, item_indent) for item in ordered_items if item.strip()
+    )
+
+    closing_line_start = fragment1_text.rfind("\n", 0, body1_end) + 1
+    closing_indent = fragment1_text[closing_line_start:body1_end]
+
+    merged_fragment1 = (
+        fragment1_text[:body1_start]
+        + "\n"
+        + merged_body
+        + "\n"
+        + closing_indent
+        + fragment1_text[body1_end:]
+    )
+
+    replacements = [
+        (fragment0[0], fragment0[1], ""),
+        (fragment1[0], fragment1[1], merged_fragment1),
+        (fragment2[0], fragment2[1], ""),
+    ]
+
+    result = text
+    for begin, finish, replacement in sorted(
+        replacements, key=lambda item: item[0], reverse=True
+    ):
+        result = result[:begin] + replacement + result[finish:]
+
+    if "fragment@0" in result or "fragment@2" in result:
+        raise ValueError("fragment@0 or fragment@2 remained in generated file")
+    if result.count("fragment@1") != 1:
+        raise ValueError("generated file does not contain exactly one fragment@1")
+
+    # Validate property ordering in the generated overlay before invoking dtc.
+    generated_fragment1 = find_fragment(result, 1)[2]
+    generated_body_start, generated_body_end = find_overlay_body(generated_fragment1)
+    generated_body = generated_fragment1[generated_body_start:generated_body_end]
+    generated_properties, generated_children = split_top_level_items(generated_body)
+
+    if not generated_children:
+        raise ValueError("generated overlay contains no child nodes")
+
+    generated_property_names = {
+        name for name in map(property_name, generated_properties) if name is not None
+    }
+    if not required.issubset(generated_property_names):
+        raise ValueError("generated overlay lost address/size cell properties")
+
+    destination_path.write_text(result, encoding="utf-8")
+
+except (OSError, ValueError) as exc:
+    print(f"Error while generating reduced pl.dtsi: {exc}", file=sys.stderr)
+    sys.exit(1)
+PY_DTSI
+
+if [[ ! -s "$PL_OVERLAY_DTSI_FILE" ]]; then
+    echo "Error: generated reduced pl.dtsi is missing or empty:" >&2
+    echo "  $PL_OVERLAY_DTSI_FILE" >&2
+    exit 1
+fi
+
+if grep -Eq 'fragment@0|fragment@2' "$PL_OVERLAY_DTSI_FILE"; then
+    echo "Error: generated pl.dtsi still contains fragment@0 or fragment@2." >&2
+    rm -f "$PL_OVERLAY_DTSI_FILE"
+    exit 1
+fi
+
+if ! grep -Eq 'fragment@1[[:space:]]*\{' "$PL_OVERLAY_DTSI_FILE"; then
+    echo "Error: generated pl.dtsi does not contain fragment@1." >&2
+    rm -f "$PL_OVERLAY_DTSI_FILE"
+    exit 1
+fi
+
+echo "Reduced overlay source generated:"
+echo "  $PL_OVERLAY_DTSI_FILE"
+echo ""
+echo "DTC compiler:"
+echo "  $DTC_BIN"
+echo ""
+echo "Overlay output:"
+echo "  $PL_DTBO_FILE"
+echo ""
+
+if "$DTC_BIN" \
+    -@ \
+    -I dts \
+    -O dtb \
+    -o "$PL_DTBO_FILE" \
+    "$PL_OVERLAY_DTSI_FILE"; then
+    echo "Device-tree overlay compiled successfully."
+else
+    RETVAL=$?
+    echo "Error: failed to compile the reduced pl.dtsi into pl.dtbo." >&2
+    echo "Return code: $RETVAL" >&2
+    rm -f "$PL_DTBO_FILE"
+    exit "$RETVAL"
 fi
 
 if [[ ! -s "$PL_DTBO_FILE" ]]; then
-
-    echo "Error: pl.dtbo exists but is empty:"
-    echo "  $PL_DTBO_FILE"
-
+    echo "Error: generated pl.dtbo is missing or empty:" >&2
+    echo "  $PL_DTBO_FILE" >&2
     exit 1
-
 fi
 
-cp -f \
-    "$PL_DTBO_FILE" \
-    "$WRAPPER_DIR/pl.dtbo"
-
-echo "DTBO copied:"
-echo "  $WRAPPER_DIR/pl.dtbo"
+echo "Generated DTBO:"
+echo "  $PL_DTBO_FILE"
 echo ""
-
 
 ###############################################################################
 # Locate WIC image
@@ -868,6 +1194,7 @@ echo "    ${DRIVER_NAME}.ko"
 echo ""
 
 echo "  Device tree:"
+echo "    pl.dtsi"
 echo "    pl.dtbo"
 
 echo ""

@@ -1,0 +1,178 @@
+$$SET_DEVICE_FIFO_MODE$$
+$$SET_DEVICE_DMA_MODE$$
+#include <linux/kernel.h>
+#include <linux/init.h>
+#include <linux/module.h>
+#include <linux/slab.h>
+#include <linux/io.h>
+#include <linux/interrupt.h>
+#include <linux/of_address.h>
+#include <linux/of_device.h>
+#include <linux/of_platform.h>
+#include <linux/poll.h>
+#include "$$DEVICE_NAME_L$$.h"
+#include <linux/dmaengine.h>
+#include <linux/dma/xilinx_dma.h>
+#include <asm/io.h>
+#include <linux/semaphore.h>
+#include <linux/spinlock.h>
+#include <linux/cdev.h>
+#include <linux/delay.h>
+#include <linux/of.h>
+#include <linux/uaccess.h>
+#include <linux/completion.h>
+#include <linux/scatterlist.h>
+#define SUCCESS 0
+#define FIFO_LEN 320000
+static int device_open(struct inode *, struct file *);
+static int device_release(struct inode *, struct file *);
+static ssize_t device_read(struct file *, char *, size_t, loff_t *);
+static ssize_t device_write(struct file *, const char *, size_t, loff_t *);
+static int device_mmap(struct file *filp, struct vm_area_struct *vma);
+static loff_t memory_lseek(struct file *file, loff_t offset, int orig);
+static long device_ioctl(
+    struct file *file,
+    unsigned int cmd,
+    unsigned long arg
+);
+static unsigned int device_poll(
+    struct file *file,
+    struct poll_table_struct *p
+);
+static int deviceAllocated;
+static struct file_operations fops = {
+    .read = device_read,
+    .write = device_write,
+    .open = device_open,
+    .release = device_release,
+    .mmap = device_mmap,
+    .llseek = memory_lseek,
+    .unlocked_ioctl = device_ioctl,
+    .poll = device_poll,
+};
+#define MAX_DMA_BUFFERS 1000
+#define DMA_BUFSIZE 4800000
+struct $$DEVICE_NAME_L$$_dev {
+    struct platform_device *pdev;
+    struct cdev cdev;
+    int busy;
+    int irq;
+    $$DECLARE_REGISTERS_IN_STRUCT$$
+    int dma_started;
+    int started;
+#ifdef HAS_DMA
+    int dma_align;
+    struct dma_chan *dma_chan;
+    dma_addr_t *dma_handles;
+    char **dma_buffers;
+    u32 *dma_buf_sizes;
+    u32 num_dma_buffers;
+    u32 dma_tot_size;
+    u32 dma_allocated;
+    struct scatterlist *dma_sg;
+    dma_cookie_t dma_cookie;
+    struct completion dma_cmp;
+    u32 dma_chunk_size;
+    u32 dma_chunk_idx;
+#endif
+};
+static struct $$DEVICE_NAME_L$$_dev staticPrivateInfo;
+/* ------------------------------------------------------------------------- */
+/* FIFO I/O                                                                  */
+/* ------------------------------------------------------------------------- */
+static void writeFifo(
+    void *addr,
+    enum AxiStreamFifo_Register op,
+    u32 data
+)
+{
+    iowrite32(data, addr + op);
+}
+static u32 readFifo(
+    void *addr,
+    enum AxiStreamFifo_Register op
+)
+{
+    return ioread32(addr + op);
+}
+static void clearFifo(void *dev)
+{
+    writeFifo(dev, ISR, 0xFFFFFFFF);
+    writeFifo(dev, RDFR, 0xA5);
+    writeFifo(dev, IER, 0x04000000);
+}
+/* ------------------------------------------------------------------------- */
+/* DMA management                                                            */
+/* ------------------------------------------------------------------------- */
+#ifdef HAS_DMA
+static dma_cookie_t dma_prep_buffer(
+    struct $$DEVICE_NAME_L$$_dev *dev,
+    struct dma_chan *chan,
+    dma_addr_t *handles,
+    size_t *lens,
+    struct scatterlist *sg,
+    u32 num_dma_buffers,
+    enum dma_transfer_direction dir
+);
+static void dma_start_transfer(
+    struct dma_chan *chan,
+    struct completion *cmp,
+    dma_cookie_t cookie
+);
+static void dma_sync_callback(void *arg)
+{
+    int status;
+    dma_cookie_t lastCookie;
+    struct $$DEVICE_NAME_L$$_dev *dev;
+    dev = (struct $$DEVICE_NAME_L$$_dev *)arg;
+    printk(
+        KERN_DEBUG
+        "DMA SYNC CALLBACK %u\n",
+        dev->num_dma_buffers
+    );
+    status = dma_async_is_tx_complete(
+        dev->dma_chan,
+        dev->dma_cookie,
+        &lastCookie,
+        NULL
+    );
+    if (status != DMA_COMPLETE) {
+        printk(
+            KERN_ERR
+            "DMA callback status: %s\n",
+            status == DMA_ERROR ? "error" : "in progress"
+        );
+    }
+    if (lastCookie != dev->dma_cookie) {
+        printk(
+            KERN_ERR
+            "DMA not terminated for this cookie: %d %d\n",
+            lastCookie,
+            dev->dma_cookie
+        );
+        dmaengine_terminate_all(dev->dma_chan);
+    }
+    dev->dma_started = 0;
+    printk(KERN_DEBUG "DMA TERMINATED\n");
+}
+static dma_cookie_t dma_prep_buffer(
+    struct $$DEVICE_NAME_L$$_dev *dev,
+    struct dma_chan *chan,
+    dma_addr_t *handles,
+    size_t *lens,
+    struct scatterlist *sg,
+    u32 num_dma_buffers,
+    enum dma_transfer_direction dir
+)
+{
+    int i;
+    enum dma_ctrl_flags flags;
+    struct dma_async_tx_descriptor *chan_desc;
+    dma_cookie_t cookie;
+    flags = DMA_CTRL_ACK;
+    set_user_nice(current, 10);
+    sg_init_table(sg, num_dma_buffers);
+    for (i = 0; i < num_dma_buffers; i++) {
+        sg_dma_address(&sg[i]) = handles[i];
+        sg_dma_len(&sg[i]) = lens[i];
+    }

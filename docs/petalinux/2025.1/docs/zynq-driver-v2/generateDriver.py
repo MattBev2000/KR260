@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+# Author: Gabriele Manduchi
+# Modified by: Bevilacqua Mattia (ChatGPT) - Added BRAM and GPIO 
+
 import re
 import sys
 
@@ -55,25 +58,93 @@ if isDma:
 label_pattern = r"([a-zA-Z_][a-zA-Z0-9_-]*)"
 address_pattern = r"[0-9a-fA-F]+"
 
-
-# AXI configuration registers.
-regexp = re.compile(
-    rf"^\s*{label_pattern}\s*:\s*"
-    rf"axi_cfg_register@{address_pattern}\s*\{{",
-    re.MULTILINE,
+node_regexp = re.compile(
+    rf"^\s*(?P<label>{label_pattern})\s*:\s*"
+    rf"(?P<node>[a-zA-Z_][a-zA-Z0-9,_-]*)"
+    rf"@(?P<address>{address_pattern})\s*\{{"
+    rf"(?P<body>.*?)^\s*\}};",
+    re.MULTILINE | re.DOTALL,
 )
 
-configuration_registers = regexp.findall(t)
+
+def classify_node(node_name, body):
+    """Return the peripheral class used by the generated driver."""
+
+    compatibles = re.findall(
+        r'compatible\s*=\s*([^;]+);',
+        body,
+    )
+    compatible_text = " ".join(compatibles)
+
+    if node_name == "axi_cfg_register":
+        return "cfg"
+    if node_name == "axi_sts_register":
+        return "sts"
+    if node_name == "axi_fifo_mm_s":
+        return "fifo"
+
+    if (
+        node_name in ("axi_bram_ctrl", "bram", "memory-controller")
+        or "xlnx,axi-bram-ctrl" in compatible_text
+    ):
+        return "bram"
+
+    if (
+        node_name in ("axi_gpio", "gpio")
+        and (
+            node_name == "axi_gpio"
+            or "xlnx,xps-gpio" in compatible_text
+            or "xlnx,axi-gpio" in compatible_text
+        )
+    ):
+        return "gpio"
+
+    return None
 
 
-# AXI status registers.
-regexp = re.compile(
-    rf"^\s*{label_pattern}\s*:\s*"
-    rf"axi_sts_register@{address_pattern}\s*\{{",
-    re.MULTILINE,
-)
+def get_compatibles(body):
+    """Extract all compatible strings from a device-tree node."""
 
-status_registers = regexp.findall(t)
+    property_match = re.search(
+        r"compatible\s*=\s*([^;]+);",
+        body,
+    )
+
+    if not property_match:
+        return []
+
+    return re.findall(r'"([^"]+)"', property_match.group(1))
+
+
+devices = []
+
+for match in node_regexp.finditer(t):
+    device_type = classify_node(
+        match.group("node"),
+        match.group("body"),
+    )
+
+    if device_type:
+        devices.append(
+            {
+                "label": match.group("label"),
+                "type": device_type,
+                "address": int(match.group("address"), 16),
+                "compatibles": get_compatibles(match.group("body")),
+            }
+        )
+
+
+# AXI configuration and status registers.
+configuration_registers = [
+    device["label"] for device in devices
+    if device["type"] == "cfg"
+]
+
+status_registers = [
+    device["label"] for device in devices
+    if device["type"] == "sts"
+]
 
 
 # Preserve the order used by the original generator:
@@ -81,42 +152,29 @@ status_registers = regexp.findall(t)
 registers = configuration_registers + status_registers
 
 
-# AXI FIFO MM-S peripherals.
-regexpr = re.compile(
-    rf"^\s*{label_pattern}\s*:\s*"
-    rf"axi_fifo_mm_s@{address_pattern}\s*\{{",
-    re.MULTILINE,
-)
+# AXI FIFO MM-S, AXI BRAM Controller and Xilinx AXI GPIO peripherals.
+fifos = [
+    device["label"] for device in devices
+    if device["type"] == "fifo"
+]
 
-fifos = regexpr.findall(t)
+brams = [
+    device["label"] for device in devices
+    if device["type"] == "bram"
+]
 
+gpios = [
+    device["label"] for device in devices
+    if device["type"] == "gpio"
+]
 
-# Find the devices managed by this driver.
-# AXI BRAM controllers and unsupported AXI peripherals are excluded.
-regexpr = re.compile(
-    rf"^\s*{label_pattern}\s*:\s*"
-    rf"(axi_cfg_register|axi_sts_register|axi_fifo_mm_s)"
-    rf"@{address_pattern}\s*\{{",
-    re.MULTILINE,
-)
-
-fifosRegs = []
-isRegs = []
-
-for match in regexpr.finditer(t):
-    device_label = match.group(1)
-    device_type = match.group(2)
-
-    fifosRegs.append(device_label)
-
-    isRegs.append(
-        device_type == "axi_cfg_register"
-        or device_type == "axi_sts_register"
-    )
+fifosRegs = [device["label"] for device in devices]
 
 
 print("Registers:", registers)
 print("FIFOs:", fifos)
+print("BRAMs:", brams)
+print("GPIOs:", gpios)
 print("Supported devices:", fifosRegs)
 
 
@@ -127,7 +185,8 @@ if not fifosRegs:
     )
     print(
         "Expected node types: axi_cfg_register, "
-        "axi_sts_register or axi_fifo_mm_s.",
+        "axi_sts_register, axi_fifo_mm_s, "
+        "AXI BRAM Controller or Xilinx AXI GPIO.",
         file=sys.stderr,
     )
     print(f"Device tree: {DEVICE_TREE}", file=sys.stderr)
@@ -275,6 +334,54 @@ for fifo in fifos:
     baseId += 1
 
 
+for peripheral in brams + gpios:
+    peripheral_u = peripheral.upper().replace("-", "_")
+
+    regConf += (
+        "#define "
+        + DEVICE_NAME.upper()
+        + "_READ_"
+        + peripheral_u
+        + "\t\t"
+        + "_IOWR("
+        + DEVICE_NAME.upper()
+        + "_IOCTL_BASE, "
+        + str(baseId)
+        + ", struct "
+        + DEVICE_NAME.lower()
+        + "_mmio_access)\n"
+    )
+    baseId += 1
+
+    regConf += (
+        "#define "
+        + DEVICE_NAME.upper()
+        + "_WRITE_"
+        + peripheral_u
+        + "\t\t"
+        + "_IOW("
+        + DEVICE_NAME.upper()
+        + "_IOCTL_BASE, "
+        + str(baseId)
+        + ", struct "
+        + DEVICE_NAME.lower()
+        + "_mmio_access)\n"
+    )
+    baseId += 1
+
+
+for gpio in gpios:
+    gpio_u = gpio.upper().replace("-", "_")
+    regConf += "\n/* Standard Xilinx AXI GPIO register offsets. */\n"
+    regConf += "#define " + gpio_u + "_DATA_OFFSET\t0x000\n"
+    regConf += "#define " + gpio_u + "_TRI_OFFSET\t0x004\n"
+    regConf += "#define " + gpio_u + "_DATA2_OFFSET\t0x008\n"
+    regConf += "#define " + gpio_u + "_TRI2_OFFSET\t0x00c\n"
+    regConf += "#define " + gpio_u + "_GIER_OFFSET\t0x11c\n"
+    regConf += "#define " + gpio_u + "_IP_ISR_OFFSET\t0x120\n"
+    regConf += "#define " + gpio_u + "_IP_IER_OFFSET\t0x128\n"
+
+
 # -------------------------------------------------------------------------
 # Generate register structure
 # -------------------------------------------------------------------------
@@ -363,18 +470,19 @@ except OSError as error:
 
 
 # -------------------------------------------------------------------------
-# Declare register and FIFO mapping pointers
+# Declare mapping pointers and resource sizes
 # -------------------------------------------------------------------------
 
 declReg = ""
 
-for reg in registers:
-    declReg += "\tvoid * iomap_" + reg + ";\n"
-
-
-for fifo in fifos:
-    iomap_name = get_iomap_name(fifo)
-    declReg += "\tvoid * iomap_" + iomap_name + ";\n"
+for device in devices:
+    iomap_name = get_iomap_name(device["label"])
+    declReg += "\tvoid __iomem *iomap_" + iomap_name + ";\n"
+    declReg += (
+        "\tresource_size_t iomap_"
+        + iomap_name
+        + "_size;\n"
+    )
 
 
 source = source.replace(
@@ -549,6 +657,90 @@ for fifo in fifos:
     iomapReg += "\t}\n"
 
 
+for peripheral in brams + gpios:
+    iomap_name = get_iomap_name(peripheral)
+    peripheral_u = peripheral.upper().replace("-", "_")
+
+    iomapReg += (
+        "\tcase "
+        + DEVICE_NAME.upper()
+        + "_READ_"
+        + peripheral_u
+        + ":\n"
+    )
+    iomapReg += "\t{\n"
+    iomapReg += (
+        "\t\tstruct "
+        + DEVICE_NAME.lower()
+        + "_mmio_access access;\n"
+    )
+    iomapReg += (
+        "\t\tif (copy_from_user(&access, "
+        "(void __user *)arg, sizeof(access)))\n"
+    )
+    iomapReg += "\t\t\treturn -EFAULT;\n"
+    iomapReg += (
+        "\t\tif ((access.offset & 3) || "
+        "dev->iomap_"
+        + iomap_name
+        + "_size < sizeof(u32) || "
+        "access.offset > dev->iomap_"
+        + iomap_name
+        + "_size - sizeof(u32))\n"
+    )
+    iomapReg += "\t\t\treturn -EINVAL;\n"
+    iomapReg += (
+        "\t\taccess.value = ioread32("
+        "dev->iomap_"
+        + iomap_name
+        + " + access.offset);\n"
+    )
+    iomapReg += (
+        "\t\tif (copy_to_user((void __user *)arg, "
+        "&access, sizeof(access)))\n"
+    )
+    iomapReg += "\t\t\treturn -EFAULT;\n"
+    iomapReg += "\t\treturn 0;\n"
+    iomapReg += "\t}\n"
+
+    iomapReg += (
+        "\tcase "
+        + DEVICE_NAME.upper()
+        + "_WRITE_"
+        + peripheral_u
+        + ":\n"
+    )
+    iomapReg += "\t{\n"
+    iomapReg += (
+        "\t\tstruct "
+        + DEVICE_NAME.lower()
+        + "_mmio_access access;\n"
+    )
+    iomapReg += (
+        "\t\tif (copy_from_user(&access, "
+        "(void __user *)arg, sizeof(access)))\n"
+    )
+    iomapReg += "\t\t\treturn -EFAULT;\n"
+    iomapReg += (
+        "\t\tif ((access.offset & 3) || "
+        "dev->iomap_"
+        + iomap_name
+        + "_size < sizeof(u32) || "
+        "access.offset > dev->iomap_"
+        + iomap_name
+        + "_size - sizeof(u32))\n"
+    )
+    iomapReg += "\t\t\treturn -EINVAL;\n"
+    iomapReg += (
+        "\t\tiowrite32(access.value, "
+        "dev->iomap_"
+        + iomap_name
+        + " + access.offset);\n"
+    )
+    iomapReg += "\t\treturn 0;\n"
+    iomapReg += "\t}\n"
+
+
 # GET_REGISTERS
 iomapReg += (
     "\tcase "
@@ -637,107 +829,90 @@ source = source.replace(
 
 
 # -------------------------------------------------------------------------
-# Map the first supported peripheral
-# -------------------------------------------------------------------------
-
-mapFirstReg = ""
-
-first_iomap_name = get_iomap_name(fifosRegs[0])
-
-mapFirstReg += (
-    "\tr_mem = platform_get_resource("
-    "pdev, IORESOURCE_MEM, 0);\n"
-)
-
-mapFirstReg += "\tif (!r_mem)\n"
-mapFirstReg += "\t\treturn -ENODEV;\n"
-
-mapFirstReg += "\toff = r_mem->start & ~PAGE_MASK;\n"
-
-mapFirstReg += (
-    "\tstaticPrivateInfo.iomap_"
-    + first_iomap_name
-    + " = devm_ioremap("
-    "&pdev->dev, "
-    "r_mem->start + off, "
-    "resource_size(r_mem));\n"
-)
-
-mapFirstReg += (
-    "\tif (!staticPrivateInfo.iomap_"
-    + first_iomap_name
-    + ")\n"
-)
-
-mapFirstReg += "\t\treturn -ENOMEM;\n"
-
-
-# -------------------------------------------------------------------------
-# Map the remaining supported peripherals
+# Map supported peripherals by physical resource address
 # -------------------------------------------------------------------------
 
 mapReg = ""
 
+mapReg += (
+    "\t\tr_mem = platform_get_resource("
+    "pdev, IORESOURCE_MEM, 0);\n"
+)
+mapReg += "\t\tif (!r_mem)\n"
+mapReg += "\t\t\treturn -ENODEV;\n\n"
 
-if isDma:
-    start_index = 0
-else:
-    start_index = 1
-
-
-for i in range(start_index, len(fifosRegs)):
-    iomap_name = get_iomap_name(fifosRegs[i])
-
-    mapReg += "\tcase " + str(i) + ":\n"
+for index, device in enumerate(devices):
+    iomap_name = get_iomap_name(device["label"])
+    keyword = "if" if index == 0 else "else if"
 
     mapReg += (
-        "\t\tr_mem = platform_get_resource("
-        "pdev, IORESOURCE_MEM, 0);\n"
+        "\t\t"
+        + keyword
+        + " (r_mem->start == (resource_size_t)0x"
+        + format(device["address"], "x")
+        + ") {\n"
     )
-
-    mapReg += "\t\tif (!r_mem)\n"
-    mapReg += "\t\t\treturn -ENODEV;\n"
-
-    mapReg += "\t\toff = r_mem->start & ~PAGE_MASK;\n"
-
     mapReg += (
-        "\t\tstaticPrivateInfo.iomap_"
+        "\t\t\tstaticPrivateInfo.iomap_"
         + iomap_name
-        + " = devm_ioremap("
-        "&pdev->dev, "
-        "r_mem->start + off, "
-        "resource_size(r_mem));\n"
+        + " = devm_ioremap_resource("
+        "&pdev->dev, r_mem);\n"
     )
-
     mapReg += (
-        "\t\tif (!staticPrivateInfo.iomap_"
+        "\t\t\tif (IS_ERR(staticPrivateInfo.iomap_"
         + iomap_name
-        + ")\n"
+        + "))\n"
     )
+    mapReg += (
+        "\t\t\t\treturn PTR_ERR(staticPrivateInfo.iomap_"
+        + iomap_name
+        + ");\n"
+    )
+    mapReg += (
+        "\t\t\tstaticPrivateInfo.iomap_"
+        + iomap_name
+        + "_size = resource_size(r_mem);\n"
+    )
+    mapReg += "\t\t}\n"
 
-    mapReg += "\t\t\treturn -ENOMEM;\n"
-    mapReg += "\t\tbreak;\n"
+mapReg += "\t\telse {\n"
+mapReg += (
+    "\t\t\tdev_warn(&pdev->dev, "
+    "\"unsupported AXI resource at %pa\\n\", "
+    "&r_mem->start);\n"
+)
+mapReg += "\t\t\treturn -ENODEV;\n"
+mapReg += "\t\t}\n"
 
 
 # -------------------------------------------------------------------------
 # Replace source placeholders
 # -------------------------------------------------------------------------
 
-if isDma:
-    source = source.replace(
-        "$$MAP_FIRST_REGISTER$$",
-        "",
-    )
-else:
-    source = source.replace(
-        "$$MAP_FIRST_REGISTER$$",
-        mapFirstReg,
-    )
-
-
 source = source.replace(
     "$$MAP_REGISTERS$$",
     mapReg,
+)
+
+compatible_values = []
+
+for device in devices:
+    for compatible in device["compatibles"]:
+        if compatible not in compatible_values:
+            compatible_values.append(compatible)
+
+ofCompat = ""
+
+for compatible in compatible_values:
+    ofCompat += (
+        '    { .compatible = "'
+        + compatible
+        + '" },\n'
+    )
+
+source = source.replace(
+    "$$DEFINE_DEVICE_COMPATIBLES$$",
+    ofCompat,
 )
 
 source = source.replace(

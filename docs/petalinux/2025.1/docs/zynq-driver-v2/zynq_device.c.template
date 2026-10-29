@@ -800,8 +800,6 @@ static int $$DEVICE_NAME_L$$_probe(
     struct platform_device *pdev
 )
 {
-    u32 off;
-    static int memIdx;
     struct resource *r_mem;
 
     printk(
@@ -813,7 +811,6 @@ static int $$DEVICE_NAME_L$$_probe(
     if (!deviceAllocated) {
         deviceAllocated = 1;
         staticPrivateInfo.pdev = pdev;
-        memIdx = 0;
     }
 
 #ifdef HAS_DMA
@@ -861,34 +858,8 @@ static int $$DEVICE_NAME_L$$_probe(
 #endif
 
     {
-        $$MAP_FIRST_REGISTER$$
-
-        printk(
-            KERN_DEBUG
-            "Following call to "
-            "$$DEVICE_NAME_L$$_probe: "
-            "%s, memIdx: %d\n",
-            pdev->name,
-            memIdx
-        );
-
-        switch (memIdx) {
-
         $$MAP_REGISTERS$$
-
-        default:
-            printk(
-                KERN_WARNING
-                "Unexpected "
-                "$$DEVICE_NAME_L$$_probe call, "
-                "memIdx: %d\n",
-                memIdx
-            );
-            break;
-        }
     }
-
-    memIdx++;
 
     return 0;
 }
@@ -940,22 +911,8 @@ static int $$DEVICE_NAME_L$$_remove(
 
 static const struct of_device_id
 $$DEVICE_NAME_L$$_of_ids[] = {
-    {
-        .compatible =
-            "xlnx,axi-dma-test-1.00.a",
-    },
-    {
-        .compatible =
-            "xlnx,axi-cfg-register-1.0",
-    },
-    {
-        .compatible =
-            "xlnx,axi-sts-register-1.0",
-    },
-    {
-        .compatible =
-            "xlnx,axi-fifo-mm-s-4.3",
-    },
+    { .compatible = "xlnx,axi-dma-test-1.00.a" },
+$$DEFINE_DEVICE_COMPATIBLES$$
     {}
 };
 

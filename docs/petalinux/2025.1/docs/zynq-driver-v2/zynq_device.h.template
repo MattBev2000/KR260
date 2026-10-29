@@ -1,3 +1,35 @@
+#ifndef $$DEVICE_NAME_U$$_H
+#define $$DEVICE_NAME_U$$_H
+
+
+#include <linux/types.h>
+#include <asm/ioctl.h>
+
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+//Temporaneo
+#define DMA_SOURCE 1
+////////////////
+
+
+#define DEVICE_NAME "$$DEVICE_NAME_L$$"  /* Dev name as it appears in /proc/devices */
+#define MODULE_NAME "$$DEVICE_NAME_L$$"
+
+/*
+ * Generic 32-bit access used for generated AXI BRAM and AXI GPIO IOCTLs.
+ * offset is relative to the peripheral base address and must be 4-byte
+ * aligned.  value contains the data to write or the value returned on read.
+ */
+struct $$DEVICE_NAME_L$$_mmio_access {
+    __u32 offset;
+    __u32 value;
+};
+
+//Generic IOCTL commands  
 
 #define $$DEVICE_NAME_U$$_IOCTL_BASE	'W'
 #define $$DEVICE_NAME_U$$_ARM_DMA    			_IO($$DEVICE_NAME_U$$_IOCTL_BASE, 1)
@@ -19,6 +51,7 @@
 #define $$DEVICE_NAME_U$$_START_READ			_IO($$DEVICE_NAME_U$$_IOCTL_BASE, 17)
 #define $$DEVICE_NAME_U$$_STOP_READ			_IO($$DEVICE_NAME_U$$_IOCTL_BASE, 18)
 $$DEFINE_REGISTER_CODES$$  
+
 #ifndef AXI_ENUMS_DEFINED
 #define AXI_ENUMS_DEFINED
 enum AxiStreamFifo_Register {
@@ -43,6 +76,7 @@ enum AxiStreamFifo_Register {
     RID   = 0x3c,   ///< Receive ID Register
     RUSER = 0x40    ///< Receive USER Register
 };
+
 enum AxiStreamFifo_ISREnum {
     ISR_RFPE = 1 << 19,  ///< Receive FIFO Programmable Empty
     ISR_RFPF = 1 << 20,  ///< Receive FIFO Programmable Full
@@ -58,6 +92,7 @@ enum AxiStreamFifo_ISREnum {
     ISR_RPORE = 1 << 30, ///< Receive Packet Overrun Read Error
     ISR_RPURE = 1 << 31, ///< Receive Packet Underrun Read Error
 };
+
 enum RegisterIdx {
     FIFO_00_IDX = 0,
     FIFO_01_IDX = 1,
@@ -69,11 +104,16 @@ enum RegisterIdx {
     MODE_REG_IDX = 8
 };
 #endif
+
 struct $$DEVICE_NAME_L$$_registers
 {
     $$DEFINE_REGISTER_STRUCT$$
 };
+
+
+
 #ifdef __cplusplus
 }
 #endif
+
 #endif // $$DEVICE_NAME_U$$_H

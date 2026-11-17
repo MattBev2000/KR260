@@ -1,10 +1,11 @@
+# Ubuntu development environment; install PetaLinux manually after creation.
 FROM ubuntu:22.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG USER_UID=1000
 ARG USER_GID=1000
 
-# Install the required development tools and libraries.
+# Install the tools and libraries used by PetaLinux and the project scripts.
 RUN dpkg --add-architecture i386 \
     && apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -25,6 +26,7 @@ RUN dpkg --add-architecture i386 \
        libselinux1 gnupg net-tools iproute2 iputils-ping \
        xterm xvfb xauth screen pax expect tofrodos \
        lsb-release debianutils util-linux dnsutils \
+       device-tree-compiler libacl1 lz4 \
     && locale-gen en_US.UTF-8 \
     && ln -sf /bin/bash /bin/sh \
     && rm -rf /var/lib/apt/lists/*
@@ -32,21 +34,35 @@ RUN dpkg --add-architecture i386 \
 ENV LANG=en_US.UTF-8
 ENV LC_ALL=en_US.UTF-8
 ENV TERM=xterm-256color
-ENV USER=admin
-ENV LOGNAME=admin
-ENV HOME=/home/admin
+ENV USER=mattia
+ENV LOGNAME=mattia
+ENV HOME=/home/mattia
 
-# Match the host account IDs for files written into shared directories.
-RUN groupadd --gid "${USER_GID}" admin \
+# Keep the installation and shared-data paths explicit. Do not set PETALINUX
+# here: the installed settings.sh script will initialize the vendor environment.
+ENV PETALINUX_INSTALL_DIR=/opt/petalinux/2025.1
+ENV DOCUMENTS_DIR=/opt/petalinux/docs
+ENV PROJECTS_DIR=/opt/petalinux/projects
+
+# Match the UID and GID of mattia on the Ubuntu host.
+RUN groupadd --gid "${USER_GID}" mattia \
     && useradd --uid "${USER_UID}" --gid "${USER_GID}" \
-       --create-home --shell /bin/bash admin \
-    && mkdir -p \
-       /opt/petalinux/2025.1/docs \
-       /opt/petalinux/2025.1/ptlnx-prjs \
-    && chown -R admin:admin /opt/petalinux/2025.1
+       --create-home --shell /bin/bash mattia
 
-# Start as a normal user in the project directory.
-USER admin
-WORKDIR /opt/petalinux/2025.1/ptlnx-prjs
+# Prepare writable mount points in the image. At runtime, bind mounts replace
+# these directories with host directories and preserve the HOST permissions.
+# Image ownership cannot grant access to a root-owned directory on the host.
+RUN install -d --owner=mattia --group=mattia --mode=0755 \
+    /opt/petalinux \
+    "${PETALINUX_INSTALL_DIR}" \
+    "${DOCUMENTS_DIR}" \
+    "${PROJECTS_DIR}"
+
+# Do not install PetaLinux in this image: a bind mount over 2025.1 would hide it.
+# Install it manually, as mattia, AFTER start_docker.sh mounts the host folders.
+# Do not declare VOLUME here; the launcher supplies the three explicit mounts.
+USER mattia
+WORKDIR ${PROJECTS_DIR}
 
 CMD ["/bin/bash"]
+

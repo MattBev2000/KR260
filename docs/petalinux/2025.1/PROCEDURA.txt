@@ -1,0 +1,152 @@
+PETALINUX 2025.1 SU LENOVO P620 — DOCKER
+
+Configurazione prevista
+Computer: AMD Threadripper, x86_64, Ubuntu 26.04.
+Utente host e container: mattia; UID 1000, GID 1000.
+Il container usa Ubuntu 22.04, conservando la base del Dockerfile originale.
+Questi file preparano l'ambiente: PetaLinux va installato separatamente.
+
+1. PREPARARE DOCKER
+
+Se Docker Engine non e' ancora installato, seguire la procedura ufficiale:
+https://docs.docker.com/engine/install/ubuntu/
+
+Questa procedura e lo script prevedono Docker Engine locale con mappatura utenti
+standard. Con Docker rootless o userns-remap i permessi richiedono una verifica
+diversa: lo script controlla anche l'accesso dall'interno del container.
+
+Per usare Docker Engine come mattia senza sudo, se necessario:
+
+    sudo usermod -aG docker mattia
+
+Poi uscire dalla sessione Ubuntu e rientrare. Il gruppo docker concede privilegi
+amministrativi sul computer. Verificare in un nuovo terminale:
+
+    id
+    uname -m
+    docker info
+
+UID e GID primario devono essere 1000; l'architettura deve essere x86_64.
+Non eseguire start_docker.sh con sudo.
+
+2. COPIARE I FILE DEL CONTAINER
+
+Creare:
+
+    mkdir -p /home/mattia/petalinux_container
+
+Copiare in questa cartella solo Dockerfile e .dockerignore da 2025.1.
+Lo script start_docker.sh si trova invece in petalinux-projects e va copiato
+in /home/mattia/petalinux-projects insieme agli script dei progetti.
+Il nome Dockerfile non deve avere estensione .txt. .dockerignore e' nascosto:
+attivare la visualizzazione dei file nascosti se necessario.
+Il Dockerfile e' gia' pronto: non occorre riscriverlo a mano.
+
+3. PREPARARE LE CARTELLE DATI SUL COMPUTER
+
+    mkdir -p /home/mattia/petalinux-projects
+    sudo mkdir -p /opt/petalinux/2025.1 /opt/petalinux/docs
+    sudo chown 1000:1000 /opt/petalinux/2025.1 /opt/petalinux/docs
+
+Il comando chown riguarda solo queste due directory, non modifica ricorsivamente
+eventuali file gia' presenti. Se contengono dati di altri utenti, controllarne
+i permessi prima di procedere.
+
+Copiare il contenuto della vecchia cartella projects dentro:
+    /home/mattia/petalinux-projects
+
+Copiare il contenuto della vecchia cartella docs dentro:
+    /opt/petalinux/docs
+
+Non creare un ulteriore livello docs/docs o projects/projects.
+Conservare tutte le sottocartelle, tra cui driver_generation e cfg_files.
+Mettere nella cartella docs anche l'installer Linux PetaLinux 2025.1 scaricato
+da AMD e il BSP 2025.1 della scheda, se serve.
+
+Non copiare il solo Dockerfile dentro l'installazione PetaLinux: ora e' in
+petalinux_container. La directory /opt/petalinux/2025.1 e' destinata al tool.
+Una precedente installazione Linux puo' richiedere una reinstallazione, specie
+se cambia il percorso visto dentro il container.
+
+4. CREARE L'IMMAGINE DOCKER
+
+    cd /home/mattia/petalinux_container
+    docker build --build-arg USER_UID=1000 --build-arg USER_GID=1000 -t kr260-petalinux:2025.1 .
+
+Questo comando legge il Dockerfile e scarica Ubuntu 22.04 e i pacchetti.
+Il tag kr260-petalinux:2025.1 e' il nome locale dell'immagine risultante.
+Non installa ancora PetaLinux.
+
+5. AVVIARE IL CONTAINER
+
+    bash /home/mattia/petalinux-projects/start_docker.sh
+
+Lo script verifica Docker e i permessi, aggiorna l'immagine usando la cache
+e apre Bash come mattia nella cartella /opt/petalinux/projects.
+Lo si puo' eseguire da qualunque directory.
+Il Dockerfile viene cercato nella cartella ../2025.1 rispetto allo script
+(se conservi la struttura originale), oppure in /home/mattia/petalinux_container.
+Per scegliere un'altra posizione del Dockerfile:
+
+    DOCKERFILE_DIR=/percorso/cartella_dockerfile bash /home/mattia/petalinux-projects/start_docker.sh
+
+Percorsi host -> percorsi interni:
+    /home/mattia/petalinux-projects -> /opt/petalinux/projects
+    /opt/petalinux/docs            -> /opt/petalinux/docs
+    /opt/petalinux/2025.1          -> /opt/petalinux/2025.1
+
+6. INSTALLARE PETALINUX UNA SOLA VOLTA
+
+Dentro il container:
+
+    id
+    cat /etc/os-release
+    ls /opt/petalinux/docs
+
+Attesi: utente mattia con UID/GID 1000 e Ubuntu 22.04.
+Usare il nome esatto dell'installer scaricato al posto di NOME_INSTALLER.run:
+
+    cd /opt/petalinux/docs
+    bash ./NOME_INSTALLER.run --dir /opt/petalinux/2025.1
+
+Seguire le richieste dell'installer e leggere le licenze. Non usare sudo.
+Se PetaLinux e' gia' installato e funzionante a questo percorso interno,
+saltare la reinstallazione.
+
+7. ATTIVARE L'AMBIENTE A OGNI NUOVO AVVIO
+
+Dentro il container:
+
+    source /opt/petalinux/2025.1/settings.sh
+    command -v petalinux-build
+    cd /opt/petalinux/projects
+    ls
+
+Gli script esistenti mantengono i percorsi interni che si aspettano.
+Gli argomenti BSP, SDT e configurazioni devono indicare file visibili DENTRO
+il container, ad esempio sotto /opt/petalinux/docs.
+L'ambiente Vitis usato da create_sdt.sh non e' incluso in questa immagine.
+
+8. USCITA E PERSISTENZA
+
+    exit
+
+Il container temporaneo viene rimosso all'uscita. Immagine, installazione
+PetaLinux, documentazione e progetti nelle tre cartelle montate restano.
+Le modifiche fatte altrove nel container, inclusa la sua home, non persistono.
+Per riaprire l'ambiente ripetere i punti 5 e 7.
+
+9. VERIFICHE E LIMITI
+
+I file sono stati preparati sul computer Windows della chat. La costruzione
+dell'immagine e una build PetaLinux sul Lenovo non sono ancora state eseguite.
+La lista di pacchetti conserva quella del Dockerfile originale: la prima
+docker build e' la verifica effettiva della disponibilita' delle dipendenze.
+Il kernel resta quello di Ubuntu sul computer: il container non e' una VM
+e non garantisce da solo la compatibilita' completa con il kernel host.
+Se PetaLinux segnala errori di namespace, AppArmor o permessi, conservarne
+il messaggio per una correzione mirata, senza disattivare protezioni globali.
+
+Riferimenti:
+https://docs.amd.com/r/2025.1-English/ug1144-petalinux-tools-reference-guide/Installation-Requirements
+https://docs.docker.com/engine/storage/bind-mounts/

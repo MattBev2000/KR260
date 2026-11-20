@@ -514,6 +514,46 @@ success 'Hardware import and project configuration completed.'
     checkpoint 2
 fi
 
+# Use the AMD endpoint directly, avoiding the legacy domain's TLS/redirect hop.
+# Keep the PetaLinux 2025.1 release paths; these are not EDF release artifacts.
+# Configure persistent project settings, then regenerate build/conf as needed.
+# This also runs on --resume before any remaining configuration/build steps.
+section 'Configuring AMD source and shared-state mirrors.'
+MIRROR_CONFIG_CHANGED=$(python3 - "$PROJECT_ROOT/project-spec/configs/config" <<'UNIFIED_EDF_MIRRORS_EOF'
+import re
+import sys
+from pathlib import Path
+
+path = Path(sys.argv[1])
+source = path.read_text()
+settings = {
+    "CONFIG_PRE_MIRROR_URL": '"https://edf.amd.com/sswreleases/rel-v2025.1/downloads"',
+    "CONFIG_YOCTO_NETWORK_SSTATE_FEEDS": "y",
+    "CONFIG_YOCTO_NETWORK_SSTATE_FEEDS_URL": '"https://edf.amd.com/sswreleases/rel-v2025.1/aarch64/sstate-cache"',
+}
+updated = source
+for key, value in settings.items():
+    pattern = rf"^(?:{re.escape(key)}=.*|# {re.escape(key)} is not set)$"
+    line = f"{key}={value}"
+    if re.search(pattern, updated, flags=re.MULTILINE):
+        updated = re.sub(pattern, lambda match: line, updated, flags=re.MULTILINE)
+    else:
+        updated = updated.rstrip("\n") + "\n" + line + "\n"
+if updated != source:
+    path.write_text(updated)
+    print("yes")
+else:
+    print("no")
+UNIFIED_EDF_MIRRORS_EOF
+)
+# Also refresh an existing generated configuration left with the old endpoint,
+# e.g. if an earlier run stopped between updating settings and regeneration.
+if [[ "$MIRROR_CONFIG_CHANGED" == yes ]] || \
+   [[ ! -s "$PROJECT_ROOT/build/conf/plnxtool.conf" ]] || \
+   grep -Fq 'https://petalinux.xilinx.com/sswreleases/' "$PROJECT_ROOT/build/conf/plnxtool.conf"; then
+    petalinux-config --silentconfig
+fi
+
 check_console_aliases
 
 if (( LAST_STEP < 3 )); then
@@ -712,8 +752,9 @@ done
     checkpoint 8
 fi
 
-if (( LAST_STEP < 9 )); then
-    CURRENT_STEP=9
+# Update the generated overlay itself before exporting or compiling it.
+# Run this check on --resume too, including when step 9 was already completed.
+CURRENT_STEP=9
 OVERLAY_DTS="$PROJECT_ROOT/components/plnx_workspace/device-tree/pl-overlay-full/pl.dtsi"
 if [[ ! -r "$OVERLAY_DTS" || ! -s "$OVERLAY_DTS" ]]; then
     error "Requested overlay source is missing after the build: $OVERLAY_DTS"
@@ -721,18 +762,65 @@ fi
 if ! grep -Eq '^[[:space:]]*/plugin/[[:space:]]*;' "$OVERLAY_DTS"; then
     error 'The requested pl.dtsi is not a standalone /plugin/ overlay.'
 fi
+section 'Setting PL0 and PL1 requested clocks to 100 MHz in the source overlay.'
+python3 - "$OVERLAY_DTS" <<'UNIFIED_PL_CLOCK_EOF'
+import re
+import sys
+from pathlib import Path
+
+path = Path(sys.argv[1])
+source = path.read_text()
+seen = set()
+
+def update_node(match):
+    node = match.group(0)
+    if not re.search(r'\bcompatible\s*=\s*"xlnx,fclk"\s*;', node):
+        return node
+    clock = re.search(
+        r'\bassigned-clocks\s*=\s*<\s*&zynqmp_clk\s+(71|72|0[xX]47|0[xX]48)\s*>\s*;', node)
+    if clock is None:
+        return node
+    clock_id = int(clock.group(1), 16 if clock.group(1).lower().startswith('0x') else 10)
+    if clock_id in seen:
+        raise SystemExit(f"Duplicate PL clock assignment: {clock_id}; overlay unchanged")
+    seen.add(clock_id)
+    node, count = re.subn(
+        r'(\bassigned-clock-rates\s*=\s*<)\s*(?:[0-9]+|0[xX][0-9a-fA-F]+)\s*(>\s*;)',
+        r'\g<1>100000000\g<2>', node)
+    if count != 1:
+        raise SystemExit(f"Expected one scalar clock rate for PL clock {clock_id}; overlay unchanged")
+    return node
+
+# Generated fclk nodes are leaves; do not replace rates in unrelated nodes.
+updated = re.sub(r'\{[^{}]*\}', update_node, source)
+if seen != {71, 72}:
+    raise SystemExit("Expected PL0/PL1 fclk assignments (zynqmp_clk 71 and 72); overlay unchanged")
+if updated != source:
+    path.write_text(updated)
+    print(f"Updated PL0/PL1 requested rates to 100000000 Hz: {path}")
+else:
+    print("PL0/PL1 requested rates are already 100000000 Hz")
+UNIFIED_PL_CLOCK_EOF
+
+if (( LAST_STEP >= 9 )) && ! cmp -s "$OVERLAY_DTS" "$WRAPPER/fpga/pl.dtsi"; then
+    info 'Source overlay differs from the exported copy; rebuilding overlay and packaging.'
+    checkpoint 8
+fi
+
+if (( LAST_STEP < 9 )); then
+    CURRENT_STEP=9
 cp -- "$OVERLAY_DTS" "$WRAPPER/fpga/pl.dtsi"
 
-# Compile the original overlay, without adding cells or removing firmware-name.
+# Compile the updated source overlay, preserving its other properties.
 if command -v dtc >/dev/null; then
     DTC=$(command -v dtc)
 else
     DTC="${PETALINUX:-/opt/petalinux/2025.1}/sysroots/x86_64-petalinux-linux/usr/bin/dtc"
 fi
 if [[ ! -x "$DTC" ]]; then
-    error 'dtc is required to compile the original PL overlay.'
+    error 'dtc is required to compile the PL overlay.'
 fi
-section 'Compiling the original PL overlay without changing its properties.'
+section 'Compiling the PL overlay with 100 MHz requested PL clocks.'
 "$DTC" -@ -I dts -O dtb -i "$(dirname -- "$OVERLAY_DTS")" \
     -o "$WRAPPER/fpga/pl.dtbo" "$OVERLAY_DTS"
 
@@ -980,6 +1068,14 @@ fi
 chmod +x "$WRAPPER/fpga/program_fpga.sh"
 success "Manual FPGA loader: $WRAPPER/fpga/program_fpga.sh"
 
+# Refresh startup sources and image packaging after this startup behavior change.
+if [[ "$NO_STARTUP" == false ]] && (( LAST_STEP >= 10 )) && \
+   ! grep -Fq '# Reuse an automatically loaded module; handle concurrent autoload too.' \
+     "$PROJECT_ROOT/project-spec/meta-user/recipes-apps/startupbash/files/startupbash"; then
+    info 'Updating startup module loading; repeating startup generation and packaging.'
+    checkpoint 9
+fi
+
 if (( LAST_STEP < 10 )); then
     CURRENT_STEP=10
 if [[ "$NO_STARTUP" == true ]]; then
@@ -1079,15 +1175,38 @@ OVERLAY_LOADS_FIRMWARE="@OVERLAY_LOADS_FIRMWARE@"
 OVERLAY=/sys/kernel/config/device-tree/overlays/kr260-startup
 STATE_FILE=/sys/class/fpga_manager/fpga0/state
 
+# Reuse an automatically loaded module; handle concurrent autoload too.
+module_loaded() {
+    [[ -d "/sys/module/${MODULE//-/_}" ]]
+}
+
+ensure_module_loaded() {
+    if module_loaded; then
+        info "Driver already loaded: $MODULE; skipping insmod."
+        return 0
+    fi
+    if [[ ! -r "$DATA_DIR/driver.ko" || ! -s "$DATA_DIR/driver.ko" ]]; then
+        error "Missing or empty startup file: $DATA_DIR/driver.ko"
+    fi
+    command -v insmod >/dev/null || error 'Missing command: insmod'
+    section "Inserting driver: $MODULE"
+    if insmod "$DATA_DIR/driver.ko"; then
+        success "Driver loaded: $MODULE"
+    elif module_loaded; then
+        info "Driver loaded concurrently: $MODULE; no second insertion needed."
+    else
+        error "Could not load driver: $MODULE"
+    fi
+}
+
 if (( EUID != 0 )); then error 'Run as root.'; fi
-for tool in fpgautil mount mountpoint insmod; do
+for tool in fpgautil mount mountpoint; do
     if ! command -v "$tool" >/dev/null; then error "Missing command: $tool"; fi
 done
-for file in "$BITSTREAM" "$DATA_DIR/pl.dtbo" "$DATA_DIR/driver.ko"; do
+for file in "$BITSTREAM" "$DATA_DIR/pl.dtbo"; do
     if [[ ! -r "$file" || ! -s "$file" ]]; then error "Missing or empty startup file: $file"; fi
 done
 if [[ ! -r "$STATE_FILE" ]]; then error 'FPGA Manager is unavailable.'; fi
-if [[ -d "/sys/module/${MODULE//-/_}" ]]; then error 'Driver already loaded; refusing to reprogram active hardware.'; fi
 read -r state < "$STATE_FILE"
 case "$state" in
     'firmware request'|'write init'|'write'|'write complete') error 'FPGA Manager is busy.' ;;
@@ -1097,7 +1216,21 @@ if ! mountpoint -q /sys/kernel/config; then
     mount -t configfs configfs /sys/kernel/config
 fi
 if [[ ! -d /sys/kernel/config/device-tree/overlays ]]; then error 'Kernel overlay support is unavailable.'; fi
-if [[ -e "$OVERLAY" ]]; then error 'Startup overlay already exists.'; fi
+if [[ -e "$OVERLAY" ]]; then
+    # A repeated service run must not replace an overlay used by a live driver.
+    if [[ ! -r "$OVERLAY/status" ]]; then error 'Cannot verify existing startup overlay.'; fi
+    read -r overlay_status < "$OVERLAY/status"
+    if [[ "$overlay_status" != applied || "$state" != operating ]]; then
+        error 'Existing startup overlay or FPGA is not ready.'
+    fi
+    info 'Startup overlay already applied and FPGA operating; keeping current hardware.'
+    ensure_module_loaded
+    success 'FPGA, overlay and driver startup completed.'
+    exit 0
+fi
+if module_loaded; then
+    error 'Driver already loaded without the startup overlay; refusing to reprogram active hardware.'
+fi
 
 if [[ "$OVERLAY_LOADS_FIRMWARE" == no ]]; then
     section "Programming FPGA: $BITSTREAM"
@@ -1119,8 +1252,7 @@ if [[ -r "$OVERLAY/status" ]]; then
 fi
 read -r state < "$STATE_FILE"
 if [[ "$state" != operating ]]; then error "Unexpected FPGA state after overlay: $state"; fi
-section "Inserting driver: $MODULE"
-insmod "$DATA_DIR/driver.ko"
+ensure_module_loaded
 success 'FPGA, overlay and driver startup completed.'
 STARTUP
 sed -i -e "s|@MODULE@|$MODULE_NAME|g" \
